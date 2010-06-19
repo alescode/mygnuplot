@@ -76,9 +76,31 @@
 }
 
 \bpr{
-\lpr{\var{instr}}{\var{funcion}(\var{var})\ =\ \var{em}}
-\lpror{\var{var}\ =\ \var{em}}
-\lpror{\var{plot}\ \var{em} \lbrace with \var{estilo}\rbrace}
-\lpror{\var{plot}\ \var{em}}
+\lpr{\var{instr}}{\var{funcion}(\var{var})\ =\ \var{em}\ ;}
+\lpror{\var{var}\ =\ \var{em}\ ;}
+\lpror{\var{plot}\ \var{em} \lbrace with\ [\ \var{lista\_estilo}\ ]\ \rbrace\ ;}
+\lpror{\var{plot}\ \var{em} \lbrace with\ [\ ]\ \rbrace\ ;}
+\lpror{\var{plot}\ \var{em} \lbrace with \var{estilo}\rbrace\ ;}
+\lpror{\var{plot}\ \var{em}\ ;}
+\lpror{for\ \var{var} in \var{em}\ \lbrace \var{step} \rbrace \var{lista\_instr} endfor}
+\lpror{for\ \var{var} in \var{em}\ \var{lista\_instr} endfor}
+\lpror{push\_back(\var{var},\var{em});}
 }
+
+\bpr{
+\lpr{\var{lista\_estilo}}{\var{lista\_estilo},\ \var{estilo}}
+\lpror{\var{estilo}}
+}
+
+\bpr{
+\lpr{\var{estilo}}{lines\ |\ points\ |\ linespoints}
+}
+
+\bpr{
+\lpr{\var{lista\_instr}}{\var{instr}\ ;}
+\lpror{\var{lista\_instr}\ \var{instr}\ ;}
+}
+%
+%\lpror{\var{}
+
 \end{document}
