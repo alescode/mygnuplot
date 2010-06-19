@@ -8,11 +8,14 @@
 \usepackage[intlimits]{amsmath}
 \usepackage{amssymb}
 
+\newcommand{\y}{\land}
 \newcommand{\va}{\longrightarrow}
 \newcommand{\pr}[2]{#1 \va #2}
 \newcommand{\bpr}[1]{\begin{gather*}\begin{tabular}{crl}#1\end{tabular}\end{gather*}}
 \newcommand{\lpr}[2]{$#1$ & $\va$ & $#2$\\}
 \newcommand{\lpror}[1]{ & $|\ $ & $#1$\\}
+\newcommand{\var}[1]{<\hspace{-0.1cm}#1\hspace{-0.1cm}>}
+\newcommand{\nm}[1]{\mbox{$\mathit{#1}$}}
 
 \DeclareGraphicsExtensions{.jpg,.pdf,.mps,.png}
 
@@ -26,16 +29,56 @@
 \end{center}
 
 \bpr{
-\lpr{S}{A+B}
-\lpror{a}
-\lpror{b}
+\lpr{\var{em}}{\var{numero}}
+\lpror{pi}
+\lpror{e}
+\lpror{\var{var}}
+\lpror{(\var{em})}
+\lpror{\var{em}\var{operador}\var{em}}
+\lpror{-\var{em}}
+\lpror{\var{funcion}(\var{em})}
+\lpror{[\ \var{lista\_em}\ ]}
+\lpror{[\ ]}
+\lpror{range(\var{em},\var{em})}
+\lpror{[\ \var{em} for \var{var} in \var{em}\ ]}
+\lpror{if (\var{cond}, \var{em}, \var{em})}
 }
+
 \bpr{
-\lpr{A}{a}
-\lpror{\epsilon}
+\lpr{\var{operador}}{+\ |\ -\ |\ *\ |\ \wedge}
 }
+
 \bpr{
-\lpr{B}{b}
-\lpror{\epsilon}
+\lpr{\var{funcion}}{sin\ |\ cos\ |\ tan\ |\ exp\ |\ log\ |\ ceil\ |\ floor}
+\lpror{funciones\ definidas\ por\ el\ usuario}
+}
+
+\bpr{
+\lpr{\var{lista\_em}}{\var{em}}
+\lpror{\var{lista\_em}\ ,\ \var{em}}
+}
+
+\bpr{
+\lpr{\var{cond}}{\var{em}}
+\lpror{\var{cond} AND \var{cond}}
+\lpror{\var{cond} OR \var{cond}}
+\lpror{NOT \var{cond}}
+\lpror{\var{cond}\ > \ \var{cond}}
+\lpror{\var{cond}\ < \ \var{cond}}
+\lpror{\var{cond}\ <=\ \var{cond}}
+\lpror{\var{cond}\ >=\ \var{cond}}
+\lpror{\var{cond}\ ==\ \var{cond}}
+}
+
+\bpr{
+\lpr{\var{eg}}{{\var{em}}}
+\lpror{$'$\ \var{file}\ $'$}
+}
+
+\bpr{
+\lpr{\var{instr}}{\var{funcion}(\var{var})\ =\ \var{em}}
+\lpror{\var{var}\ =\ \var{em}}
+\lpror{\var{plot}\ \var{em} \lbrace with \var{estilo}\rbrace}
+\lpror{\var{plot}\ \var{em}}
 }
 \end{document}
