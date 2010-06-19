@@ -1,0 +1,6 @@
+f = [];
+for i in (1, 4)
+    push_back(f, x^i+10);
+endfor
+plot (-10, 20) f with [lines, points, lines, points];
+
