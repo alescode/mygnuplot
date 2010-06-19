@@ -10,21 +10,26 @@ $alfa = [a-zA-z]
 tokens :-
     $white+                                        ;
     "#".*                                          ;
-    "("                                            { \s -> LParen }
-    ")"                                            { \s -> RParen }
-    $digito+                                       { \s -> Entero (read s) }
-    $digito+ ("." $digito+)? ("e" digito+)?          { \s -> Real (read s)}
-    --$digito+(\.digito+|e-?digito+)                 { \s -> Real (read s) } 
-    --[\+\-\*\/]                                     { \s -> Operator (head s) }
+    "("                                            { \s -> ParentesisI }
+    ")"                                            { \s -> ParentesisD }
+    $digito+                                       { \s -> Entero s }
+    $digito+ ("." $digito+)? ("e" $digito+)?       { \s -> Real s}
+    [\+\-\*\/]                                     { \s -> AritmeticoBinario (head s) }
+    "pi" | "e"                                     { \s -> ConstanteMat s }
+    $alfa+                                         { \s -> Variable s }
+    "-"                                            { \s -> Menos }
 
 {
 -- The token type:
 data Token =
-    LParen      |
-    RParen      |
-    Entero Int  |      
-    Real Double |
-    Mu
+    ParentesisI                   |
+    ParentesisD                   |
+    Entero String                 |      
+    Real String                   |    
+    AritmeticoBinario Char        |
+    ConstanteMat String           | 
+    Variable String               |
+    Menos
     deriving (Eq,Show)
 
 main = do
