@@ -5,27 +5,14 @@
 
 \usepackage{graphicx}
 \usepackage{tabularx}
-\usepackage{graphicx}
 \usepackage[intlimits]{amsmath}
 \usepackage{amssymb}
 
-\newcommand{\y}{\land}
-\renewcommand{\o}{\lor}
-\newcommand{\no}{\neg}
-\newcommand{\eq}{\equiv}
-\newcommand{\nq}{\not\equiv}
-\newcommand{\tq}{\mid}
-\newcommand{\impl}{\Rightarrow}
-\newcommand{\conseq}{\Leftarrow}
-\newcommand{\true}{\textit{true}}
-\newcommand{\false}{\textit{false}}
-\newcommand{\existe}[3]{(\exists #1 \mid #2 : #3)}
-\newcommand{\patodo}[3]{(\forall #1 \mid #2 : #3)}
-\newcommand{\cuant}[3]{(* #1 \mid \ #2 : #3)}
-\newcommand{\sust}[3]{#1 [#2 := #3]}
-\newcommand{\nolibre}[2]{\no \textit{ocurre-libre}('#1', '#2')}
-\newcommand{\range}[3]{#1 \leq #2 < #3}
 \newcommand{\va}{\longrightarrow}
+\newcommand{\pr}[2]{#1 \va #2}
+\newcommand{\bpr}[1]{\begin{gather*}\begin{tabular}{crl}#1\end{tabular}\end{gather*}}
+\newcommand{\lpr}[2]{$#1$ & $\va$ & $#2$\\}
+\newcommand{\lpror}[1]{ & $|\ $ & $#1$\\}
 
 \DeclareGraphicsExtensions{.jpg,.pdf,.mps,.png}
 
@@ -36,11 +23,19 @@
 
 \begin{center}
 \Large{Gramática - \textit{mygnuplot}}
-
-\begin{gather*}
-S \va S
-\end{gather*}
-
 \end{center}
 
+\bpr{
+\lpr{S}{A+B}
+\lpror{a}
+\lpror{b}
+}
+\bpr{
+\lpr{A}{a}
+\lpror{\epsilon}
+}
+\bpr{
+\lpr{B}{b}
+\lpror{\epsilon}
+}
 \end{document}
