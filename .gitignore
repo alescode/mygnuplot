@@ -1,2 +1,5 @@
 *.o
 *.hi
+otros/alex_emhn/*
+otros/alex_daniel/*
+otros/happy_emhn/*
