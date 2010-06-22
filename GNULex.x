@@ -18,7 +18,18 @@ tokens :-
     "pi" | "e"                                     { \s -> ConstanteMat s }
     $alfa+                                         { \s -> Variable s }
     "-"                                            { \s -> Menos }
-
+	"["											   { \s -> CorcheteI }
+	"]"											   { \s -> CorcheteD }
+	"range"										   { \s -> Rango }
+	"if"										   { \s -> Condicional }
+	"AND" | "OR" | "NOT"						   { \s -> OperadorLogico s }
+	[\<\>]=? | "=="								   { \s -> OperadorRelacional s }
+    "lines" | "points" | "linespoints"			   { \s -> Estilo s}
+	"plot"										   { \s -> Plot }
+	"{"											   { \s -> LlaveI }
+	"}"											   { \s -> LlaveD }
+	"with"										   { \s -> With }
+	"push_back"									   { \s -> PushBack }
 {
 -- The token type:
 data Token =
@@ -29,7 +40,19 @@ data Token =
     AritmeticoBinario Char        |
     ConstanteMat String           | 
     Variable String               |
-    Menos
+    Menos						  |
+	CorcheteI					  |
+	CorcheteD					  |
+	Rango						  |
+	Condicional					  |
+	OperadorLogico String		  |
+	OperadorRelacional String	  |
+	Estilo String				  |
+	LlaveI						  |
+	LlaveD						  |
+	With						  |
+	Plot						  |
+	PushBack
     deriving (Eq,Show)
 
 main = do
