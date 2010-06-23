@@ -37,8 +37,7 @@
 \lpror{\var{em}\var{operador}\var{em}}
 \lpror{-\var{em}}
 \lpror{\var{funcion}(\var{em})}
-\lpror{[\ \var{lista\_em}\ ]}
-\lpror{[\ ]}
+\lpror{\var{arreglo\_em}}
 \lpror{range(\var{em},\var{em})}
 \lpror{[\ \var{em} for \var{var} in \var{em}\ ]}
 \lpror{if (\var{cond}, \var{em}, \var{em})}
@@ -51,6 +50,11 @@
 \bpr{
 \lpr{\var{funcion}}{sin\ |\ cos\ |\ tan\ |\ exp\ |\ log\ |\ ceil\ |\ floor}
 \lpror{funciones\ definidas\ por\ el\ usuario}
+}
+
+\bpr{
+\lpr{\var{arreglo\_em}}{[\ ]}
+\lpror{[\ \var{lista\_em}\ ]}
 }
 
 \bpr{
@@ -78,15 +82,18 @@
 \bpr{
 \lpr{\var{instr}}{\var{funcion}(\var{var})\ =\ \var{em}\ ;}
 \lpror{\var{var}\ =\ \var{em}\ ;}
-\lpror{plot\ \var{em} \lbrace with\ [\ \var{lista\_estilo}\ ]\ \rbrace\ ;}
-\lpror{plot\ \var{em} \lbrace with\ [\ ]\ \rbrace\ ;}
+\lpror{plot\ \var{em} \lbrace with\ \var{arreglo\_estilo} \rbrace\ ;}
 \lpror{plot\ \var{em} \lbrace with \var{estilo}\rbrace\ ;}
 \lpror{plot\ \var{em}\ ;}
-\lpror{for\ \var{var} in \var{em}\ \lbrace \var{step} \rbrace \var{lista\_instr} endfor}
+\lpror{for\ \var{var} in \var{em}\ \lbrace step \var{numero} \rbrace \var{lista\_instr} endfor}
 \lpror{for\ \var{var} in \var{em}\ \var{lista\_instr} endfor}
 \lpror{push\_back(\var{var},\var{em});}
 }
 
+\bpr{
+\lpr{\var{arreglo\_estilo}}{[\ ]}
+\lpror{[\ \var{lista\_estilo}\ ]}
+}
 \bpr{
 \lpr{\var{lista\_estilo}}{\var{lista\_estilo},\ \var{estilo}}
 \lpror{\var{estilo}}
