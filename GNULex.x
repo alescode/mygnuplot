@@ -15,7 +15,7 @@ tokens :-
     $digito+                                       { obtenerToken Entero }
     $digito+ ("." $digito+)? ("e" $digito+)?       { obtenerToken Real }
     ("." $digito+) ("e" $digito+)?				   { obtenerToken Real }
-    [\+\-\*\/\^]                                   { obtenerToken Aritmetico } 
+    [\+\-\*\/\^]                                   { obtenerToken OperadorAritmetico } 
     "pi" | "e"                                     { obtenerToken ConstanteMat }
     "-"                                            { obtenerToken $ const Menos }
 	"["											   { obtenerToken $ const CorcheteI }
@@ -26,18 +26,18 @@ tokens :-
 	[\<\>]=? | "=="								   { obtenerToken OperadorRelacional }
     "lines" | "points" | "linespoints"			   { obtenerToken Estilo }
 	"plot"										   { obtenerToken $ const Plot }
-	"{"											   { obtenerToken $ const LlaveI }
-	"}"											   { obtenerToken $ const LlaveD }
+	\{											   { obtenerToken $ const LlaveI }
+	\}											   { obtenerToken $ const LlaveD }
 	"with"										   { obtenerToken $ const With }
 	"push_back"									   { obtenerToken $ const PushBack }
 	"for"										   { obtenerToken $ const For }
 	"in"										   { obtenerToken $ const In }
 	"step"										   { obtenerToken $ const Step }
 	"endfor"									   { obtenerToken $ const Endfor }
-	"'"											   { obtenerToken $ const Comilla }
-	";"											   { obtenerToken $ const PuntoYComa }
-	","											   { obtenerToken $ const Coma }
-	"="											   { obtenerToken $ const Asignacion }
+	\'											   { obtenerToken $ const Comilla }
+	\;											   { obtenerToken $ const PuntoYComa }
+	\,											   { obtenerToken $ const Coma }
+	\=											   { obtenerToken $ const Asignacion }
 	"sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                               { obtenerToken Funcion }
 	$alfa+                                         { obtenerToken Identificador }
@@ -64,7 +64,7 @@ data Token =  ParentesisI
 		   |  ParentesisD
 		   |  Entero String
 		   |  Real String
-		   |  Aritmetico String
+		   |  OperadorAritmetico String
 		   |  ConstanteMat String
 		   |  Identificador String
 		   |  Menos	
