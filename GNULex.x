@@ -13,23 +13,31 @@ tokens :-
     "("                                            { obtenerToken $ const ParentesisI }
     ")"                                            { obtenerToken $ const ParentesisD }
     $digito+                                       { obtenerToken Entero }
---    $digito+ ("." $digito+)? ("e" $digito+)?       { tok (\p s -> Real s) }
---    [\+\-\*\/]                                     { tok (\p s -> AritmeticoBinario (head s)) }
---    "pi" | "e"                                     { tok (\p s -> ConstanteMat s) }
---    $alfa+                                         { tok (\p s -> Variable s) }
---    "-"                                            { tok (\p s -> Menos) }
---	"["											   { tok (\p s -> CorcheteI) }
---	"]"											   { tok (\p s -> CorcheteD) }
---	"range"										   { tok (\p s -> Rango) }
---	"if"										   { tok (\p s -> Condicional) }
---	"AND" | "OR" | "NOT"						   { tok (\p s -> OperadorLogico s) }
---	[\<\>]=? | "=="								   { tok (\p s -> OperadorRelacional s) }
---    "lines" | "points" | "linespoints"			   { tok (\p s -> Estilo s) }
---	"plot"										   { tok (\p s -> Plot) }
---	"{"											   { tok (\p s -> LlaveI) }
---	"}"											   { tok (\p s -> LlaveD) }
---	"with"										   { tok (\p s -> With) }
---	"push_back"									   { tok (\p s -> PushBack) }
+    $digito+ ("." $digito+)? ("e" $digito+)?       { obtenerToken Real }
+    ("." $digito+) ("e" $digito+)?				   { obtenerToken Real }
+    [\+\-\*\/]                                     { obtenerToken AritmeticoBinario } 
+    "pi" | "e"                                     { obtenerToken ConstanteMat }
+    "-"                                            { obtenerToken $ const Menos }
+	"["											   { obtenerToken $ const CorcheteI }
+	"]"											   { obtenerToken $ const CorcheteD }
+	"range"										   { obtenerToken $ const Rango }
+	"if"										   { obtenerToken $ const If }
+	"AND" | "OR" | "NOT"						   { obtenerToken OperadorLogico }
+	[\<\>]=? | "=="								   { obtenerToken OperadorRelacional }
+    "lines" | "points" | "linespoints"			   { obtenerToken Estilo }
+	"plot"										   { obtenerToken $ const Plot }
+	"{"											   { obtenerToken $ const LlaveI }
+	"}"											   { obtenerToken $ const LlaveD }
+	"with"										   { obtenerToken $ const With }
+	"push_back"									   { obtenerToken $ const PushBack }
+	"for"										   { obtenerToken $ const For }
+	"in"										   { obtenerToken $ const In }
+	"step"										   { obtenerToken $ const Step }
+	"endfor"									   { obtenerToken $ const Endfor }
+	"'"											   { obtenerToken $ const Comilla }
+	";"											   { obtenerToken $ const PuntoyComa }
+	","											   { obtenerToken $ const Coma }
+	$alfa+                                         { obtenerToken Identificador }
 
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
@@ -50,27 +58,33 @@ obtenerToken f pos s = f s
 
 
 -- El tipo Token:
-data Token =
-    ParentesisI                   |
-    ParentesisD                   |
-    Entero String                 |      
-    Real String                   |    
-    AritmeticoBinario Char        |
-    ConstanteMat String           | 
-    Variable String               |
-    Menos						  |
-	CorcheteI					  |
-	CorcheteD					  |
-	Rango						  |
-	Condicional					  |
-	OperadorLogico String		  |
-	OperadorRelacional String	  |
-	Estilo String				  |
-	LlaveI						  |
-	LlaveD						  |
-	With						  |
-	Plot						  |
-	PushBack
+data Token =  ParentesisI
+		   |  ParentesisD
+		   |  Entero String
+		   |  Real String
+		   |  AritmeticoBinario String
+		   |  ConstanteMat String
+		   |  Identificador String
+		   |  Menos	
+		   |  CorcheteI
+		   |  CorcheteD	
+		   |  Rango	
+		   |  If
+		   |  OperadorLogico String
+		   |  OperadorRelacional String	
+		   |  Estilo String	
+		   |  LlaveI
+		   |  LlaveD
+		   |  With
+		   |  Plot						  
+		   |  PushBack
+		   |  For
+		   |  In
+		   |  Step
+		   |  Endfor
+		   |  Comilla
+		   |  Coma
+		   |  PuntoyComa
     deriving (Eq,Show)
 
 -- Obtiene el número de línea del AlexPosn
