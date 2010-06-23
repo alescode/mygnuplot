@@ -5,7 +5,7 @@ module Main (main) where
 %wrapper "posn"
 
 $digito = 0-9           -- dígitos
-$alfa = [a-zA-z]        -- caracteres alfabéticos
+$alfa = [a-zA-Z]        -- caracteres alfabéticos
 
 tokens :-
     $white+                                        ;
@@ -15,7 +15,7 @@ tokens :-
     $digito+                                       { obtenerToken Entero }
     $digito+ ("." $digito+)? ("e" $digito+)?       { obtenerToken Real }
     ("." $digito+) ("e" $digito+)?				   { obtenerToken Real }
-    [\+\-\*\/]                                     { obtenerToken AritmeticoBinario } 
+    [\+\-\*\/\^]                                   { obtenerToken Aritmetico } 
     "pi" | "e"                                     { obtenerToken ConstanteMat }
     "-"                                            { obtenerToken $ const Menos }
 	"["											   { obtenerToken $ const CorcheteI }
@@ -35,8 +35,11 @@ tokens :-
 	"step"										   { obtenerToken $ const Step }
 	"endfor"									   { obtenerToken $ const Endfor }
 	"'"											   { obtenerToken $ const Comilla }
-	";"											   { obtenerToken $ const PuntoyComa }
+	";"											   { obtenerToken $ const PuntoYComa }
 	","											   { obtenerToken $ const Coma }
+	"="											   { obtenerToken $ const Asignacion }
+	"sin" | "cos" | "tan" | "exp" | "log" |
+    "ceil" | "floor"                               { obtenerToken Funcion }
 	$alfa+                                         { obtenerToken Identificador }
 
 {
@@ -56,13 +59,12 @@ tokens :-
 obtenerToken :: (String -> Token) -> AlexPosn -> String -> Token
 obtenerToken f pos s = f s
 
-
 -- El tipo Token:
 data Token =  ParentesisI
 		   |  ParentesisD
 		   |  Entero String
 		   |  Real String
-		   |  AritmeticoBinario String
+		   |  Aritmetico String
 		   |  ConstanteMat String
 		   |  Identificador String
 		   |  Menos	
@@ -84,8 +86,10 @@ data Token =  ParentesisI
 		   |  Endfor
 		   |  Comilla
 		   |  Coma
-		   |  PuntoyComa
-    deriving (Eq,Show)
+		   |  PuntoYComa
+		   |  Asignacion
+		   |  Funcion String
+           deriving (Eq,Show)
 
 -- Obtiene el número de línea del AlexPosn
 obtenerLinea :: (AlexPosn, Char, String) -> String
@@ -94,13 +98,18 @@ obtenerLinea (AlexPn _ x _, _, _) = show x
 obtenerColumna :: (AlexPosn, Char, String) -> String
 obtenerColumna (AlexPn _ _ x, _, _) = show x
 
+obtenerError :: (AlexPosn, Char, String) -> String
+obtenerError (_, _, i) = head $ lines i
+
 -- Redefinición de alexScanTokens
 --alexScanTokens :: String -> [Token]
 lexer str = go (alexStartPos,'\n',str)
   where go inp@(pos,_,str) =
           case alexScan inp 0 of
                 AlexEOF -> []
-                AlexError e -> error $ "error lexico: linea: " ++ obtenerLinea e ++ 
+                AlexError e -> error $ "error lexico: " ++
+                               "token inesperado '" ++ obtenerError e ++ 
+                               "', linea: " ++ obtenerLinea e ++ 
                                ", columna: " ++ obtenerColumna e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
