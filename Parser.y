@@ -22,6 +22,8 @@ import Lexer
 --	"e"	   	   { E }
 --    int        { Int $$ }
 --	"sin" 	   { Funcion }
+
+%left '+'
 --%left  '+' '-'
 --%right '*' '/'
 --%right NEG
