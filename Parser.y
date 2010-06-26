@@ -48,6 +48,7 @@ import Lexer
     estilo          { TkEstilo $$ }
     identificador   { TkIdentificador $$ }
 
+--nonassoc <?
 %left "AND" "OR"
 %left "NOT"
 %left "=="
@@ -116,7 +117,7 @@ EG    : EM                                     { Graficable $1 }
 
 {
 parseError :: [Token] -> a
-parseError _ = error "Parse error"
+parseError e = error $ "Parse error " ++ show e
 
 data Variable = Var String
 
