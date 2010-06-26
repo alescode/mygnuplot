@@ -37,7 +37,9 @@ import Lexer
     ">="            { TkMayorIg }
     "<="            { TkMenorIg }
     "=="            { TkIgual }
-    '\''             { TkComilla }
+    '\''            { TkComilla }
+    ';'             { TkPuntoYComa }
+    '='             { TkAsignacion }
     identificador   { TkIdentificador $$ }
 
 %left "AND" "OR"
@@ -49,6 +51,8 @@ import Lexer
 %right '^'
 
 %%
+
+INSTR  : identificador '(' identificador ')' '=' EM ';'   { DefFuncion $1 $3 $6 }
 
 EM  : EM '+' EM                                { Mas  $1 $3 }
     | EM '-' EM                                { Menos $1 $3 }
@@ -68,6 +72,9 @@ EM  : EM '+' EM                                { Mas  $1 $3 }
     | '[' EM "for" identificador "in" EM ']'   { ArregloComprension $2 (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'          { ExpresionCond $3 $5 $7 }
 
+SECUENCIA_EM  : EM                     { Unitaria $1 }
+              | SECUENCIA_EM ',' EM    { Secuencia $1 $3 }
+
 COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }
       | COND "OR" COND                         { Disyuncion $1 $3 }  
@@ -79,10 +86,7 @@ COND  : EM                                     { Condicion $1 }
       | COND "==" COND                         { Igual $1 $3 }
 
 EG    : EM                                     { Graficable $1 }
-      | '\'' identificador '\''                  { Archivo $2 }
-                                                 
-SECUENCIA_EM : EM                     { Unitaria $1 }
-             | SECUENCIA_EM ',' EM    { Secuencia $1 $3 }
+      | '\'' identificador '\''                { Archivo $2 }
 
 {
 parseError :: [Token] -> a
@@ -129,6 +133,9 @@ data SecuenciaExpMat = Unitaria EM
 data ExpGraficable = Graficable EM
                    | Archivo String
                    deriving (Show)
+
+data Instruccion = DefFuncion String String EM
+                 deriving (Show)
 
 main = do
     s <- getContents
