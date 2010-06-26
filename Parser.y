@@ -1,10 +1,11 @@
 {
 --module Parser where
-module Main (main) where
+module Main (main, parse, lexer) where
 
 import Lexer
 }
 
+-- parse :: [Token] -> EM
 %name parse
 %tokentype { Token }
 %error { parseError }
@@ -45,6 +46,7 @@ parseError _ = error "Parse error"
 
 data EM = Mas EM EM
         | Numero Token
+        deriving (Show)
 --    | Minus EM EM
 --    | Times EM EM
 --    | Div EM EM
@@ -57,5 +59,5 @@ data EM = Mas EM EM
 
 main = do
     s <- getContents
-    print $ lexer s
+    print $ parse $ lexer s
 }   
