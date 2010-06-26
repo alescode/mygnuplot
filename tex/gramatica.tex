@@ -34,7 +34,11 @@
 \lpror{e}
 \lpror{\var{var}}
 \lpror{(\var{em})}
-\lpror{\var{em}\var{operador}\var{em}}
+\lpror{\var{em}\ $+$\ \var{em}}
+\lpror{\var{em}\ $-$\ \var{em}}
+\lpror{\var{em}\ $*$\ \var{em}}
+\lpror{\var{em}\ $/$\ \var{em}}
+\lpror{\var{em}\ \wedge\ \var{em}}
 \lpror{-\var{em}}
 \lpror{\var{funcion}(\var{em})}
 \lpror{\var{arreglo\_em}}
@@ -44,22 +48,18 @@
 }
 
 \bpr{
-\lpr{\var{operador}}{+\ |\ -\ |\ *\ |\ \wedge}
-}
-
-\bpr{
 \lpr{\var{funcion}}{sin\ |\ cos\ |\ tan\ |\ exp\ |\ log\ |\ ceil\ |\ floor}
 \lpror{funciones\ definidas\ por\ el\ usuario}
 }
 
 \bpr{
 \lpr{\var{arreglo\_em}}{[\ ]}
-\lpror{[\ \var{lista\_em}\ ]}
+\lpror{[\ \var{secuencia\_em}\ ]}
 }
 
 \bpr{
-\lpr{\var{lista\_em}}{\var{em}}
-\lpror{\var{lista\_em}\ ,\ \var{em}}
+\lpr{\var{secuencia\_em}}{\var{em}}
+\lpror{\var{secuencia\_em}\ ,\ \var{em}}
 }
 
 \bpr{
@@ -82,20 +82,20 @@
 \bpr{
 \lpr{\var{instr}}{\var{funcion}(\var{var})\ =\ \var{em}\ ;}
 \lpror{\var{var}\ =\ \var{em}\ ;}
-\lpror{plot\ \var{em} with\ \var{arreglo\_estilo} \ ;}
-\lpror{plot\ \var{em} with \var{estilo}\ ;}
-\lpror{plot\ \var{em}\ ;}
-\lpror{for\ \var{var} in \var{em}\ step \var{numero} \var{lista\_instr} endfor}
-\lpror{for\ \var{var} in \var{em}\ \var{lista\_instr} endfor}
+\lpror{plot\ \var{eg} with\ \var{arreglo\_estilo} \ ;}
+\lpror{plot\ \var{eg} with \var{estilo}\ ;}
+\lpror{plot\ \var{eg}\ ;}
+\lpror{for\ \var{var} in \var{em}\ step \var{numero} \var{secuencia\_instr} endfor}
+\lpror{for\ \var{var} in \var{em}\ \var{secuencia\_instr} endfor}
 \lpror{push\_back(\var{var},\var{em});}
 }
 
 \bpr{
 \lpr{\var{arreglo\_estilo}}{[\ ]}
-\lpror{[\ \var{lista\_estilo}\ ]}
+\lpror{[\ \var{secuencia\_estilo}\ ]}
 }
 \bpr{
-\lpr{\var{lista\_estilo}}{\var{lista\_estilo},\ \var{estilo}}
+\lpr{\var{secuencia\_estilo}}{\var{secuencia\_estilo},\ \var{estilo}}
 \lpror{\var{estilo}}
 }
 
@@ -104,8 +104,8 @@
 }
 
 \bpr{
-\lpr{\var{lista\_instr}}{\var{instr}}
-\lpror{\var{lista\_instr};\ \var{instr}}
+\lpr{\var{secuencia\_instr}}{\var{instr}}
+\lpror{\var{secuencia\_instr};\ \var{instr}}
 }
 %
 %\lpror{\var{}
