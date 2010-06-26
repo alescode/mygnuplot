@@ -1,6 +1,6 @@
 {
 module Lexer (
-    Token(..)
+    Token(..),
     lexer
 ) where
 import qualified System.IO.UTF8 as U
