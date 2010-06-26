@@ -1,46 +1,56 @@
 {
 module Main (main) where
+import qualified System.IO.UTF8 as U
 }
 
 %wrapper "posn"
 
 $digito = 0-9           -- dígitos
 $alfa = [a-zA-Z]        -- caracteres alfabéticos
+$mm = [\+\-]            -- un símbolo más, o menos
 
 tokens :-
-    $white+                                        ;
-    "#".*                                          ;
-    "("                                            { obtenerToken $ const ParentesisI }
-    ")"                                            { obtenerToken $ const ParentesisD }
-    $digito+                                       { obtenerToken Entero }
-    $digito+ ("." $digito+)? ("e" $digito+)?       { obtenerToken Real }
-    ("." $digito+) ("e" $digito+)?				   { obtenerToken Real }
-    [\+\-\*\/\^]                                   { obtenerToken OperadorAritmetico } 
-    "pi" | "e"                                     { obtenerToken ConstanteMat }
-    "-"                                            { obtenerToken $ const Menos }
-	"["											   { obtenerToken $ const CorcheteI }
-	"]"											   { obtenerToken $ const CorcheteD }
-	"range"										   { obtenerToken $ const Rango }
-	"if"										   { obtenerToken $ const If }
-	"AND" | "OR" | "NOT"						   { obtenerToken OperadorLogico }
-	[\<\>]=? | "=="								   { obtenerToken OperadorRelacional }
-    "lines" | "points" | "linespoints"			   { obtenerToken Estilo }
-	"plot"										   { obtenerToken $ const Plot }
-	\{											   { obtenerToken $ const LlaveI }
-	\}											   { obtenerToken $ const LlaveD }
-	"with"										   { obtenerToken $ const With }
-	"push_back"									   { obtenerToken $ const PushBack }
-	"for"										   { obtenerToken $ const For }
-	"in"										   { obtenerToken $ const In }
-	"step"										   { obtenerToken $ const Step }
-	"endfor"									   { obtenerToken $ const Endfor }
-	\'											   { obtenerToken $ const Comilla }
-	\;											   { obtenerToken $ const PuntoYComa }
-	\,											   { obtenerToken $ const Coma }
-	\=											   { obtenerToken $ const Asignacion }
-	"sin" | "cos" | "tan" | "exp" | "log" |
-    "ceil" | "floor"                               { obtenerToken Funcion }
-	$alfa+                                         { obtenerToken Identificador }
+    $white+                                          ;
+    "#".*                                            ;
+    "("                                              { obtenerToken $ const TkParentesisI }
+    ")"                                              { obtenerToken $ const TkParentesisD }
+    $digito+                                         { obtenerToken TkEntero }
+    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerToken TkReal }
+    ("." $digito+) ("e" $mm? $digito+)?              { obtenerToken TkReal }
+    "+"                                              { obtenerToken $ const TkMas }
+    "-"                                              { obtenerToken $ const TkMenos } 
+    "*"                                              { obtenerToken $ const TkPor } 
+    "/"                                              { obtenerToken $ const TkEntre } 
+    "pi" | "e"                                       { obtenerToken TkConstanteMat }
+    "["                                              { obtenerToken $ const TkCorcheteI }
+    "]"                                              { obtenerToken $ const TkCorcheteD }
+    "range"                                          { obtenerToken $ const TkRango }
+    "if"                                             { obtenerToken $ const TkIf }
+    "AND"                                            { obtenerToken $ const TkAnd }
+    "OR"                                             { obtenerToken $ const TkOr }
+    "NOT"                                            { obtenerToken $ const TkNot }
+    "<"                                              { obtenerToken $ const TkMenor }
+    "<="                                             { obtenerToken $ const TkMenorIg }
+    ">"                                              { obtenerToken $ const TkMayor }
+    ">="                                             { obtenerToken $ const TkMayorIg }
+    "=="                                             { obtenerToken $ const TkIgual }
+    "lines" | "points" | "linespoints"               { obtenerToken TkEstilo }
+    "plot"                                           { obtenerToken $ const TkPlot }
+    \{                                               { obtenerToken $ const TkLlaveI }
+    \}                                               { obtenerToken $ const TkLlaveD }
+    "with"                                           { obtenerToken $ const TkWith }
+    "push_back"                                      { obtenerToken $ const TkPushBack }
+    "for"                                            { obtenerToken $ const TkFor }
+    "in"                                             { obtenerToken $ const TkIn }
+    "step"                                           { obtenerToken $ const TkStep }
+    "endfor"                                         { obtenerToken $ const TkEndfor }
+    \'                                               { obtenerToken $ const TkComilla }
+    \;                                               { obtenerToken $ const TkPuntoYComa }
+    \,                                               { obtenerToken $ const TkComa }
+    \=                                               { obtenerToken $ const TkAsignacion }
+    "sin" | "cos" | "tan" | "exp" | "log" |
+    "ceil" | "floor"                                 { obtenerToken TkFuncion }
+    $alfa+                                           { obtenerToken TkIdentificador }
 
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
@@ -60,35 +70,43 @@ obtenerToken :: (String -> Token) -> AlexPosn -> String -> Token
 obtenerToken f pos s = f s
 
 -- El tipo Token:
-data Token =  ParentesisI
-		   |  ParentesisD
-		   |  Entero String
-		   |  Real String
-		   |  OperadorAritmetico String
-		   |  ConstanteMat String
-		   |  Identificador String
-		   |  Menos	
-		   |  CorcheteI
-		   |  CorcheteD	
-		   |  Rango	
-		   |  If
-		   |  OperadorLogico String
-		   |  OperadorRelacional String	
-		   |  Estilo String	
-		   |  LlaveI
-		   |  LlaveD
-		   |  With
-		   |  Plot						  
-		   |  PushBack
-		   |  For
-		   |  In
-		   |  Step
-		   |  Endfor
-		   |  Comilla
-		   |  Coma
-		   |  PuntoYComa
-		   |  Asignacion
-		   |  Funcion String
+data Token =  TkParentesisI
+           |  TkParentesisD
+           |  TkEntero String
+           |  TkReal String
+           |  TkMas
+           |  TkMenos
+           |  TkPor
+           |  TkEntre
+           |  TkConstanteMat String
+           |  TkIdentificador String
+           |  TkCorcheteI
+           |  TkCorcheteD    
+           |  TkRango    
+           |  TkIf
+           |  TkAnd
+           |  TkOr
+           |  TkNot
+           |  TkMayor
+           |  TkMayorIg
+           |  TkMenor
+           |  TkMenorIg
+           |  TkIgual
+           |  TkEstilo String    
+           |  TkLlaveI
+           |  TkLlaveD
+           |  TkWith
+           |  TkPlot                          
+           |  TkPushBack
+           |  TkFor
+           |  TkIn
+           |  TkStep
+           |  TkEndfor
+           |  TkComilla
+           |  TkComa
+           |  TkPuntoYComa
+           |  TkAsignacion
+           |  TkFuncion String
            deriving (Eq,Show)
 
 -- Obtiene el número de línea del AlexPosn
@@ -107,6 +125,7 @@ lexer str = go (alexStartPos,'\n',str)
   where go inp@(pos,_,str) =
           case alexScan inp 0 of
                 AlexEOF -> []
+                --Pendiente modificar
                 AlexError e -> error $ "error lexico: " ++
                                "token inesperado '" ++ obtenerError e ++ 
                                "', linea: " ++ obtenerLinea e ++ 
