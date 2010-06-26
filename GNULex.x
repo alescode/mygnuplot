@@ -12,18 +12,18 @@ $mm = [\+\-]            -- un símbolo más, o menos
 tokens :-
     $white+                                          ;
     "#".*                                            ;
-    "("                                              { obtenerToken $ const TkParentesisI }
-    ")"                                              { obtenerToken $ const TkParentesisD }
+    \(                                               { obtenerToken $ const TkParentesisI }
+    \)                                               { obtenerToken $ const TkParentesisD }
     $digito+                                         { obtenerToken TkEntero }
     $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerToken TkReal }
     ("." $digito+) ("e" $mm? $digito+)?              { obtenerToken TkReal }
-    "+"                                              { obtenerToken $ const TkMas }
-    "-"                                              { obtenerToken $ const TkMenos } 
-    "*"                                              { obtenerToken $ const TkPor } 
-    "/"                                              { obtenerToken $ const TkEntre } 
+    \+                                               { obtenerToken $ const TkMas }
+    \-                                               { obtenerToken $ const TkMenos } 
+    \*                                               { obtenerToken $ const TkPor } 
+    \/                                               { obtenerToken $ const TkEntre } 
     "pi" | "e"                                       { obtenerToken TkConstanteMat }
-    "["                                              { obtenerToken $ const TkCorcheteI }
-    "]"                                              { obtenerToken $ const TkCorcheteD }
+    \[                                               { obtenerToken $ const TkCorcheteI }
+    \]                                               { obtenerToken $ const TkCorcheteD }
     "range"                                          { obtenerToken $ const TkRango }
     "if"                                             { obtenerToken $ const TkIf }
     "AND"                                            { obtenerToken $ const TkAnd }
@@ -34,7 +34,7 @@ tokens :-
     ">"                                              { obtenerToken $ const TkMayor }
     ">="                                             { obtenerToken $ const TkMayorIg }
     "=="                                             { obtenerToken $ const TkIgual }
-    "lines" | "points" | "linespoints"               { obtenerToken TkEstilo }
+    "lines" "points"? | "points"                     { obtenerToken TkEstilo }
     "plot"                                           { obtenerToken $ const TkPlot }
     \{                                               { obtenerToken $ const TkLlaveI }
     \}                                               { obtenerToken $ const TkLlaveD }
