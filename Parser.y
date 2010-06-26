@@ -12,7 +12,7 @@ import Lexer
 
 %token
     '+'          { TkMas }
-    '2'          { TkEntero "2" }
+    int          { TkEntero $$ }
 --    '-'        { Operator '-' }
 --    '*'        { Operator '*' }
 --    '/'        { Operator '/' }
@@ -31,7 +31,7 @@ import Lexer
 %%
 
 EM  : EM '+' EM        { Mas  $1 $3 }
-    | '2'              { Numero $1  }
+    | int              { Entero $1  }
 --     | EM '-' EM       { Minus $1 $3 }
 --     | EM '*' EM        { Times $1 $3 }
 --     | EM '/' EM        { Div   $1 $3 }
@@ -47,7 +47,7 @@ parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
 data EM = Mas EM EM
-        | Numero Token
+        | Entero String
         deriving (Show)
 --    | Minus EM EM
 --    | Times EM EM
