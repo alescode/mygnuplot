@@ -4,7 +4,7 @@ mygnuplot: Main.hs
 	ghc --make Main.hs -o mygnuplot
 
 Parser.hs: Parser.y Lexer.hs
-	happy -a -c -g -s Parser.y; ghc --make Parser.hs -o Parser
+	happy -a -c -g -s Parser.y; ghc --make -w Parser.hs -o Parser
 
 Lexer.hs: Lexer.x
 	alex -g Lexer.x
