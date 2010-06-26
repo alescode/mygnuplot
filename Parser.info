@@ -8,19 +8,45 @@ Grammar
 -----------------------------------------------------------------------------
 	%start_parse -> EM                                 (0)
 	EM -> EM '+' EM                                    (1)
-	EM -> '2'                                          (2)
+	EM -> EM '-' EM                                    (2)
+	EM -> EM '*' EM                                    (3)
+	EM -> EM '/' EM                                    (4)
+	EM -> EM '^' EM                                    (5)
+	EM -> '-' EM                                       (6)
+	EM -> '(' EM ')'                                   (7)
+	EM -> int                                          (8)
+	EM -> constmat                                     (9)
+	EM -> funcion '(' EM ')'                           (10)
+	EM -> variable                                     (11)
+	EM -> '[' ']'                                      (12)
+	EM -> '[' SECUENCIA_EM ']'                         (13)
+	SECUENCIA_EM -> EM                                 (14)
+	SECUENCIA_EM -> SECUENCIA_EM ',' EM                (15)
 
 -----------------------------------------------------------------------------
 Terminals
 -----------------------------------------------------------------------------
 	'+'            { TkMas }
-	'2'            { TkEntero "2" }
+	'-'            { TkMenos }
+	'*'            { TkPor }
+	'/'            { TkEntre }
+	'^'            { TkElevado }
+	int            { TkEntero $$ }
+	constmat       { TkConstanteMat $$ }
+	funcion        { TkFuncion $$ }
+	'('            { TkParentesisI }
+	')'            { TkParentesisD }
+	'['            { TkCorcheteI }
+	']'            { TkCorcheteD }
+	','            { TkComa }
+	variable       { TkIdentificador $$ }
 
 -----------------------------------------------------------------------------
 Non-terminals
 -----------------------------------------------------------------------------
 	%start_parse    rule  0
-	EM              rules 1, 2
+	EM              rules 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+	SECUENCIA_EM    rules 14, 15
 
 -----------------------------------------------------------------------------
 States
@@ -28,62 +54,519 @@ States
 State 0
 
 
-	'2'            shift, and enter state 3
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
 
-	EM             goto state 4
+	EM             goto state 10
 
 State 1
 
 
-	'2'            shift, and enter state 3
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
 
 	EM             goto state 2
 
 State 2
 
 	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
 
-	'+'            shift, and enter state 5
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
 
 
 State 3
 
-	EM -> '2' .                                         (rule 2)
+	EM -> '-' . EM                                      (rule 6)
 
-	'+'            reduce using rule 2
-	%eof           reduce using rule 2
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
 
+	EM             goto state 21
 
 State 4
 
-	%start_parse -> EM .                                (rule 0)
-	EM -> EM . '+' EM                                   (rule 1)
+	EM -> int .                                         (rule 8)
 
-	'+'            shift, and enter state 5
-	%eof           accept
+	'+'            reduce using rule 8
+	'-'            reduce using rule 8
+	'*'            reduce using rule 8
+	'/'            reduce using rule 8
+	'^'            reduce using rule 8
+	')'            reduce using rule 8
+	']'            reduce using rule 8
+	','            reduce using rule 8
+	%eof           reduce using rule 8
 
 
 State 5
 
-	EM -> EM '+' . EM                                   (rule 1)
+	EM -> constmat .                                    (rule 9)
 
-	'2'            shift, and enter state 3
+	'+'            reduce using rule 9
+	'-'            reduce using rule 9
+	'*'            reduce using rule 9
+	'/'            reduce using rule 9
+	'^'            reduce using rule 9
+	')'            reduce using rule 9
+	']'            reduce using rule 9
+	','            reduce using rule 9
+	%eof           reduce using rule 9
 
-	EM             goto state 6
 
 State 6
 
+	EM -> funcion . '(' EM ')'                          (rule 10)
+
+	'('            shift, and enter state 20
+
+
+State 7
+
+	EM -> '(' . EM ')'                                  (rule 7)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 19
+
+State 8
+
+	EM -> '[' . ']'                                     (rule 12)
+	EM -> '[' . SECUENCIA_EM ']'                        (rule 13)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	']'            shift, and enter state 18
+	variable       shift, and enter state 9
+
+	EM             goto state 16
+	SECUENCIA_EM   goto state 17
+
+State 9
+
+	EM -> variable .                                    (rule 11)
+
+	'+'            reduce using rule 11
+	'-'            reduce using rule 11
+	'*'            reduce using rule 11
+	'/'            reduce using rule 11
+	'^'            reduce using rule 11
+	')'            reduce using rule 11
+	']'            reduce using rule 11
+	','            reduce using rule 11
+	%eof           reduce using rule 11
+
+
+State 10
+
+	%start_parse -> EM .                                (rule 0)
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	%eof           accept
+
+
+State 11
+
+	EM -> EM '+' . EM                                   (rule 1)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 30
+
+State 12
+
+	EM -> EM '-' . EM                                   (rule 2)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 29
+
+State 13
+
+	EM -> EM '*' . EM                                   (rule 3)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 28
+
+State 14
+
+	EM -> EM '/' . EM                                   (rule 4)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 27
+
+State 15
+
+	EM -> EM '^' . EM                                   (rule 5)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 26
+
+State 16
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	SECUENCIA_EM -> EM .                                (rule 14)
+
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	']'            reduce using rule 14
+	','            reduce using rule 14
+
+
+State 17
+
+	EM -> '[' SECUENCIA_EM . ']'                        (rule 13)
+	SECUENCIA_EM -> SECUENCIA_EM . ',' EM               (rule 15)
+
+	']'            shift, and enter state 24
+	','            shift, and enter state 25
+
+
+State 18
+
+	EM -> '[' ']' .                                     (rule 12)
+
+	'+'            reduce using rule 12
+	'-'            reduce using rule 12
+	'*'            reduce using rule 12
+	'/'            reduce using rule 12
+	'^'            reduce using rule 12
+	')'            reduce using rule 12
+	']'            reduce using rule 12
+	','            reduce using rule 12
+	%eof           reduce using rule 12
+
+
+State 19
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	EM -> '(' EM . ')'                                  (rule 7)
+
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	')'            shift, and enter state 23
+
+
+State 20
+
+	EM -> funcion '(' . EM ')'                          (rule 10)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 22
+
+State 21
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	EM -> '-' EM .                                      (rule 6)
+
+	'+'            reduce using rule 6
+	'-'            reduce using rule 6
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	')'            reduce using rule 6
+	']'            reduce using rule 6
+	','            reduce using rule 6
+	%eof           reduce using rule 6
+
+
+State 22
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	EM -> funcion '(' EM . ')'                          (rule 10)
+
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	')'            shift, and enter state 32
+
+
+State 23
+
+	EM -> '(' EM ')' .                                  (rule 7)
+
+	'+'            reduce using rule 7
+	'-'            reduce using rule 7
+	'*'            reduce using rule 7
+	'/'            reduce using rule 7
+	'^'            reduce using rule 7
+	')'            reduce using rule 7
+	']'            reduce using rule 7
+	','            reduce using rule 7
+	%eof           reduce using rule 7
+
+
+State 24
+
+	EM -> '[' SECUENCIA_EM ']' .                        (rule 13)
+
+	'+'            reduce using rule 13
+	'-'            reduce using rule 13
+	'*'            reduce using rule 13
+	'/'            reduce using rule 13
+	'^'            reduce using rule 13
+	')'            reduce using rule 13
+	']'            reduce using rule 13
+	','            reduce using rule 13
+	%eof           reduce using rule 13
+
+
+State 25
+
+	SECUENCIA_EM -> SECUENCIA_EM ',' . EM               (rule 15)
+
+	'-'            shift, and enter state 3
+	int            shift, and enter state 4
+	constmat       shift, and enter state 5
+	funcion        shift, and enter state 6
+	'('            shift, and enter state 7
+	'['            shift, and enter state 8
+	variable       shift, and enter state 9
+
+	EM             goto state 31
+
+State 26
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	EM -> EM '^' EM .                                   (rule 5)
+
+	'+'            reduce using rule 5
+	'-'            reduce using rule 5
+	'*'            reduce using rule 5
+	'/'            reduce using rule 5
+	'^'            shift, and enter state 15
+	')'            reduce using rule 5
+	']'            reduce using rule 5
+	','            reduce using rule 5
+	%eof           reduce using rule 5
+
+
+State 27
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM '/' EM .                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+
+	'+'            reduce using rule 4
+	'-'            reduce using rule 4
+	'*'            reduce using rule 4
+	'/'            reduce using rule 4
+	'^'            shift, and enter state 15
+	')'            reduce using rule 4
+	']'            reduce using rule 4
+	','            reduce using rule 4
+	%eof           reduce using rule 4
+
+
+State 28
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM '*' EM .                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+
+	'+'            reduce using rule 3
+	'-'            reduce using rule 3
+	'*'            reduce using rule 3
+	'/'            reduce using rule 3
+	'^'            shift, and enter state 15
+	')'            reduce using rule 3
+	']'            reduce using rule 3
+	','            reduce using rule 3
+	%eof           reduce using rule 3
+
+
+State 29
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM '-' EM .                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+
+	'+'            reduce using rule 2
+	'-'            reduce using rule 2
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	')'            reduce using rule 2
+	']'            reduce using rule 2
+	','            reduce using rule 2
+	%eof           reduce using rule 2
+
+
+State 30
+
 	EM -> EM . '+' EM                                   (rule 1)
 	EM -> EM '+' EM .                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
 
 	'+'            reduce using rule 1
+	'-'            reduce using rule 1
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	')'            reduce using rule 1
+	']'            reduce using rule 1
+	','            reduce using rule 1
 	%eof           reduce using rule 1
+
+
+State 31
+
+	EM -> EM . '+' EM                                   (rule 1)
+	EM -> EM . '-' EM                                   (rule 2)
+	EM -> EM . '*' EM                                   (rule 3)
+	EM -> EM . '/' EM                                   (rule 4)
+	EM -> EM . '^' EM                                   (rule 5)
+	SECUENCIA_EM -> SECUENCIA_EM ',' EM .               (rule 15)
+
+	'+'            shift, and enter state 11
+	'-'            shift, and enter state 12
+	'*'            shift, and enter state 13
+	'/'            shift, and enter state 14
+	'^'            shift, and enter state 15
+	']'            reduce using rule 15
+	','            reduce using rule 15
+
+
+State 32
+
+	EM -> funcion '(' EM ')' .                          (rule 10)
+
+	'+'            reduce using rule 10
+	'-'            reduce using rule 10
+	'*'            reduce using rule 10
+	'/'            reduce using rule 10
+	'^'            reduce using rule 10
+	')'            reduce using rule 10
+	']'            reduce using rule 10
+	','            reduce using rule 10
+	%eof           reduce using rule 10
 
 
 -----------------------------------------------------------------------------
 Grammar Totals
 -----------------------------------------------------------------------------
-Number of rules: 3
-Number of terminals: 2
-Number of non-terminals: 2
-Number of states: 7
+Number of rules: 16
+Number of terminals: 14
+Number of non-terminals: 3
+Number of states: 33

@@ -12,43 +12,68 @@ import Lexer
 
 %token
     '+'          { TkMas }
+    '-'          { TkMenos }
+    '*'          { TkPor }
+    '/'          { TkEntre }
+    '^'          { TkElevado }
     int          { TkEntero $$ }
---    '-'        { Operator '-' }
---    '*'        { Operator '*' }
---    '/'        { Operator '/' }
---    '('        { LParen }
---    ')'        { RParen }
---	"pi"	   { Pi }
---	"e"	   	   { E }
---    int        { Int $$ }
---	"sin" 	   { Funcion }
+    constmat     { TkConstanteMat $$ }
+    funcion      { TkFuncion $$ }
+    '('          { TkParentesisI }
+    ')'          { TkParentesisD }
+    '['          { TkCorcheteI }
+    ']'          { TkCorcheteD }
+    ','          { TkComa }
+    variable     { TkIdentificador $$ }
 
-%left '+'
---%left  '+' '-'
---%right '*' '/'
+%left '+' '-'
+%left '*' '/'
+%right '^'
 --%right NEG
 
 %%
 
-EM  : EM '+' EM        { Mas  $1 $3 }
-    | int              { Entero $1  }
---     | EM '-' EM       { Minus $1 $3 }
---     | EM '*' EM        { Times $1 $3 }
---     | EM '/' EM        { Div   $1 $3 }
---     | '(' EM ')'        { Paren $2 }
---     | '-' EM %prec NEG  { Negate $2 }
---     | int                { Intg $1 }
---	 | "pi"				  { Pi }
---	 | "e"				  { E }
---	 | Funcion '(' EM ')' { Funcion $1 $3 }
+EM  : EM '+' EM                   { Mas  $1 $3 }
+    | EM '-' EM                   { Menos $1 $3 }
+    | EM '*' EM                   { Por $1 $3 }
+    | EM '/' EM                   { Entre $1 $3 }
+    | EM '^' EM                   { Elevado $1 $3 }
+    | '-' EM                      { MenosUnario $2 }
+    | '(' EM ')'                  { Expresion $2 }
+    | int                         { Entero $1 }
+    | constmat                    { ConstMat $1 }
+    | funcion '(' EM ')'          { Funcion $1 $3 }
+    | variable                    { Variable $1 }
+    | '[' ']'                     { ArregloVacio }
+    | '[' SECUENCIA_EM ']'        { ArregloEM $2 }
+
+SECUENCIA_EM : EM                     { Unitaria $1 }
+             | SECUENCIA_EM ',' EM    { Secuencia $1 $3 }
 
 {
 parseError :: [Token] -> a
 parseError _ = error "Parse error"
 
-data EM = Mas EM EM
+data EM = Expresion EM
+        | Mas EM EM
+        | Menos EM EM
+        | MenosUnario EM
+        | Por EM EM
+        | Entre EM EM
+        | Elevado EM EM
         | Entero String
+        | ConstMat String
+        | Funcion String EM
+        | Variable String
+        | ArregloVacio
+        | ArregloEM SecuenciaExpMat
+--        | SecuenciaExpMat Secuencia EM
         deriving (Show)
+
+data SecuenciaExpMat = Unitaria EM
+                     | Secuencia SecuenciaExpMat EM
+                     deriving (Show)
+
 --    | Minus EM EM
 --    | Times EM EM
 --    | Div EM EM

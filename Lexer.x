@@ -24,6 +24,7 @@ tokens :-
     \-                                               { obtenerToken $ const TkMenos } 
     \*                                               { obtenerToken $ const TkPor } 
     \/                                               { obtenerToken $ const TkEntre } 
+    \^                                               { obtenerToken $ const TkElevado } 
     "pi" | "e"                                       { obtenerToken TkConstanteMat }
     \[                                               { obtenerToken $ const TkCorcheteI }
     \]                                               { obtenerToken $ const TkCorcheteD }
@@ -81,6 +82,7 @@ data Token =  TkParentesisI
            |  TkMenos
            |  TkPor
            |  TkEntre
+           |  TkElevado
            |  TkConstanteMat String
            |  TkIdentificador String
            |  TkCorcheteI
