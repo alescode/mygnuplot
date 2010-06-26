@@ -1,5 +1,8 @@
 {
-module Main (main) where
+module Lexer (
+    Token(..)
+    lexer
+) where
 import qualified System.IO.UTF8 as U
 }
 
@@ -121,6 +124,7 @@ obtenerError (_, _, i) = head $ lines i
 
 -- Redefinición de alexScanTokens
 --alexScanTokens :: String -> [Token]
+lexer :: String -> [Token]
 lexer str = go (alexStartPos,'\n',str)
   where go inp@(pos,_,str) =
           case alexScan inp 0 of
@@ -132,8 +136,4 @@ lexer str = go (alexStartPos,'\n',str)
                                ", columna: " ++ obtenerColumna e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
-
-main = do
-  s <- getContents
-  print (lexer s)
 }
