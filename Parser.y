@@ -60,25 +60,30 @@ import Lexer
 %%
 
 -- Exportar "Variable"
--- Pendiente el for no tiene ; final
-SEC_INSTR  : INSTR                                        { $1 }
-           | SEC_INSTR INSTR                              { Secuenciacion $1 $2 }
+SEC_INSTR  : INSTR ';'                                       { $1 }
+           | CICLO                                           { $1 }
+           | SEC_INSTR INSTR ';'                             { Secuenciacion $1 $2 }
 
-INSTR  : identificador '(' identificador ')' '=' EM ';'         { DefFuncion $1 $3 $6 }
-       | identificador '=' EM ';'                               { Asignacion $1 $3 }
-       | "plot" EM ',' EG "with" '[' ']' ';'                    { GraficarVacio $2 $4 }
-       | "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' ';'   { GraficarArreglo $2 $4 $7 }
-       | "plot" EM ',' EG "with" estilo ';'                     { GraficarEstilo $2 $4 (mkEstilo $6) }
-       | "plot" EM ',' EG ';'                                   { Graficar $2 $4 }
+INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
+       | identificador '=' EM                                { Asignacion $1 $3 }
+       | "plot" EM ',' EG "with" '[' ']'                     { GraficarVacio $2 $4 }
+       | "plot" EM ',' EG "with"
+       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 $7 }
+       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 (mkEstilo $6) }
+       | "plot" EM ',' EG                                    { Graficar $2 $4 }
+       | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
+
+CICLO  : "for" identificador "in" EM
+         SEC_INSTR_CICLO "endfor"                                 { Ciclo $2 $4 $5 }
        | "for" identificador "in" EM 
-         "step" int SEC_INSTR "endfor"                          { CicloStep $2 $4 $6 $7 }
-       | "for" identificador "in" EM
-         SEC_INSTR "endfor"                                     { Ciclo $2 $4 $5 }
-       | "push_back" '(' identificador ',' EM ')' ';'           { PB $3 $5 }
+         "step" int SEC_INSTR_CICLO "endfor"                      { CicloStep $2 $4 $6 $7 }
 
---OJO CAMBIAR
-SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo           { SecuenciaES $1 (mkEstilo $3) }
-                  | estilo                                { Unitario (mkEstilo $1) }
+SEC_INSTR_CICLO : INSTR                                      { $1 }
+                | SEC_INSTR2 ';' INSTR                       { Secuenciacion $1 $3 }
+
+--OJO CAMBIAR UNITARIO
+SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
+                  | estilo                                   { Unitario (mkEstilo $1) }
 
 EM  : EM '+' EM                                { Mas  $1 $3 }
     | EM '-' EM                                { Menos $1 $3 }
@@ -116,8 +121,10 @@ EG    : EM                                     { Graficable $1 }
       | '\'' identificador '\''                { Archivo $2 }
 
 {
+-- Función por Ernesto Hernández Novich
 parseError :: [Token] -> a
-parseError e = error $ "Parse error " ++ show e
+parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
+                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
 
 data Variable = Var String
 
