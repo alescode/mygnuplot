@@ -42,10 +42,12 @@ import Lexer
     '='             { TkAsignacion }
     "with"          { TkWith }
     "plot"          { TkPlot }
+    "endfor"        { TkEndFor }
+    "step"          { TkStep }
+    "push_back"     { TkPushBack }
     estilo          { TkEstilo $$ }
     identificador   { TkIdentificador $$ }
 
---%left ';'
 %left "AND" "OR"
 %left "NOT"
 %left "=="
@@ -57,6 +59,7 @@ import Lexer
 %%
 
 -- Exportar "Variable"
+-- Pendiente el for no tiene ; final
 SEC_INSTR  : INSTR                                        { $1 }
            | SEC_INSTR INSTR                              { Secuenciacion $1 $2 }
 
@@ -66,6 +69,11 @@ INSTR  : identificador '(' identificador ')' '=' EM ';'         { DefFuncion $1 
        | "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' ';'   { GraficarArreglo $2 $4 $7 }
        | "plot" EM ',' EG "with" estilo ';'                     { GraficarEstilo $2 $4 (mkEstilo $6) }
        | "plot" EM ',' EG ';'                                   { Graficar $2 $4 }
+       | "for" identificador "in" EM 
+         "step" int SEC_INSTR "endfor"                          { CicloStep $2 $4 $6 $7 }
+       | "for" identificador "in" EM
+         SEC_INSTR "endfor"                                     { Ciclo $2 $4 $5 }
+       | "push_back" '(' identificador ',' EM ')' ';'           { PB $3 $5 }
 
 --OJO CAMBIAR
 SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo           { SecuenciaES $1 (mkEstilo $3) }
@@ -159,6 +167,9 @@ data Instruccion = DefFuncion String String EM
                  | GraficarArreglo EM EG SecuenciaEstilo 
                  | GraficarEstilo EM EG Estilo
                  | Graficar EM EG
+                 | CicloStep String EM String Instruccion
+                 | Ciclo String EM Instruccion
+                 | PB String EM
                  deriving (Show)
 
 data Estilo = Lineas

@@ -47,7 +47,7 @@ tokens :-
     "for"                                            { obtenerToken $ const TkFor }
     "in"                                             { obtenerToken $ const TkIn }
     "step"                                           { obtenerToken $ const TkStep }
-    "endfor"                                         { obtenerToken $ const TkEndfor }
+    "endfor"                                         { obtenerToken $ const TkEndFor }
     \'                                               { obtenerToken $ const TkComilla }
     \;                                               { obtenerToken $ const TkPuntoYComa }
     \,                                               { obtenerToken $ const TkComa }
@@ -106,7 +106,7 @@ data Token =  TkParentesisI
            |  TkFor
            |  TkIn
            |  TkStep
-           |  TkEndfor
+           |  TkEndFor
            |  TkComilla
            |  TkComa
            |  TkPuntoYComa
