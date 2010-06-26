@@ -40,8 +40,12 @@ import Lexer
     '\''            { TkComilla }
     ';'             { TkPuntoYComa }
     '='             { TkAsignacion }
+    "with"          { TkWith }
+    "plot"          { TkPlot }
+    estilo          { TkEstilo $$ }
     identificador   { TkIdentificador $$ }
 
+--%left ';'
 %left "AND" "OR"
 %left "NOT"
 %left "=="
@@ -52,7 +56,20 @@ import Lexer
 
 %%
 
-INSTR  : identificador '(' identificador ')' '=' EM ';'   { DefFuncion $1 $3 $6 }
+-- Exportar "Variable"
+SEC_INSTR  : INSTR                                        { $1 }
+           | SEC_INSTR INSTR                              { Secuenciacion $1 $2 }
+
+INSTR  : identificador '(' identificador ')' '=' EM ';'         { DefFuncion $1 $3 $6 }
+       | identificador '=' EM ';'                               { Asignacion $1 $3 }
+       | "plot" EM ',' EG "with" '[' ']' ';'                    { GraficarVacio $2 $4 }
+       | "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' ';'   { GraficarArreglo $2 $4 $7 }
+       | "plot" EM ',' EG "with" estilo ';'                     { GraficarEstilo $2 $4 (mkEstilo $6) }
+       | "plot" EM ',' EG ';'                                   { Graficar $2 $4 }
+
+--OJO CAMBIAR
+SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo           { SecuenciaES $1 (mkEstilo $3) }
+                  | estilo                                { Unitario (mkEstilo $1) }
 
 EM  : EM '+' EM                                { Mas  $1 $3 }
     | EM '-' EM                                { Menos $1 $3 }
@@ -65,6 +82,7 @@ EM  : EM '+' EM                                { Mas  $1 $3 }
     | real                                     { Real $1 }
     | constmat                                 { ConstMat $1 }
     | funcion '(' EM ')'                       { Funcion $1 $3 }
+    | identificador '(' EM ')'                 { Funcion $1 $3 }
     | identificador                            { Variable $1 }
     | '[' ']'                                  { ArregloVacio }
     | '[' SECUENCIA_EM ']'                     { ArregloEM $2 }
@@ -73,7 +91,7 @@ EM  : EM '+' EM                                { Mas  $1 $3 }
     | "if" '(' COND ',' EM ',' EM ')'          { ExpresionCond $3 $5 $7 }
 
 SECUENCIA_EM  : EM                     { Unitaria $1 }
-              | SECUENCIA_EM ',' EM    { Secuencia $1 $3 }
+              | SECUENCIA_EM ',' EM    { SecuenciaEM $1 $3 }
 
 COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }
@@ -127,16 +145,36 @@ data Condicional = Condicion EM
                  deriving (Show)
 
 data SecuenciaExpMat = Unitaria EM
-                     | Secuencia SecuenciaExpMat EM
+                     | SecuenciaEM SecuenciaExpMat EM
                      deriving (Show)
 
-data ExpGraficable = Graficable EM
-                   | Archivo String
-                   deriving (Show)
+data EG = Graficable EM
+        | Archivo String
+        deriving (Show)
 
 data Instruccion = DefFuncion String String EM
+                 | Secuenciacion Instruccion Instruccion
+                 | Asignacion String EM
+                 | GraficarVacio EM EG
+                 | GraficarArreglo EM EG SecuenciaEstilo 
+                 | GraficarEstilo EM EG Estilo
+                 | Graficar EM EG
                  deriving (Show)
 
+data Estilo = Lineas
+            | Puntos
+            | LineasPunteadas 
+            deriving (Show)
+
+mkEstilo :: String -> Estilo
+mkEstilo str
+   | str == "lines" = Lineas
+   | str == "points" = Puntos
+   | str == "linespoints" = LineasPunteadas
+
+data SecuenciaEstilo = Unitario Estilo
+                     | SecuenciaES SecuenciaEstilo Estilo
+                     deriving (Show)
 main = do
     s <- getContents
     print $ parse $ lexer s
