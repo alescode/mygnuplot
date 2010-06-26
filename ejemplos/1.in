@@ -2,5 +2,5 @@ f = [];
 for i in range(1, 4)
     push_back(f, x^i+10);
 endfor
-plot (-10, 20) f with [lines, points, lines, points];
+plot range(-10, 20), f with [lines, points, lines, points];
 
