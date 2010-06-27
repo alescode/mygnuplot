@@ -87,12 +87,12 @@ SEC_INSTR_CICLO : INSTR                                      { $1 }
 SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
                   | estilo                                   { Unitario (mkEstilo $1) }
 
-EM  : EM '+' EM                                     { Mas  $1 $3 }
-    | EM '-' EM                                     { Menos $1 $3 }
-    | EM '*' EM                                     { Por $1 $3 }
-    | EM '/' EM                                     { Entre $1 $3 }
-    | EM '^' EM                                     { Elevado $1 $3 }
-    | '-' EM                                        { MenosUnario $2 }
+EM  : EM '+' EM                                         { Suma  $1 $3 }
+    | EM '-' EM                                     { Resta $1 $3 }
+    | EM '*' EM                                     { Multiplicacion $1 $3 }
+    | EM '/' EM                                     { Division $1 $3 }
+    | EM '^' EM                                     { Potencia $1 $3 }
+    | '-' EM                                        { Menos $2 }
     | '(' EM ')'                                    { Expresion $2 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }
@@ -134,12 +134,12 @@ parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
 data Variable = Var String
 
 data EM = Expresion EM
-        | Mas EM EM
-        | Menos EM EM
-        | MenosUnario EM
-        | Por EM EM
-        | Entre EM EM
-        | Elevado EM EM
+        | Suma EM EM
+        | Resta EM EM
+        | Menos EM
+        | Multiplicacion EM EM
+        | Division EM EM
+        | Potencia EM EM
         | Entero String
         | Real String
         | ConstMat String
