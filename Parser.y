@@ -49,10 +49,10 @@ import Lexer
     archivo         { TkArchivo $$ }
 
 --nonassoc <?
-%left "AND" "OR"
+%left "OR"
+%left "AND"
 %left "NOT"
-%left "=="
-%nonassoc '>' '<' "<=" ">="
+%nonassoc "==" '>' '<' "<=" ">="
 %left '+' '-'
 %left '*' '/'
 %right '^'
@@ -66,16 +66,16 @@ SEC_INSTR  : INSTR ';'                                       { $1 }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
-       | "plot" ARREGLO EG "with" '[' ']'                    { GraficarVacio $2 $3 }
-       | "plot" ARREGLO EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $3 $6 }
-       | "plot" ARREGLO EG "with" estilo                     { GraficarEstilo $2 $3 (mkEstilo $5) }
-       | "plot" ARREGLO EG                                   { Graficar $2 $3 }
+       | "plot" EM ',' EG "with" '[' ']'                     { GraficarVacio $2 $4 }
+       | "plot" EM ',' EG "with"
+       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 $7 }
+       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 (mkEstilo $6) }
+       | "plot" EM ',' EG                                    { Graficar $2 $4 }
        | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
 
-CICLO  : "for" identificador "in" ARREGLO
+CICLO  : "for" identificador "in" EM
          SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 $5 }
-       | "for" identificador "in" ARREGLO 
+       | "for" identificador "in" EM 
          "step" int SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 $7 }
 
 SEC_INSTR_CICLO : INSTR                                      { $1 }
@@ -86,26 +86,24 @@ SEC_INSTR_CICLO : INSTR                                      { $1 }
 SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
                   | estilo                                   { Unitario (mkEstilo $1) }
 
-EM  : EM '+' EM                                { Mas  $1 $3 }
-    | EM '-' EM                                { Menos $1 $3 }
-    | EM '*' EM                                { Por $1 $3 }
-    | EM '/' EM                                { Entre $1 $3 }
-    | EM '^' EM                                { Elevado $1 $3 }
-    | '-' EM                                   { MenosUnario $2 }
-    | '(' EM ')'                               { Expresion $2 }
-    | int                                      { Entero $1 }
-    | real                                     { Real $1 }
-    | constmat                                 { ConstMat $1 }
-    | funcion '(' EM ')'                       { Funcion $1 $3 }
-    | identificador '(' EM ')'                 { Funcion $1 $3 }
-    | identificador                            { Variable $1 }
-    | ARREGLO                                  { $1 }
-    | "if" '(' COND ',' EM ',' EM ')'          { ExpresionCond $3 $5 $7 }
-
-ARREGLO: '[' ']'                                       { ArregloVacio }
-       | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
-       | "range" '(' int ',' int ')'                   { Rango $3 $5 }
-       | '[' EM "for" identificador "in" ARREGLO ']'   { ArregloComprension $2 (Variable $4) $6 }
+EM  : EM '+' EM                                     { Mas  $1 $3 }
+    | EM '-' EM                                     { Menos $1 $3 }
+    | EM '*' EM                                     { Por $1 $3 }
+    | EM '/' EM                                     { Entre $1 $3 }
+    | EM '^' EM                                     { Elevado $1 $3 }
+    | '-' EM                                        { MenosUnario $2 }
+    | '(' EM ')'                                    { Expresion $2 }
+    | int                                           { Entero $1 }
+    | real                                          { Real $1 }
+    | constmat                                      { ConstMat $1 }
+    | funcion '(' EM ')'                            { Funcion $1 $3 }
+    | identificador '(' EM ')'                      { Funcion $1 $3 }
+    | identificador                                 { Variable $1 }
+    | '[' ']'                                       { ArregloVacio }
+    | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
+    | "range" '(' int ',' int ')'                   { Rango $3 $5 }
+    | '[' EM "for" identificador "in" EM ']'   { ArregloComprension $2 (Variable $4) $6 }
+    | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }
 
 SECUENCIA_EM  : EM                     { Unitaria $1 }
               | SECUENCIA_EM ',' EM    { SecuenciaEM $1 $3 }
@@ -114,11 +112,11 @@ COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }
       | COND "OR" COND                         { Disyuncion $1 $3 }  
       | "NOT" COND                             { Negacion $2 } 
-      | COND '>' COND                          { MayorQue $1 $3 }
-      | COND '<' COND                          { MenorQue $1 $3 }
-      | COND "<=" COND                         { MenorIgual $1 $3 }
-      | COND ">=" COND                         { MayorIgual $1 $3 }
-      | COND "==" COND                         { Igual $1 $3 }
+      | EM '>' EM                              { MayorQue $1 $3 }
+      | EM '<' EM                              { MenorQue $1 $3 }
+      | EM "<=" EM                             { MenorIgual $1 $3 }
+      | EM ">=" EM                             { MayorIgual $1 $3 }
+      | EM "==" EM                             { Igual $1 $3 }
 
 EG    : EM                                     { Graficable $1 }
       | archivo                                { Archivo $1 }
@@ -156,11 +154,11 @@ data Condicional = Condicion EM
                  | Conjuncion Condicional Condicional
                  | Disyuncion Condicional Condicional
                  | Negacion Condicional
-                 | MayorQue Condicional Condicional
-                 | MenorQue Condicional Condicional
-                 | MayorIgual Condicional Condicional
-                 | MenorIgual Condicional Condicional
-                 | Igual Condicional Condicional
+                 | MayorQue EM EM
+                 | MenorQue EM EM
+                 | MayorIgual EM EM
+                 | MenorIgual EM EM
+                 | Igual EM EM
                  deriving (Show)
 
 data SecuenciaExpMat = Unitaria EM
