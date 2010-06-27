@@ -79,6 +79,7 @@ CICLO  : "for" identificador "in" ARREGLO
          "step" int SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 $7 }
 
 SEC_INSTR_CICLO : INSTR                                      { $1 }
+                | CICLO                                      { $1 }
                 | SEC_INSTR_CICLO ';' INSTR                  { Secuenciacion $1 $3 }
 
 --OJO CAMBIAR UNITARIO
@@ -103,7 +104,7 @@ EM  : EM '+' EM                                { Mas  $1 $3 }
 
 ARREGLO: '[' ']'                                       { ArregloVacio }
        | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
-       | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
+       | "range" '(' int ',' int ')'                   { Rango $3 $5 }
        | '[' EM "for" identificador "in" ARREGLO ']'   { ArregloComprension $2 (Variable $4) $6 }
 
 SECUENCIA_EM  : EM                     { Unitaria $1 }
@@ -144,7 +145,7 @@ data EM = Expresion EM
         | Variable String -- Como compactar?? ArregloComprension EM Variable EM
         | ArregloVacio
         | ArregloEM SecuenciaExpMat
-        | Rango EM EM
+        | Rango String String
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
         deriving (Show)
