@@ -66,11 +66,11 @@ SEC_INSTR  : INSTR ';'                                       { $1 }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
-       | "plot" EM ',' EG "with" '[' ']'                     { GraficarVacio $2 $4 }
-       | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 $7 }
-       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 (mkEstilo $6) }
-       | "plot" EM ',' EG                                    { Graficar $2 $4 }
+       | "plot" ARREGLO EG "with" '[' ']'                    { GraficarVacio $2 $3 }
+       | "plot" ARREGLO EG "with"
+       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $3 $6 }
+       | "plot" ARREGLO EG "with" estilo                     { GraficarEstilo $2 $3 (mkEstilo $5) }
+       | "plot" ARREGLO EG                                   { Graficar $2 $3 }
        | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
 
 CICLO  : "for" identificador "in" ARREGLO

@@ -40,8 +40,6 @@ tokens :-
     "=="                                             { obtenerToken $ const TkIgual }
     "lines" "points"? | "points"                     { obtenerToken TkEstilo }
     "plot"                                           { obtenerToken $ const TkPlot }
-    \{                                               { obtenerToken $ const TkLlaveI }
-    \}                                               { obtenerToken $ const TkLlaveD }
     "with"                                           { obtenerToken $ const TkWith }
     "push_back"                                      { obtenerToken $ const TkPushBack }
     "for"                                            { obtenerToken $ const TkFor }
@@ -98,8 +96,6 @@ data Token =  TkParentesisI
            |  TkMenorIg
            |  TkIgual
            |  TkEstilo String    
-           |  TkLlaveI
-           |  TkLlaveD
            |  TkWith
            |  TkPlot                          
            |  TkPushBack
