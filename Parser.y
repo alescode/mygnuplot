@@ -63,6 +63,7 @@ import Lexer
 SEC_INSTR  : INSTR ';'                                       { $1 }
            | CICLO                                           { $1 }
            | SEC_INSTR INSTR ';'                             { Secuenciacion $1 $2 }
+           | SEC_INSTR CICLO                                 { Secuenciacion $1 $2 }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
@@ -101,7 +102,7 @@ EM  : EM '+' EM                                     { Mas  $1 $3 }
     | identificador                                 { Variable $1 }
     | '[' ']'                                       { ArregloVacio }
     | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
-    | "range" '(' int ',' int ')'                   { Rango $3 $5 }
+    | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
     | '[' EM "for" identificador "in" EM ']'   { ArregloComprension $2 (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }
 
@@ -125,10 +126,10 @@ EG    : EM                                     { Graficable $1 }
 
 -- Función por Ernesto Hernández Novich
 parseError :: [Token] -> E a
---parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
---                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
+parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
+                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
 
-parseError tokens = failE "parse error"
+--parseError tokens = failE "parse error"
 
 data Variable = Var String
 
@@ -146,7 +147,7 @@ data EM = Expresion EM
         | Variable String -- Como compactar?? ArregloComprension EM Variable EM
         | ArregloVacio
         | ArregloEM SecuenciaExpMat
-        | Rango String String
+        | Rango EM EM
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
         deriving (Show)
