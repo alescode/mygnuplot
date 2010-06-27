@@ -37,7 +37,6 @@ import Lexer
     ">="            { TkMayorIg }
     "<="            { TkMenorIg }
     "=="            { TkIgual }
-    '\''            { TkComilla }
     ';'             { TkPuntoYComa }
     '='             { TkAsignacion }
     "with"          { TkWith }
@@ -53,7 +52,7 @@ import Lexer
 %left "AND" "OR"
 %left "NOT"
 %left "=="
-%left '>' '<' "<=" ">="
+%nonassoc '>' '<' "<=" ">="
 %left '+' '-'
 %left '*' '/'
 %right '^'
@@ -74,9 +73,9 @@ INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 
        | "plot" EM ',' EG                                    { Graficar $2 $4 }
        | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
 
-CICLO  : "for" identificador "in" EM
+CICLO  : "for" identificador "in" ARREGLO
          SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 $5 }
-       | "for" identificador "in" EM 
+       | "for" identificador "in" ARREGLO 
          "step" int SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 $7 }
 
 SEC_INSTR_CICLO : INSTR                                      { $1 }
@@ -99,11 +98,13 @@ EM  : EM '+' EM                                { Mas  $1 $3 }
     | funcion '(' EM ')'                       { Funcion $1 $3 }
     | identificador '(' EM ')'                 { Funcion $1 $3 }
     | identificador                            { Variable $1 }
-    | '[' ']'                                  { ArregloVacio }
-    | '[' SECUENCIA_EM ']'                     { ArregloEM $2 }
-    | "range" '(' EM ',' EM ')'                { Rango $3 $5 }
-    | '[' EM "for" identificador "in" EM ']'   { ArregloComprension $2 (Variable $4) $6 }
+    | ARREGLO                                  { $1 }
     | "if" '(' COND ',' EM ',' EM ')'          { ExpresionCond $3 $5 $7 }
+
+ARREGLO: '[' ']'                                       { ArregloVacio }
+       | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
+       | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
+       | '[' EM "for" identificador "in" ARREGLO ']'   { ArregloComprension $2 (Variable $4) $6 }
 
 SECUENCIA_EM  : EM                     { Unitaria $1 }
               | SECUENCIA_EM ',' EM    { SecuenciaEM $1 $3 }
@@ -119,7 +120,7 @@ COND  : EM                                     { Condicion $1 }
       | COND "==" COND                         { Igual $1 $3 }
 
 EG    : EM                                     { Graficable $1 }
-      | '\'' archivo '\''                      { Archivo $2 }
+      | archivo                                { Archivo $1 }
 
 {
 -- Función por Ernesto Hernández Novich

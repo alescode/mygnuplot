@@ -48,14 +48,14 @@ tokens :-
     "in"                                             { obtenerToken $ const TkIn }
     "step"                                           { obtenerToken $ const TkStep }
     "endfor"                                         { obtenerToken $ const TkEndFor }
-    \'                                               { obtenerToken $ const TkComilla }
     \;                                               { obtenerToken $ const TkPuntoYComa }
     \,                                               { obtenerToken $ const TkComa }
     \=                                               { obtenerToken $ const TkAsignacion }
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerToken TkFuncion }
     $alfa+                                           { obtenerToken TkIdentificador }
-    $carch+                                           { obtenerToken TkArchivo }
+    \'$carch*\'                                      { obtenerToken TkArchivo }
+    --obtener solo lo que esta entre comillas
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de
@@ -107,7 +107,6 @@ data Token =  TkParentesisI
            |  TkIn
            |  TkStep
            |  TkEndFor
-           |  TkComilla
            |  TkComa
            |  TkPuntoYComa
            |  TkAsignacion

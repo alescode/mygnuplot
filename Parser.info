@@ -17,8 +17,8 @@ Grammar
 	INSTR -> "plot" EM ',' EG "with" estilo            (8)
 	INSTR -> "plot" EM ',' EG                          (9)
 	INSTR -> "push_back" '(' identificador ',' EM ')'   (10)
-	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO "endfor"   (11)
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO "endfor"   (12)
+	CICLO -> "for" identificador "in" ARREGLO SEC_INSTR_CICLO "endfor"   (11)
+	CICLO -> "for" identificador "in" ARREGLO "step" int SEC_INSTR_CICLO "endfor"   (12)
 	SEC_INSTR_CICLO -> INSTR                           (13)
 	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' INSTR       (14)
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' estilo    (15)
@@ -36,24 +36,25 @@ Grammar
 	EM -> funcion '(' EM ')'                           (27)
 	EM -> identificador '(' EM ')'                     (28)
 	EM -> identificador                                (29)
-	EM -> '[' ']'                                      (30)
-	EM -> '[' SECUENCIA_EM ']'                         (31)
-	EM -> "range" '(' EM ',' EM ')'                    (32)
-	EM -> '[' EM "for" identificador "in" EM ']'       (33)
-	EM -> "if" '(' COND ',' EM ',' EM ')'              (34)
-	SECUENCIA_EM -> EM                                 (35)
-	SECUENCIA_EM -> SECUENCIA_EM ',' EM                (36)
-	COND -> EM                                         (37)
-	COND -> COND "AND" COND                            (38)
-	COND -> COND "OR" COND                             (39)
-	COND -> "NOT" COND                                 (40)
-	COND -> COND '>' COND                              (41)
-	COND -> COND '<' COND                              (42)
-	COND -> COND "<=" COND                             (43)
-	COND -> COND ">=" COND                             (44)
-	COND -> COND "==" COND                             (45)
-	EG -> EM                                           (46)
-	EG -> '\'' archivo '\''                            (47)
+	EM -> ARREGLO                                      (30)
+	EM -> "if" '(' COND ',' EM ',' EM ')'              (31)
+	ARREGLO -> '[' ']'                                 (32)
+	ARREGLO -> '[' SECUENCIA_EM ']'                    (33)
+	ARREGLO -> "range" '(' EM ',' EM ')'               (34)
+	ARREGLO -> '[' EM "for" identificador "in" ARREGLO ']'   (35)
+	SECUENCIA_EM -> EM                                 (36)
+	SECUENCIA_EM -> SECUENCIA_EM ',' EM                (37)
+	COND -> EM                                         (38)
+	COND -> COND "AND" COND                            (39)
+	COND -> COND "OR" COND                             (40)
+	COND -> "NOT" COND                                 (41)
+	COND -> COND '>' COND                              (42)
+	COND -> COND '<' COND                              (43)
+	COND -> COND "<=" COND                             (44)
+	COND -> COND ">=" COND                             (45)
+	COND -> COND "==" COND                             (46)
+	EG -> EM                                           (47)
+	EG -> archivo                                      (48)
 
 -----------------------------------------------------------------------------
 Terminals
@@ -84,7 +85,6 @@ Terminals
 	">="           { TkMayorIg }
 	"<="           { TkMenorIg }
 	"=="           { TkIgual }
-	'\''           { TkComilla }
 	';'            { TkPuntoYComa }
 	'='            { TkAsignacion }
 	"with"         { TkWith }
@@ -105,10 +105,11 @@ Non-terminals
 	CICLO           rules 11, 12
 	SEC_INSTR_CICLO rules 13, 14
 	SECUENCIA_ESTILO rules 15, 16
-	EM              rules 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
-	SECUENCIA_EM    rules 35, 36
-	COND            rules 37, 38, 39, 40, 41, 42, 43, 44, 45
-	EG              rules 46, 47
+	EM              rules 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+	ARREGLO         rules 32, 33, 34, 35
+	SECUENCIA_EM    rules 36, 37
+	COND            rules 38, 39, 40, 41, 42, 43, 44, 45, 46
+	EG              rules 47, 48
 
 -----------------------------------------------------------------------------
 States
@@ -138,7 +139,7 @@ State 2
 
 	SEC_INSTR -> INSTR . ';'                            (rule 1)
 
-	';'            shift, and enter state 25
+	';'            shift, and enter state 26
 
 
 State 3
@@ -148,18 +149,19 @@ State 3
 	INSTR -> "plot" . EM ',' EG "with" estilo           (rule 8)
 	INSTR -> "plot" . EM ',' EG                         (rule 9)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
 
 	EM             goto state 14
+	ARREGLO        goto state 15
 
 State 4
 
@@ -201,56 +203,57 @@ State 7
 
 State 8
 
-	CICLO -> "for" . identificador "in" EM SEC_INSTR_CICLO "endfor"    (rule 11)
-	CICLO -> "for" . identificador "in" EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
+	CICLO -> "for" . identificador "in" ARREGLO SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" . identificador "in" ARREGLO "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	identificador  shift, and enter state 9
 
 
 State 9
 
-	CICLO -> "for" identificador . "in" EM SEC_INSTR_CICLO "endfor"    (rule 11)
-	CICLO -> "for" identificador . "in" EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
+	CICLO -> "for" identificador . "in" ARREGLO SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador . "in" ARREGLO "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 
-	"in"           shift, and enter state 45
+	"in"           shift, and enter state 46
 
 
 State 10
 
 	SEC_INSTR -> SEC_INSTR INSTR . ';'                  (rule 3)
 
-	';'            shift, and enter state 44
+	';'            shift, and enter state 45
 
 
 State 11
 
 	INSTR -> identificador '(' . identificador ')' '=' EM    (rule 4)
 
-	identificador  shift, and enter state 43
+	identificador  shift, and enter state 44
 
 
 State 12
 
 	INSTR -> identificador '=' . EM                     (rule 5)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
 
-	EM             goto state 42
+	EM             goto state 43
+	ARREGLO        goto state 15
 
 State 13
 
 	INSTR -> "push_back" '(' . identificador ',' EM ')'    (rule 10)
 
-	identificador  shift, and enter state 41
+	identificador  shift, and enter state 42
 
 
 State 14
@@ -265,32 +268,58 @@ State 14
 	EM -> EM . '/' EM                                   (rule 20)
 	EM -> EM . '^' EM                                   (rule 21)
 
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	','            shift, and enter state 40
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	','            shift, and enter state 41
 
 
 State 15
 
-	EM -> '-' . EM                                      (rule 22)
+	EM -> ARREGLO .                                     (rule 30)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'+'            reduce using rule 30
+	'-'            reduce using rule 30
+	'*'            reduce using rule 30
+	'/'            reduce using rule 30
+	'^'            reduce using rule 30
+	')'            reduce using rule 30
+	']'            reduce using rule 30
+	','            reduce using rule 30
+	"for"          reduce using rule 30
+	"AND"          reduce using rule 30
+	"OR"           reduce using rule 30
+	'<'            reduce using rule 30
+	'>'            reduce using rule 30
+	">="           reduce using rule 30
+	"<="           reduce using rule 30
+	"=="           reduce using rule 30
+	';'            reduce using rule 30
+	"with"         reduce using rule 30
+	"endfor"       reduce using rule 30
 
-	EM             goto state 34
 
 State 16
+
+	EM -> '-' . EM                                      (rule 22)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 35
+	ARREGLO        goto state 15
+
+State 17
 
 	EM -> int .                                         (rule 24)
 
@@ -312,14 +341,10 @@ State 16
 	"=="           reduce using rule 24
 	';'            reduce using rule 24
 	"with"         reduce using rule 24
-	"plot"         reduce using rule 24
 	"endfor"       reduce using rule 24
-	"step"         reduce using rule 24
-	"push_back"    reduce using rule 24
-	identificador  reduce using rule 24
 
 
-State 17
+State 18
 
 	EM -> real .                                        (rule 25)
 
@@ -341,14 +366,10 @@ State 17
 	"=="           reduce using rule 25
 	';'            reduce using rule 25
 	"with"         reduce using rule 25
-	"plot"         reduce using rule 25
 	"endfor"       reduce using rule 25
-	"step"         reduce using rule 25
-	"push_back"    reduce using rule 25
-	identificador  reduce using rule 25
 
 
-State 18
+State 19
 
 	EM -> constmat .                                    (rule 26)
 
@@ -370,73 +391,71 @@ State 18
 	"=="           reduce using rule 26
 	';'            reduce using rule 26
 	"with"         reduce using rule 26
-	"plot"         reduce using rule 26
 	"endfor"       reduce using rule 26
-	"step"         reduce using rule 26
-	"push_back"    reduce using rule 26
-	identificador  reduce using rule 26
-
-
-State 19
-
-	EM -> funcion . '(' EM ')'                          (rule 27)
-
-	'('            shift, and enter state 33
 
 
 State 20
 
-	EM -> '(' . EM ')'                                  (rule 23)
+	EM -> funcion . '(' EM ')'                          (rule 27)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'('            shift, and enter state 34
 
-	EM             goto state 32
 
 State 21
 
-	EM -> '[' . ']'                                     (rule 30)
-	EM -> '[' . SECUENCIA_EM ']'                        (rule 31)
-	EM -> '[' . EM "for" identificador "in" EM ']'      (rule 33)
+	EM -> '(' . EM ')'                                  (rule 23)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	']'            shift, and enter state 31
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
 
-	EM             goto state 29
-	SECUENCIA_EM   goto state 30
+	EM             goto state 33
+	ARREGLO        goto state 15
 
 State 22
 
-	EM -> "range" . '(' EM ',' EM ')'                   (rule 32)
+	ARREGLO -> '[' . ']'                                (rule 32)
+	ARREGLO -> '[' . SECUENCIA_EM ']'                   (rule 33)
+	ARREGLO -> '[' . EM "for" identificador "in" ARREGLO ']'    (rule 35)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	']'            shift, and enter state 32
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 30
+	ARREGLO        goto state 15
+	SECUENCIA_EM   goto state 31
+
+State 23
+
+	ARREGLO -> "range" . '(' EM ',' EM ')'              (rule 34)
+
+	'('            shift, and enter state 29
+
+
+State 24
+
+	EM -> "if" . '(' COND ',' EM ',' EM ')'             (rule 31)
 
 	'('            shift, and enter state 28
 
 
-State 23
-
-	EM -> "if" . '(' COND ',' EM ',' EM ')'             (rule 34)
-
-	'('            shift, and enter state 27
-
-
-State 24
+State 25
 
 	EM -> identificador . '(' EM ')'                    (rule 28)
 	EM -> identificador .                               (rule 29)
@@ -446,7 +465,7 @@ State 24
 	'*'            reduce using rule 29
 	'/'            reduce using rule 29
 	'^'            reduce using rule 29
-	'('            shift, and enter state 26
+	'('            shift, and enter state 27
 	')'            reduce using rule 29
 	']'            reduce using rule 29
 	','            reduce using rule 29
@@ -460,14 +479,10 @@ State 24
 	"=="           reduce using rule 29
 	';'            reduce using rule 29
 	"with"         reduce using rule 29
-	"plot"         reduce using rule 29
 	"endfor"       reduce using rule 29
-	"step"         reduce using rule 29
-	"push_back"    reduce using rule 29
-	identificador  reduce using rule 29
 
 
-State 25
+State 26
 
 	SEC_INSTR -> INSTR ';' .                            (rule 1)
 
@@ -477,1452 +492,94 @@ State 25
 	%eof           reduce using rule 1
 
 
-State 26
+State 27
 
 	EM -> identificador '(' . EM ')'                    (rule 28)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
 
-	EM             goto state 66
-
-State 27
-
-	EM -> "if" '(' . COND ',' EM ',' EM ')'             (rule 34)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 64
+	EM             goto state 67
+	ARREGLO        goto state 15
 
 State 28
 
-	EM -> "range" '(' . EM ',' EM ')'                   (rule 32)
+	EM -> "if" '(' . COND ',' EM ',' EM ')'             (rule 31)
 
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
 
-	EM             goto state 62
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 65
 
 State 29
+
+	ARREGLO -> "range" '(' . EM ',' EM ')'              (rule 34)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 63
+	ARREGLO        goto state 15
+
+State 30
 
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
 	EM -> EM . '/' EM                                   (rule 20)
 	EM -> EM . '^' EM                                   (rule 21)
-	EM -> '[' EM . "for" identificador "in" EM ']'      (rule 33)
-	SECUENCIA_EM -> EM .                                (rule 35)
+	ARREGLO -> '[' EM . "for" identificador "in" ARREGLO ']'    (rule 35)
+	SECUENCIA_EM -> EM .                                (rule 36)
 
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	']'            reduce using rule 35
-	','            reduce using rule 35
-	"for"          shift, and enter state 61
-
-
-State 30
-
-	EM -> '[' SECUENCIA_EM . ']'                        (rule 31)
-	SECUENCIA_EM -> SECUENCIA_EM . ',' EM               (rule 36)
-
-	']'            shift, and enter state 59
-	','            shift, and enter state 60
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	']'            reduce using rule 36
+	','            reduce using rule 36
+	"for"          shift, and enter state 62
 
 
 State 31
 
-	EM -> '[' ']' .                                     (rule 30)
+	ARREGLO -> '[' SECUENCIA_EM . ']'                   (rule 33)
+	SECUENCIA_EM -> SECUENCIA_EM . ',' EM               (rule 37)
 
-	'+'            reduce using rule 30
-	'-'            reduce using rule 30
-	'*'            reduce using rule 30
-	'/'            reduce using rule 30
-	'^'            reduce using rule 30
-	')'            reduce using rule 30
-	']'            reduce using rule 30
-	','            reduce using rule 30
-	"for"          reduce using rule 30
-	"AND"          reduce using rule 30
-	"OR"           reduce using rule 30
-	'<'            reduce using rule 30
-	'>'            reduce using rule 30
-	">="           reduce using rule 30
-	"<="           reduce using rule 30
-	"=="           reduce using rule 30
-	';'            reduce using rule 30
-	"with"         reduce using rule 30
-	"plot"         reduce using rule 30
-	"endfor"       reduce using rule 30
-	"step"         reduce using rule 30
-	"push_back"    reduce using rule 30
-	identificador  reduce using rule 30
+	']'            shift, and enter state 60
+	','            shift, and enter state 61
 
 
 State 32
 
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> '(' EM . ')'                                  (rule 23)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 58
-
-
-State 33
-
-	EM -> funcion '(' . EM ')'                          (rule 27)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 57
-
-State 34
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> '-' EM .                                      (rule 22)
-
-	'+'            reduce using rule 22
-	'-'            reduce using rule 22
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            reduce using rule 22
-	']'            reduce using rule 22
-	','            reduce using rule 22
-	"for"          reduce using rule 22
-	"AND"          reduce using rule 22
-	"OR"           reduce using rule 22
-	'<'            reduce using rule 22
-	'>'            reduce using rule 22
-	">="           reduce using rule 22
-	"<="           reduce using rule 22
-	"=="           reduce using rule 22
-	';'            reduce using rule 22
-	"with"         reduce using rule 22
-	"plot"         reduce using rule 22
-	"endfor"       reduce using rule 22
-	"step"         reduce using rule 22
-	"push_back"    reduce using rule 22
-	identificador  reduce using rule 22
-
-
-State 35
-
-	EM -> EM '+' . EM                                   (rule 17)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 56
-
-State 36
-
-	EM -> EM '-' . EM                                   (rule 18)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 55
-
-State 37
-
-	EM -> EM '*' . EM                                   (rule 19)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 54
-
-State 38
-
-	EM -> EM '/' . EM                                   (rule 20)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 53
-
-State 39
-
-	EM -> EM '^' . EM                                   (rule 21)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 52
-
-State 40
-
-	INSTR -> "plot" EM ',' . EG "with" '[' ']'          (rule 6)
-	INSTR -> "plot" EM ',' . EG "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
-	INSTR -> "plot" EM ',' . EG "with" estilo           (rule 8)
-	INSTR -> "plot" EM ',' . EG                         (rule 9)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	'\''           shift, and enter state 51
-	identificador  shift, and enter state 24
-
-	EM             goto state 49
-	EG             goto state 50
-
-State 41
-
-	INSTR -> "push_back" '(' identificador . ',' EM ')'    (rule 10)
-
-	','            shift, and enter state 48
-
-
-State 42
-
-	INSTR -> identificador '=' EM .                     (rule 5)
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	';'            reduce using rule 5
-	"endfor"       reduce using rule 5
-
-
-State 43
-
-	INSTR -> identificador '(' identificador . ')' '=' EM    (rule 4)
-
-	')'            shift, and enter state 47
-
-
-State 44
-
-	SEC_INSTR -> SEC_INSTR INSTR ';' .                  (rule 3)
-
-	"plot"         reduce using rule 3
-	"push_back"    reduce using rule 3
-	identificador  reduce using rule 3
-	%eof           reduce using rule 3
-
-
-State 45
-
-	CICLO -> "for" identificador "in" . EM SEC_INSTR_CICLO "endfor"    (rule 11)
-	CICLO -> "for" identificador "in" . EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 46
-
-State 46
-
-	CICLO -> "for" identificador "in" EM . SEC_INSTR_CICLO "endfor"    (rule 11)
-	CICLO -> "for" identificador "in" EM . "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	"plot"         shift, and enter state 3
-	"step"         shift, and enter state 87
-	"push_back"    shift, and enter state 4
-	identificador  shift, and enter state 5
-
-	INSTR          goto state 85
-	SEC_INSTR_CICLOgoto state 86
-
-State 47
-
-	INSTR -> identificador '(' identificador ')' . '=' EM    (rule 4)
-
-	'='            shift, and enter state 84
-
-
-State 48
-
-	INSTR -> "push_back" '(' identificador ',' . EM ')'    (rule 10)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 83
-
-State 49
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EG -> EM .                                          (rule 46)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	';'            reduce using rule 46
-	"with"         reduce using rule 46
-	"endfor"       reduce using rule 46
-
-
-State 50
-
-	INSTR -> "plot" EM ',' EG . "with" '[' ']'          (rule 6)
-	INSTR -> "plot" EM ',' EG . "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
-	INSTR -> "plot" EM ',' EG . "with" estilo           (rule 8)
-	INSTR -> "plot" EM ',' EG .                         (rule 9)
-
-	';'            reduce using rule 9
-	"with"         shift, and enter state 82
-	"endfor"       reduce using rule 9
-
-
-State 51
-
-	EG -> '\'' . archivo '\''                           (rule 47)
-
-	archivo        shift, and enter state 81
-
-
-State 52
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> EM '^' EM .                                   (rule 21)
-
-	'+'            reduce using rule 21
-	'-'            reduce using rule 21
-	'*'            reduce using rule 21
-	'/'            reduce using rule 21
-	'^'            shift, and enter state 39
-	')'            reduce using rule 21
-	']'            reduce using rule 21
-	','            reduce using rule 21
-	"for"          reduce using rule 21
-	"AND"          reduce using rule 21
-	"OR"           reduce using rule 21
-	'<'            reduce using rule 21
-	'>'            reduce using rule 21
-	">="           reduce using rule 21
-	"<="           reduce using rule 21
-	"=="           reduce using rule 21
-	';'            reduce using rule 21
-	"with"         reduce using rule 21
-	"plot"         reduce using rule 21
-	"endfor"       reduce using rule 21
-	"step"         reduce using rule 21
-	"push_back"    reduce using rule 21
-	identificador  reduce using rule 21
-
-
-State 53
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM '/' EM .                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            reduce using rule 20
-	'-'            reduce using rule 20
-	'*'            reduce using rule 20
-	'/'            reduce using rule 20
-	'^'            shift, and enter state 39
-	')'            reduce using rule 20
-	']'            reduce using rule 20
-	','            reduce using rule 20
-	"for"          reduce using rule 20
-	"AND"          reduce using rule 20
-	"OR"           reduce using rule 20
-	'<'            reduce using rule 20
-	'>'            reduce using rule 20
-	">="           reduce using rule 20
-	"<="           reduce using rule 20
-	"=="           reduce using rule 20
-	';'            reduce using rule 20
-	"with"         reduce using rule 20
-	"plot"         reduce using rule 20
-	"endfor"       reduce using rule 20
-	"step"         reduce using rule 20
-	"push_back"    reduce using rule 20
-	identificador  reduce using rule 20
-
-
-State 54
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM '*' EM .                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            reduce using rule 19
-	'-'            reduce using rule 19
-	'*'            reduce using rule 19
-	'/'            reduce using rule 19
-	'^'            shift, and enter state 39
-	')'            reduce using rule 19
-	']'            reduce using rule 19
-	','            reduce using rule 19
-	"for"          reduce using rule 19
-	"AND"          reduce using rule 19
-	"OR"           reduce using rule 19
-	'<'            reduce using rule 19
-	'>'            reduce using rule 19
-	">="           reduce using rule 19
-	"<="           reduce using rule 19
-	"=="           reduce using rule 19
-	';'            reduce using rule 19
-	"with"         reduce using rule 19
-	"plot"         reduce using rule 19
-	"endfor"       reduce using rule 19
-	"step"         reduce using rule 19
-	"push_back"    reduce using rule 19
-	identificador  reduce using rule 19
-
-
-State 55
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM '-' EM .                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            reduce using rule 18
-	'-'            reduce using rule 18
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            reduce using rule 18
-	']'            reduce using rule 18
-	','            reduce using rule 18
-	"for"          reduce using rule 18
-	"AND"          reduce using rule 18
-	"OR"           reduce using rule 18
-	'<'            reduce using rule 18
-	'>'            reduce using rule 18
-	">="           reduce using rule 18
-	"<="           reduce using rule 18
-	"=="           reduce using rule 18
-	';'            reduce using rule 18
-	"with"         reduce using rule 18
-	"plot"         reduce using rule 18
-	"endfor"       reduce using rule 18
-	"step"         reduce using rule 18
-	"push_back"    reduce using rule 18
-	identificador  reduce using rule 18
-
-
-State 56
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM '+' EM .                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            reduce using rule 17
-	'-'            reduce using rule 17
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            reduce using rule 17
-	']'            reduce using rule 17
-	','            reduce using rule 17
-	"for"          reduce using rule 17
-	"AND"          reduce using rule 17
-	"OR"           reduce using rule 17
-	'<'            reduce using rule 17
-	'>'            reduce using rule 17
-	">="           reduce using rule 17
-	"<="           reduce using rule 17
-	"=="           reduce using rule 17
-	';'            reduce using rule 17
-	"with"         reduce using rule 17
-	"plot"         reduce using rule 17
-	"endfor"       reduce using rule 17
-	"step"         reduce using rule 17
-	"push_back"    reduce using rule 17
-	identificador  reduce using rule 17
-
-
-State 57
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> funcion '(' EM . ')'                          (rule 27)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 80
-
-
-State 58
-
-	EM -> '(' EM ')' .                                  (rule 23)
-
-	'+'            reduce using rule 23
-	'-'            reduce using rule 23
-	'*'            reduce using rule 23
-	'/'            reduce using rule 23
-	'^'            reduce using rule 23
-	')'            reduce using rule 23
-	']'            reduce using rule 23
-	','            reduce using rule 23
-	"for"          reduce using rule 23
-	"AND"          reduce using rule 23
-	"OR"           reduce using rule 23
-	'<'            reduce using rule 23
-	'>'            reduce using rule 23
-	">="           reduce using rule 23
-	"<="           reduce using rule 23
-	"=="           reduce using rule 23
-	';'            reduce using rule 23
-	"with"         reduce using rule 23
-	"plot"         reduce using rule 23
-	"endfor"       reduce using rule 23
-	"step"         reduce using rule 23
-	"push_back"    reduce using rule 23
-	identificador  reduce using rule 23
-
-
-State 59
-
-	EM -> '[' SECUENCIA_EM ']' .                        (rule 31)
-
-	'+'            reduce using rule 31
-	'-'            reduce using rule 31
-	'*'            reduce using rule 31
-	'/'            reduce using rule 31
-	'^'            reduce using rule 31
-	')'            reduce using rule 31
-	']'            reduce using rule 31
-	','            reduce using rule 31
-	"for"          reduce using rule 31
-	"AND"          reduce using rule 31
-	"OR"           reduce using rule 31
-	'<'            reduce using rule 31
-	'>'            reduce using rule 31
-	">="           reduce using rule 31
-	"<="           reduce using rule 31
-	"=="           reduce using rule 31
-	';'            reduce using rule 31
-	"with"         reduce using rule 31
-	"plot"         reduce using rule 31
-	"endfor"       reduce using rule 31
-	"step"         reduce using rule 31
-	"push_back"    reduce using rule 31
-	identificador  reduce using rule 31
-
-
-State 60
-
-	SECUENCIA_EM -> SECUENCIA_EM ',' . EM               (rule 36)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 79
-
-State 61
-
-	EM -> '[' EM "for" . identificador "in" EM ']'      (rule 33)
-
-	identificador  shift, and enter state 78
-
-
-State 62
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> "range" '(' EM . ',' EM ')'                   (rule 32)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	','            shift, and enter state 77
-
-
-State 63
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	COND -> EM .                                        (rule 37)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	','            reduce using rule 37
-	"AND"          reduce using rule 37
-	"OR"           reduce using rule 37
-	'<'            reduce using rule 37
-	'>'            reduce using rule 37
-	">="           reduce using rule 37
-	"<="           reduce using rule 37
-	"=="           reduce using rule 37
-
-
-State 64
-
-	EM -> "if" '(' COND . ',' EM ',' EM ')'             (rule 34)
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            shift, and enter state 69
-	"AND"          shift, and enter state 70
-	"OR"           shift, and enter state 71
-	'<'            shift, and enter state 72
-	'>'            shift, and enter state 73
-	">="           shift, and enter state 74
-	"<="           shift, and enter state 75
-	"=="           shift, and enter state 76
-
-
-State 65
-
-	COND -> "NOT" . COND                                (rule 40)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 68
-
-State 66
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> identificador '(' EM . ')'                    (rule 28)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 67
-
-
-State 67
-
-	EM -> identificador '(' EM ')' .                    (rule 28)
-
-	'+'            reduce using rule 28
-	'-'            reduce using rule 28
-	'*'            reduce using rule 28
-	'/'            reduce using rule 28
-	'^'            reduce using rule 28
-	')'            reduce using rule 28
-	']'            reduce using rule 28
-	','            reduce using rule 28
-	"for"          reduce using rule 28
-	"AND"          reduce using rule 28
-	"OR"           reduce using rule 28
-	'<'            reduce using rule 28
-	'>'            reduce using rule 28
-	">="           reduce using rule 28
-	"<="           reduce using rule 28
-	"=="           reduce using rule 28
-	';'            reduce using rule 28
-	"with"         reduce using rule 28
-	"plot"         reduce using rule 28
-	"endfor"       reduce using rule 28
-	"step"         reduce using rule 28
-	"push_back"    reduce using rule 28
-	identificador  reduce using rule 28
-
-
-State 68
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> "NOT" COND .                                (rule 40)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 40
-	"AND"          reduce using rule 40
-	"OR"           reduce using rule 40
-	'<'            shift, and enter state 72
-	'>'            shift, and enter state 73
-	">="           shift, and enter state 74
-	"<="           shift, and enter state 75
-	"=="           shift, and enter state 76
-
-
-State 69
-
-	EM -> "if" '(' COND ',' . EM ',' EM ')'             (rule 34)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 105
-
-State 70
-
-	COND -> COND "AND" . COND                           (rule 38)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 104
-
-State 71
-
-	COND -> COND "OR" . COND                            (rule 39)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 103
-
-State 72
-
-	COND -> COND '<' . COND                             (rule 42)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 102
-
-State 73
-
-	COND -> COND '>' . COND                             (rule 41)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 101
-
-State 74
-
-	COND -> COND ">=" . COND                            (rule 44)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 100
-
-State 75
-
-	COND -> COND "<=" . COND                            (rule 43)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 99
-
-State 76
-
-	COND -> COND "==" . COND                            (rule 45)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	"NOT"          shift, and enter state 65
-	identificador  shift, and enter state 24
-
-	EM             goto state 63
-	COND           goto state 98
-
-State 77
-
-	EM -> "range" '(' EM ',' . EM ')'                   (rule 32)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 97
-
-State 78
-
-	EM -> '[' EM "for" identificador . "in" EM ']'      (rule 33)
-
-	"in"           shift, and enter state 96
-
-
-State 79
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	SECUENCIA_EM -> SECUENCIA_EM ',' EM .               (rule 36)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	']'            reduce using rule 36
-	','            reduce using rule 36
-
-
-State 80
-
-	EM -> funcion '(' EM ')' .                          (rule 27)
-
-	'+'            reduce using rule 27
-	'-'            reduce using rule 27
-	'*'            reduce using rule 27
-	'/'            reduce using rule 27
-	'^'            reduce using rule 27
-	')'            reduce using rule 27
-	']'            reduce using rule 27
-	','            reduce using rule 27
-	"for"          reduce using rule 27
-	"AND"          reduce using rule 27
-	"OR"           reduce using rule 27
-	'<'            reduce using rule 27
-	'>'            reduce using rule 27
-	">="           reduce using rule 27
-	"<="           reduce using rule 27
-	"=="           reduce using rule 27
-	';'            reduce using rule 27
-	"with"         reduce using rule 27
-	"plot"         reduce using rule 27
-	"endfor"       reduce using rule 27
-	"step"         reduce using rule 27
-	"push_back"    reduce using rule 27
-	identificador  reduce using rule 27
-
-
-State 81
-
-	EG -> '\'' archivo . '\''                           (rule 47)
-
-	'\''           shift, and enter state 95
-
-
-State 82
-
-	INSTR -> "plot" EM ',' EG "with" . '[' ']'          (rule 6)
-	INSTR -> "plot" EM ',' EG "with" . '[' SECUENCIA_ESTILO ']'    (rule 7)
-	INSTR -> "plot" EM ',' EG "with" . estilo           (rule 8)
-
-	'['            shift, and enter state 93
-	estilo         shift, and enter state 94
-
-
-State 83
-
-	INSTR -> "push_back" '(' identificador ',' EM . ')'    (rule 10)
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 92
-
-
-State 84
-
-	INSTR -> identificador '(' identificador ')' '=' . EM    (rule 4)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 91
-
-State 85
-
-	SEC_INSTR_CICLO -> INSTR .                          (rule 13)
-
-	';'            reduce using rule 13
-	"endfor"       reduce using rule 13
-
-
-State 86
-
-	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO . "endfor"    (rule 11)
-	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
-
-	';'            shift, and enter state 89
-	"endfor"       shift, and enter state 90
-
-
-State 87
-
-	CICLO -> "for" identificador "in" EM "step" . int SEC_INSTR_CICLO "endfor"    (rule 12)
-
-	int            shift, and enter state 88
-
-
-State 88
-
-	CICLO -> "for" identificador "in" EM "step" int . SEC_INSTR_CICLO "endfor"    (rule 12)
-
-	"plot"         shift, and enter state 3
-	"push_back"    shift, and enter state 4
-	identificador  shift, and enter state 5
-
-	INSTR          goto state 85
-	SEC_INSTR_CICLOgoto state 113
-
-State 89
-
-	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' . INSTR      (rule 14)
-
-	"plot"         shift, and enter state 3
-	"push_back"    shift, and enter state 4
-	identificador  shift, and enter state 5
-
-	INSTR          goto state 112
-
-State 90
-
-	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO "endfor" .    (rule 11)
-
-	"plot"         reduce using rule 11
-	"push_back"    reduce using rule 11
-	identificador  reduce using rule 11
-	%eof           reduce using rule 11
-
-
-State 91
-
-	INSTR -> identificador '(' identificador ')' '=' EM .    (rule 4)
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	';'            reduce using rule 4
-	"endfor"       reduce using rule 4
-
-
-State 92
-
-	INSTR -> "push_back" '(' identificador ',' EM ')' .    (rule 10)
-
-	';'            reduce using rule 10
-	"endfor"       reduce using rule 10
-
-
-State 93
-
-	INSTR -> "plot" EM ',' EG "with" '[' . ']'          (rule 6)
-	INSTR -> "plot" EM ',' EG "with" '[' . SECUENCIA_ESTILO ']'    (rule 7)
-
-	']'            shift, and enter state 110
-	estilo         shift, and enter state 111
-
-	SECUENCIA_ESTILOgoto state 109
-
-State 94
-
-	INSTR -> "plot" EM ',' EG "with" estilo .           (rule 8)
-
-	';'            reduce using rule 8
-	"endfor"       reduce using rule 8
-
-
-State 95
-
-	EG -> '\'' archivo '\'' .                           (rule 47)
-
-	';'            reduce using rule 47
-	"with"         reduce using rule 47
-	"endfor"       reduce using rule 47
-
-
-State 96
-
-	EM -> '[' EM "for" identificador "in" . EM ']'      (rule 33)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 108
-
-State 97
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> "range" '(' EM ',' EM . ')'                   (rule 32)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 107
-
-
-State 98
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-	COND -> COND "==" COND .                            (rule 45)
-
-	','            reduce using rule 45
-	"AND"          reduce using rule 45
-	"OR"           reduce using rule 45
-	'<'            shift, and enter state 72
-	'>'            shift, and enter state 73
-	">="           shift, and enter state 74
-	"<="           shift, and enter state 75
-	"=="           reduce using rule 45
-
-
-State 99
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND "<=" COND .                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 43
-	"AND"          reduce using rule 43
-	"OR"           reduce using rule 43
-	'<'            reduce using rule 43
-	'>'            reduce using rule 43
-	">="           reduce using rule 43
-	"<="           reduce using rule 43
-	"=="           reduce using rule 43
-
-
-State 100
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND ">=" COND .                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 44
-	"AND"          reduce using rule 44
-	"OR"           reduce using rule 44
-	'<'            reduce using rule 44
-	'>'            reduce using rule 44
-	">="           reduce using rule 44
-	"<="           reduce using rule 44
-	"=="           reduce using rule 44
-
-
-State 101
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND '>' COND .                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 41
-	"AND"          reduce using rule 41
-	"OR"           reduce using rule 41
-	'<'            reduce using rule 41
-	'>'            reduce using rule 41
-	">="           reduce using rule 41
-	"<="           reduce using rule 41
-	"=="           reduce using rule 41
-
-
-State 102
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND '<' COND .                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 42
-	"AND"          reduce using rule 42
-	"OR"           reduce using rule 42
-	'<'            reduce using rule 42
-	'>'            reduce using rule 42
-	">="           reduce using rule 42
-	"<="           reduce using rule 42
-	"=="           reduce using rule 42
-
-
-State 103
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND "OR" COND .                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 39
-	"AND"          reduce using rule 39
-	"OR"           reduce using rule 39
-	'<'            shift, and enter state 72
-	'>'            shift, and enter state 73
-	">="           shift, and enter state 74
-	"<="           shift, and enter state 75
-	"=="           shift, and enter state 76
-
-
-State 104
-
-	COND -> COND . "AND" COND                           (rule 38)
-	COND -> COND "AND" COND .                           (rule 38)
-	COND -> COND . "OR" COND                            (rule 39)
-	COND -> COND . '>' COND                             (rule 41)
-	COND -> COND . '<' COND                             (rule 42)
-	COND -> COND . "<=" COND                            (rule 43)
-	COND -> COND . ">=" COND                            (rule 44)
-	COND -> COND . "==" COND                            (rule 45)
-
-	','            reduce using rule 38
-	"AND"          reduce using rule 38
-	"OR"           reduce using rule 38
-	'<'            shift, and enter state 72
-	'>'            shift, and enter state 73
-	">="           shift, and enter state 74
-	"<="           shift, and enter state 75
-	"=="           shift, and enter state 76
-
-
-State 105
-
-	EM -> EM . '+' EM                                   (rule 17)
-	EM -> EM . '-' EM                                   (rule 18)
-	EM -> EM . '*' EM                                   (rule 19)
-	EM -> EM . '/' EM                                   (rule 20)
-	EM -> EM . '^' EM                                   (rule 21)
-	EM -> "if" '(' COND ',' EM . ',' EM ')'             (rule 34)
-
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	','            shift, and enter state 106
-
-
-State 106
-
-	EM -> "if" '(' COND ',' EM ',' . EM ')'             (rule 34)
-
-	'-'            shift, and enter state 15
-	int            shift, and enter state 16
-	real           shift, and enter state 17
-	constmat       shift, and enter state 18
-	funcion        shift, and enter state 19
-	'('            shift, and enter state 20
-	'['            shift, and enter state 21
-	"range"        shift, and enter state 22
-	"if"           shift, and enter state 23
-	identificador  shift, and enter state 24
-
-	EM             goto state 118
-
-State 107
-
-	EM -> "range" '(' EM ',' EM ')' .                   (rule 32)
+	ARREGLO -> '[' ']' .                                (rule 32)
 
 	'+'            reduce using rule 32
 	'-'            reduce using rule 32
@@ -1949,93 +606,509 @@ State 107
 	identificador  reduce using rule 32
 
 
-State 108
+State 33
 
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
 	EM -> EM . '/' EM                                   (rule 20)
 	EM -> EM . '^' EM                                   (rule 21)
-	EM -> '[' EM "for" identificador "in" EM . ']'      (rule 33)
+	EM -> '(' EM . ')'                                  (rule 23)
 
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	']'            shift, and enter state 117
-
-
-State 109
-
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO . ']'    (rule 7)
-	SECUENCIA_ESTILO -> SECUENCIA_ESTILO . ',' estilo    (rule 15)
-
-	']'            shift, and enter state 115
-	','            shift, and enter state 116
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 59
 
 
-State 110
+State 34
 
-	INSTR -> "plot" EM ',' EG "with" '[' ']' .          (rule 6)
+	EM -> funcion '(' . EM ')'                          (rule 27)
 
-	';'            reduce using rule 6
-	"endfor"       reduce using rule 6
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
 
+	EM             goto state 58
+	ARREGLO        goto state 15
 
-State 111
+State 35
 
-	SECUENCIA_ESTILO -> estilo .                        (rule 16)
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> '-' EM .                                      (rule 22)
 
-	']'            reduce using rule 16
-	','            reduce using rule 16
-
-
-State 112
-
-	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' INSTR .      (rule 14)
-
-	';'            reduce using rule 14
-	"endfor"       reduce using rule 14
-
-
-State 113
-
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO . "endfor"    (rule 12)
-	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
-
-	';'            shift, and enter state 89
-	"endfor"       shift, and enter state 114
-
-
-State 114
-
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO "endfor" .    (rule 12)
-
-	"plot"         reduce using rule 12
-	"push_back"    reduce using rule 12
-	identificador  reduce using rule 12
-	%eof           reduce using rule 12
-
-
-State 115
-
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' .    (rule 7)
-
-	';'            reduce using rule 7
-	"endfor"       reduce using rule 7
+	'+'            reduce using rule 22
+	'-'            reduce using rule 22
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            reduce using rule 22
+	']'            reduce using rule 22
+	','            reduce using rule 22
+	"for"          reduce using rule 22
+	"AND"          reduce using rule 22
+	"OR"           reduce using rule 22
+	'<'            reduce using rule 22
+	'>'            reduce using rule 22
+	">="           reduce using rule 22
+	"<="           reduce using rule 22
+	"=="           reduce using rule 22
+	';'            reduce using rule 22
+	"with"         reduce using rule 22
+	"endfor"       reduce using rule 22
 
 
-State 116
+State 36
 
-	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' . estilo    (rule 15)
+	EM -> EM '+' . EM                                   (rule 17)
 
-	estilo         shift, and enter state 120
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 57
+	ARREGLO        goto state 15
+
+State 37
+
+	EM -> EM '-' . EM                                   (rule 18)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 56
+	ARREGLO        goto state 15
+
+State 38
+
+	EM -> EM '*' . EM                                   (rule 19)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 55
+	ARREGLO        goto state 15
+
+State 39
+
+	EM -> EM '/' . EM                                   (rule 20)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 54
+	ARREGLO        goto state 15
+
+State 40
+
+	EM -> EM '^' . EM                                   (rule 21)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 53
+	ARREGLO        goto state 15
+
+State 41
+
+	INSTR -> "plot" EM ',' . EG "with" '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' . EG "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' . EG "with" estilo           (rule 8)
+	INSTR -> "plot" EM ',' . EG                         (rule 9)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+	archivo        shift, and enter state 52
+
+	EM             goto state 50
+	ARREGLO        goto state 15
+	EG             goto state 51
+
+State 42
+
+	INSTR -> "push_back" '(' identificador . ',' EM ')'    (rule 10)
+
+	','            shift, and enter state 49
 
 
-State 117
+State 43
 
-	EM -> '[' EM "for" identificador "in" EM ']' .      (rule 33)
+	INSTR -> identificador '=' EM .                     (rule 5)
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	';'            reduce using rule 5
+	"endfor"       reduce using rule 5
+
+
+State 44
+
+	INSTR -> identificador '(' identificador . ')' '=' EM    (rule 4)
+
+	')'            shift, and enter state 48
+
+
+State 45
+
+	SEC_INSTR -> SEC_INSTR INSTR ';' .                  (rule 3)
+
+	"plot"         reduce using rule 3
+	"push_back"    reduce using rule 3
+	identificador  reduce using rule 3
+	%eof           reduce using rule 3
+
+
+State 46
+
+	CICLO -> "for" identificador "in" . ARREGLO SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador "in" . ARREGLO "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
+
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+
+	ARREGLO        goto state 47
+
+State 47
+
+	CICLO -> "for" identificador "in" ARREGLO . SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador "in" ARREGLO . "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
+
+	"plot"         shift, and enter state 3
+	"step"         shift, and enter state 87
+	"push_back"    shift, and enter state 4
+	identificador  shift, and enter state 5
+
+	INSTR          goto state 85
+	SEC_INSTR_CICLOgoto state 86
+
+State 48
+
+	INSTR -> identificador '(' identificador ')' . '=' EM    (rule 4)
+
+	'='            shift, and enter state 84
+
+
+State 49
+
+	INSTR -> "push_back" '(' identificador ',' . EM ')'    (rule 10)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 83
+	ARREGLO        goto state 15
+
+State 50
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EG -> EM .                                          (rule 47)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	';'            reduce using rule 47
+	"with"         reduce using rule 47
+	"endfor"       reduce using rule 47
+
+
+State 51
+
+	INSTR -> "plot" EM ',' EG . "with" '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG . "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' EG . "with" estilo           (rule 8)
+	INSTR -> "plot" EM ',' EG .                         (rule 9)
+
+	';'            reduce using rule 9
+	"with"         shift, and enter state 82
+	"endfor"       reduce using rule 9
+
+
+State 52
+
+	EG -> archivo .                                     (rule 48)
+
+	';'            reduce using rule 48
+	"with"         reduce using rule 48
+	"endfor"       reduce using rule 48
+
+
+State 53
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> EM '^' EM .                                   (rule 21)
+
+	'+'            reduce using rule 21
+	'-'            reduce using rule 21
+	'*'            reduce using rule 21
+	'/'            reduce using rule 21
+	'^'            shift, and enter state 40
+	')'            reduce using rule 21
+	']'            reduce using rule 21
+	','            reduce using rule 21
+	"for"          reduce using rule 21
+	"AND"          reduce using rule 21
+	"OR"           reduce using rule 21
+	'<'            reduce using rule 21
+	'>'            reduce using rule 21
+	">="           reduce using rule 21
+	"<="           reduce using rule 21
+	"=="           reduce using rule 21
+	';'            reduce using rule 21
+	"with"         reduce using rule 21
+	"endfor"       reduce using rule 21
+
+
+State 54
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM '/' EM .                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            reduce using rule 20
+	'-'            reduce using rule 20
+	'*'            reduce using rule 20
+	'/'            reduce using rule 20
+	'^'            shift, and enter state 40
+	')'            reduce using rule 20
+	']'            reduce using rule 20
+	','            reduce using rule 20
+	"for"          reduce using rule 20
+	"AND"          reduce using rule 20
+	"OR"           reduce using rule 20
+	'<'            reduce using rule 20
+	'>'            reduce using rule 20
+	">="           reduce using rule 20
+	"<="           reduce using rule 20
+	"=="           reduce using rule 20
+	';'            reduce using rule 20
+	"with"         reduce using rule 20
+	"endfor"       reduce using rule 20
+
+
+State 55
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM '*' EM .                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            reduce using rule 19
+	'-'            reduce using rule 19
+	'*'            reduce using rule 19
+	'/'            reduce using rule 19
+	'^'            shift, and enter state 40
+	')'            reduce using rule 19
+	']'            reduce using rule 19
+	','            reduce using rule 19
+	"for"          reduce using rule 19
+	"AND"          reduce using rule 19
+	"OR"           reduce using rule 19
+	'<'            reduce using rule 19
+	'>'            reduce using rule 19
+	">="           reduce using rule 19
+	"<="           reduce using rule 19
+	"=="           reduce using rule 19
+	';'            reduce using rule 19
+	"with"         reduce using rule 19
+	"endfor"       reduce using rule 19
+
+
+State 56
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM '-' EM .                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            reduce using rule 18
+	'-'            reduce using rule 18
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            reduce using rule 18
+	']'            reduce using rule 18
+	','            reduce using rule 18
+	"for"          reduce using rule 18
+	"AND"          reduce using rule 18
+	"OR"           reduce using rule 18
+	'<'            reduce using rule 18
+	'>'            reduce using rule 18
+	">="           reduce using rule 18
+	"<="           reduce using rule 18
+	"=="           reduce using rule 18
+	';'            reduce using rule 18
+	"with"         reduce using rule 18
+	"endfor"       reduce using rule 18
+
+
+State 57
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM '+' EM .                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            reduce using rule 17
+	'-'            reduce using rule 17
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            reduce using rule 17
+	']'            reduce using rule 17
+	','            reduce using rule 17
+	"for"          reduce using rule 17
+	"AND"          reduce using rule 17
+	"OR"           reduce using rule 17
+	'<'            reduce using rule 17
+	'>'            reduce using rule 17
+	">="           reduce using rule 17
+	"<="           reduce using rule 17
+	"=="           reduce using rule 17
+	';'            reduce using rule 17
+	"with"         reduce using rule 17
+	"endfor"       reduce using rule 17
+
+
+State 58
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> funcion '(' EM . ')'                          (rule 27)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 81
+
+
+State 59
+
+	EM -> '(' EM ')' .                                  (rule 23)
+
+	'+'            reduce using rule 23
+	'-'            reduce using rule 23
+	'*'            reduce using rule 23
+	'/'            reduce using rule 23
+	'^'            reduce using rule 23
+	')'            reduce using rule 23
+	']'            reduce using rule 23
+	','            reduce using rule 23
+	"for"          reduce using rule 23
+	"AND"          reduce using rule 23
+	"OR"           reduce using rule 23
+	'<'            reduce using rule 23
+	'>'            reduce using rule 23
+	">="           reduce using rule 23
+	"<="           reduce using rule 23
+	"=="           reduce using rule 23
+	';'            reduce using rule 23
+	"with"         reduce using rule 23
+	"endfor"       reduce using rule 23
+
+
+State 60
+
+	ARREGLO -> '[' SECUENCIA_EM ']' .                   (rule 33)
 
 	'+'            reduce using rule 33
 	'-'            reduce using rule 33
@@ -2062,26 +1135,757 @@ State 117
 	identificador  reduce using rule 33
 
 
-State 118
+State 61
+
+	SECUENCIA_EM -> SECUENCIA_EM ',' . EM               (rule 37)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 80
+	ARREGLO        goto state 15
+
+State 62
+
+	ARREGLO -> '[' EM "for" . identificador "in" ARREGLO ']'    (rule 35)
+
+	identificador  shift, and enter state 79
+
+
+State 63
 
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
 	EM -> EM . '/' EM                                   (rule 20)
 	EM -> EM . '^' EM                                   (rule 21)
-	EM -> "if" '(' COND ',' EM ',' EM . ')'             (rule 34)
+	ARREGLO -> "range" '(' EM . ',' EM ')'              (rule 34)
 
-	'+'            shift, and enter state 35
-	'-'            shift, and enter state 36
-	'*'            shift, and enter state 37
-	'/'            shift, and enter state 38
-	'^'            shift, and enter state 39
-	')'            shift, and enter state 119
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	','            shift, and enter state 78
 
 
-State 119
+State 64
 
-	EM -> "if" '(' COND ',' EM ',' EM ')' .             (rule 34)
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	COND -> EM .                                        (rule 38)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	','            reduce using rule 38
+	"AND"          reduce using rule 38
+	"OR"           reduce using rule 38
+	'<'            reduce using rule 38
+	'>'            reduce using rule 38
+	">="           reduce using rule 38
+	"<="           reduce using rule 38
+	"=="           reduce using rule 38
+
+
+State 65
+
+	EM -> "if" '(' COND . ',' EM ',' EM ')'             (rule 31)
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            shift, and enter state 70
+	"AND"          shift, and enter state 71
+	"OR"           shift, and enter state 72
+	'<'            shift, and enter state 73
+	'>'            shift, and enter state 74
+	">="           shift, and enter state 75
+	"<="           shift, and enter state 76
+	"=="           shift, and enter state 77
+
+
+State 66
+
+	COND -> "NOT" . COND                                (rule 41)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 69
+
+State 67
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> identificador '(' EM . ')'                    (rule 28)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 68
+
+
+State 68
+
+	EM -> identificador '(' EM ')' .                    (rule 28)
+
+	'+'            reduce using rule 28
+	'-'            reduce using rule 28
+	'*'            reduce using rule 28
+	'/'            reduce using rule 28
+	'^'            reduce using rule 28
+	')'            reduce using rule 28
+	']'            reduce using rule 28
+	','            reduce using rule 28
+	"for"          reduce using rule 28
+	"AND"          reduce using rule 28
+	"OR"           reduce using rule 28
+	'<'            reduce using rule 28
+	'>'            reduce using rule 28
+	">="           reduce using rule 28
+	"<="           reduce using rule 28
+	"=="           reduce using rule 28
+	';'            reduce using rule 28
+	"with"         reduce using rule 28
+	"endfor"       reduce using rule 28
+
+
+State 69
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> "NOT" COND .                                (rule 41)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 41
+	"AND"          reduce using rule 41
+	"OR"           reduce using rule 41
+	'<'            shift, and enter state 73
+	'>'            shift, and enter state 74
+	">="           shift, and enter state 75
+	"<="           shift, and enter state 76
+	"=="           shift, and enter state 77
+
+
+State 70
+
+	EM -> "if" '(' COND ',' . EM ',' EM ')'             (rule 31)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 104
+	ARREGLO        goto state 15
+
+State 71
+
+	COND -> COND "AND" . COND                           (rule 39)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 103
+
+State 72
+
+	COND -> COND "OR" . COND                            (rule 40)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 102
+
+State 73
+
+	COND -> COND '<' . COND                             (rule 43)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 101
+
+State 74
+
+	COND -> COND '>' . COND                             (rule 42)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 100
+
+State 75
+
+	COND -> COND ">=" . COND                            (rule 45)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 99
+
+State 76
+
+	COND -> COND "<=" . COND                            (rule 44)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 98
+
+State 77
+
+	COND -> COND "==" . COND                            (rule 46)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	"NOT"          shift, and enter state 66
+	identificador  shift, and enter state 25
+
+	EM             goto state 64
+	ARREGLO        goto state 15
+	COND           goto state 97
+
+State 78
+
+	ARREGLO -> "range" '(' EM ',' . EM ')'              (rule 34)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 96
+	ARREGLO        goto state 15
+
+State 79
+
+	ARREGLO -> '[' EM "for" identificador . "in" ARREGLO ']'    (rule 35)
+
+	"in"           shift, and enter state 95
+
+
+State 80
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	SECUENCIA_EM -> SECUENCIA_EM ',' EM .               (rule 37)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	']'            reduce using rule 37
+	','            reduce using rule 37
+
+
+State 81
+
+	EM -> funcion '(' EM ')' .                          (rule 27)
+
+	'+'            reduce using rule 27
+	'-'            reduce using rule 27
+	'*'            reduce using rule 27
+	'/'            reduce using rule 27
+	'^'            reduce using rule 27
+	')'            reduce using rule 27
+	']'            reduce using rule 27
+	','            reduce using rule 27
+	"for"          reduce using rule 27
+	"AND"          reduce using rule 27
+	"OR"           reduce using rule 27
+	'<'            reduce using rule 27
+	'>'            reduce using rule 27
+	">="           reduce using rule 27
+	"<="           reduce using rule 27
+	"=="           reduce using rule 27
+	';'            reduce using rule 27
+	"with"         reduce using rule 27
+	"endfor"       reduce using rule 27
+
+
+State 82
+
+	INSTR -> "plot" EM ',' EG "with" . '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG "with" . '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' EG "with" . estilo           (rule 8)
+
+	'['            shift, and enter state 93
+	estilo         shift, and enter state 94
+
+
+State 83
+
+	INSTR -> "push_back" '(' identificador ',' EM . ')'    (rule 10)
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 92
+
+
+State 84
+
+	INSTR -> identificador '(' identificador ')' '=' . EM    (rule 4)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 91
+	ARREGLO        goto state 15
+
+State 85
+
+	SEC_INSTR_CICLO -> INSTR .                          (rule 13)
+
+	';'            reduce using rule 13
+	"endfor"       reduce using rule 13
+
+
+State 86
+
+	CICLO -> "for" identificador "in" ARREGLO SEC_INSTR_CICLO . "endfor"    (rule 11)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
+
+	';'            shift, and enter state 89
+	"endfor"       shift, and enter state 90
+
+
+State 87
+
+	CICLO -> "for" identificador "in" ARREGLO "step" . int SEC_INSTR_CICLO "endfor"    (rule 12)
+
+	int            shift, and enter state 88
+
+
+State 88
+
+	CICLO -> "for" identificador "in" ARREGLO "step" int . SEC_INSTR_CICLO "endfor"    (rule 12)
+
+	"plot"         shift, and enter state 3
+	"push_back"    shift, and enter state 4
+	identificador  shift, and enter state 5
+
+	INSTR          goto state 85
+	SEC_INSTR_CICLOgoto state 112
+
+State 89
+
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' . INSTR      (rule 14)
+
+	"plot"         shift, and enter state 3
+	"push_back"    shift, and enter state 4
+	identificador  shift, and enter state 5
+
+	INSTR          goto state 111
+
+State 90
+
+	CICLO -> "for" identificador "in" ARREGLO SEC_INSTR_CICLO "endfor" .    (rule 11)
+
+	"plot"         reduce using rule 11
+	"push_back"    reduce using rule 11
+	identificador  reduce using rule 11
+	%eof           reduce using rule 11
+
+
+State 91
+
+	INSTR -> identificador '(' identificador ')' '=' EM .    (rule 4)
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	';'            reduce using rule 4
+	"endfor"       reduce using rule 4
+
+
+State 92
+
+	INSTR -> "push_back" '(' identificador ',' EM ')' .    (rule 10)
+
+	';'            reduce using rule 10
+	"endfor"       reduce using rule 10
+
+
+State 93
+
+	INSTR -> "plot" EM ',' EG "with" '[' . ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG "with" '[' . SECUENCIA_ESTILO ']'    (rule 7)
+
+	']'            shift, and enter state 109
+	estilo         shift, and enter state 110
+
+	SECUENCIA_ESTILOgoto state 108
+
+State 94
+
+	INSTR -> "plot" EM ',' EG "with" estilo .           (rule 8)
+
+	';'            reduce using rule 8
+	"endfor"       reduce using rule 8
+
+
+State 95
+
+	ARREGLO -> '[' EM "for" identificador "in" . ARREGLO ']'    (rule 35)
+
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+
+	ARREGLO        goto state 107
+
+State 96
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	ARREGLO -> "range" '(' EM ',' EM . ')'              (rule 34)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 106
+
+
+State 97
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+	COND -> COND "==" COND .                            (rule 46)
+
+	','            reduce using rule 46
+	"AND"          reduce using rule 46
+	"OR"           reduce using rule 46
+	'<'            shift, and enter state 73
+	'>'            shift, and enter state 74
+	">="           shift, and enter state 75
+	"<="           shift, and enter state 76
+	"=="           reduce using rule 46
+
+
+State 98
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND "<=" COND .                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 44
+	"AND"          reduce using rule 44
+	"OR"           reduce using rule 44
+	'<'            fail
+	'>'            fail
+	">="           fail
+	"<="           fail
+	"=="           reduce using rule 44
+
+
+State 99
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND ">=" COND .                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 45
+	"AND"          reduce using rule 45
+	"OR"           reduce using rule 45
+	'<'            fail
+	'>'            fail
+	">="           fail
+	"<="           fail
+	"=="           reduce using rule 45
+
+
+State 100
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND '>' COND .                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 42
+	"AND"          reduce using rule 42
+	"OR"           reduce using rule 42
+	'<'            fail
+	'>'            fail
+	">="           fail
+	"<="           fail
+	"=="           reduce using rule 42
+
+
+State 101
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND '<' COND .                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 43
+	"AND"          reduce using rule 43
+	"OR"           reduce using rule 43
+	'<'            fail
+	'>'            fail
+	">="           fail
+	"<="           fail
+	"=="           reduce using rule 43
+
+
+State 102
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND "OR" COND .                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 40
+	"AND"          reduce using rule 40
+	"OR"           reduce using rule 40
+	'<'            shift, and enter state 73
+	'>'            shift, and enter state 74
+	">="           shift, and enter state 75
+	"<="           shift, and enter state 76
+	"=="           shift, and enter state 77
+
+
+State 103
+
+	COND -> COND . "AND" COND                           (rule 39)
+	COND -> COND "AND" COND .                           (rule 39)
+	COND -> COND . "OR" COND                            (rule 40)
+	COND -> COND . '>' COND                             (rule 42)
+	COND -> COND . '<' COND                             (rule 43)
+	COND -> COND . "<=" COND                            (rule 44)
+	COND -> COND . ">=" COND                            (rule 45)
+	COND -> COND . "==" COND                            (rule 46)
+
+	','            reduce using rule 39
+	"AND"          reduce using rule 39
+	"OR"           reduce using rule 39
+	'<'            shift, and enter state 73
+	'>'            shift, and enter state 74
+	">="           shift, and enter state 75
+	"<="           shift, and enter state 76
+	"=="           shift, and enter state 77
+
+
+State 104
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> "if" '(' COND ',' EM . ',' EM ')'             (rule 31)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	','            shift, and enter state 105
+
+
+State 105
+
+	EM -> "if" '(' COND ',' EM ',' . EM ')'             (rule 31)
+
+	'-'            shift, and enter state 16
+	int            shift, and enter state 17
+	real           shift, and enter state 18
+	constmat       shift, and enter state 19
+	funcion        shift, and enter state 20
+	'('            shift, and enter state 21
+	'['            shift, and enter state 22
+	"range"        shift, and enter state 23
+	"if"           shift, and enter state 24
+	identificador  shift, and enter state 25
+
+	EM             goto state 117
+	ARREGLO        goto state 15
+
+State 106
+
+	ARREGLO -> "range" '(' EM ',' EM ')' .              (rule 34)
 
 	'+'            reduce using rule 34
 	'-'            reduce using rule 34
@@ -2108,7 +1912,152 @@ State 119
 	identificador  reduce using rule 34
 
 
-State 120
+State 107
+
+	ARREGLO -> '[' EM "for" identificador "in" ARREGLO . ']'    (rule 35)
+
+	']'            shift, and enter state 116
+
+
+State 108
+
+	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO . ']'    (rule 7)
+	SECUENCIA_ESTILO -> SECUENCIA_ESTILO . ',' estilo    (rule 15)
+
+	']'            shift, and enter state 114
+	','            shift, and enter state 115
+
+
+State 109
+
+	INSTR -> "plot" EM ',' EG "with" '[' ']' .          (rule 6)
+
+	';'            reduce using rule 6
+	"endfor"       reduce using rule 6
+
+
+State 110
+
+	SECUENCIA_ESTILO -> estilo .                        (rule 16)
+
+	']'            reduce using rule 16
+	','            reduce using rule 16
+
+
+State 111
+
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' INSTR .      (rule 14)
+
+	';'            reduce using rule 14
+	"endfor"       reduce using rule 14
+
+
+State 112
+
+	CICLO -> "for" identificador "in" ARREGLO "step" int SEC_INSTR_CICLO . "endfor"    (rule 12)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
+
+	';'            shift, and enter state 89
+	"endfor"       shift, and enter state 113
+
+
+State 113
+
+	CICLO -> "for" identificador "in" ARREGLO "step" int SEC_INSTR_CICLO "endfor" .    (rule 12)
+
+	"plot"         reduce using rule 12
+	"push_back"    reduce using rule 12
+	identificador  reduce using rule 12
+	%eof           reduce using rule 12
+
+
+State 114
+
+	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' .    (rule 7)
+
+	';'            reduce using rule 7
+	"endfor"       reduce using rule 7
+
+
+State 115
+
+	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' . estilo    (rule 15)
+
+	estilo         shift, and enter state 119
+
+
+State 116
+
+	ARREGLO -> '[' EM "for" identificador "in" ARREGLO ']' .    (rule 35)
+
+	'+'            reduce using rule 35
+	'-'            reduce using rule 35
+	'*'            reduce using rule 35
+	'/'            reduce using rule 35
+	'^'            reduce using rule 35
+	')'            reduce using rule 35
+	']'            reduce using rule 35
+	','            reduce using rule 35
+	"for"          reduce using rule 35
+	"AND"          reduce using rule 35
+	"OR"           reduce using rule 35
+	'<'            reduce using rule 35
+	'>'            reduce using rule 35
+	">="           reduce using rule 35
+	"<="           reduce using rule 35
+	"=="           reduce using rule 35
+	';'            reduce using rule 35
+	"with"         reduce using rule 35
+	"plot"         reduce using rule 35
+	"endfor"       reduce using rule 35
+	"step"         reduce using rule 35
+	"push_back"    reduce using rule 35
+	identificador  reduce using rule 35
+
+
+State 117
+
+	EM -> EM . '+' EM                                   (rule 17)
+	EM -> EM . '-' EM                                   (rule 18)
+	EM -> EM . '*' EM                                   (rule 19)
+	EM -> EM . '/' EM                                   (rule 20)
+	EM -> EM . '^' EM                                   (rule 21)
+	EM -> "if" '(' COND ',' EM ',' EM . ')'             (rule 31)
+
+	'+'            shift, and enter state 36
+	'-'            shift, and enter state 37
+	'*'            shift, and enter state 38
+	'/'            shift, and enter state 39
+	'^'            shift, and enter state 40
+	')'            shift, and enter state 118
+
+
+State 118
+
+	EM -> "if" '(' COND ',' EM ',' EM ')' .             (rule 31)
+
+	'+'            reduce using rule 31
+	'-'            reduce using rule 31
+	'*'            reduce using rule 31
+	'/'            reduce using rule 31
+	'^'            reduce using rule 31
+	')'            reduce using rule 31
+	']'            reduce using rule 31
+	','            reduce using rule 31
+	"for"          reduce using rule 31
+	"AND"          reduce using rule 31
+	"OR"           reduce using rule 31
+	'<'            reduce using rule 31
+	'>'            reduce using rule 31
+	">="           reduce using rule 31
+	"<="           reduce using rule 31
+	"=="           reduce using rule 31
+	';'            reduce using rule 31
+	"with"         reduce using rule 31
+	"endfor"       reduce using rule 31
+
+
+State 119
 
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' estilo .    (rule 15)
 
@@ -2119,7 +2068,7 @@ State 120
 -----------------------------------------------------------------------------
 Grammar Totals
 -----------------------------------------------------------------------------
-Number of rules: 48
-Number of terminals: 37
-Number of non-terminals: 10
-Number of states: 121
+Number of rules: 49
+Number of terminals: 36
+Number of non-terminals: 11
+Number of states: 120
