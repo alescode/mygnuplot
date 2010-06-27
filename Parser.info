@@ -10,17 +10,17 @@ Grammar
 	SEC_INSTR -> INSTR ';'                             (1)
 	SEC_INSTR -> CICLO                                 (2)
 	SEC_INSTR -> SEC_INSTR INSTR ';'                   (3)
-	SEC_INSTR2 -> INSTR                                (4)
-	SEC_INSTR2 -> SEC_INSTR2 ';' INSTR                 (5)
-	INSTR -> identificador '(' identificador ')' '=' EM   (6)
-	INSTR -> identificador '=' EM                      (7)
-	INSTR -> "plot" EM ',' EG "with" '[' ']'           (8)
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']'   (9)
-	INSTR -> "plot" EM ',' EG "with" estilo            (10)
-	INSTR -> "plot" EM ',' EG                          (11)
-	INSTR -> "push_back" '(' identificador ',' EM ')'   (12)
-	CICLO -> "for" identificador "in" EM SEC_INSTR2 "endfor"   (13)
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR2 "endfor"   (14)
+	INSTR -> identificador '(' identificador ')' '=' EM   (4)
+	INSTR -> identificador '=' EM                      (5)
+	INSTR -> "plot" EM ',' EG "with" '[' ']'           (6)
+	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']'   (7)
+	INSTR -> "plot" EM ',' EG "with" estilo            (8)
+	INSTR -> "plot" EM ',' EG                          (9)
+	INSTR -> "push_back" '(' identificador ',' EM ')'   (10)
+	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO "endfor"   (11)
+	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO "endfor"   (12)
+	SEC_INSTR_CICLO -> INSTR                           (13)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' INSTR       (14)
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' estilo    (15)
 	SECUENCIA_ESTILO -> estilo                         (16)
 	EM -> EM '+' EM                                    (17)
@@ -53,7 +53,7 @@ Grammar
 	COND -> COND ">=" COND                             (44)
 	COND -> COND "==" COND                             (45)
 	EG -> EM                                           (46)
-	EG -> '\'' identificador '\''                      (47)
+	EG -> '\'' archivo '\''                            (47)
 
 -----------------------------------------------------------------------------
 Terminals
@@ -94,15 +94,16 @@ Terminals
 	"push_back"    { TkPushBack }
 	estilo         { TkEstilo $$ }
 	identificador  { TkIdentificador $$ }
+	archivo        { TkArchivo $$ }
 
 -----------------------------------------------------------------------------
 Non-terminals
 -----------------------------------------------------------------------------
 	%start_parse    rule  0
 	SEC_INSTR       rules 1, 2, 3
-	SEC_INSTR2      rules 4, 5
-	INSTR           rules 6, 7, 8, 9, 10, 11, 12
-	CICLO           rules 13, 14
+	INSTR           rules 4, 5, 6, 7, 8, 9, 10
+	CICLO           rules 11, 12
+	SEC_INSTR_CICLO rules 13, 14
 	SECUENCIA_ESTILO rules 15, 16
 	EM              rules 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
 	SECUENCIA_EM    rules 35, 36
@@ -142,10 +143,10 @@ State 2
 
 State 3
 
-	INSTR -> "plot" . EM ',' EG "with" '[' ']'          (rule 8)
-	INSTR -> "plot" . EM ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 9)
-	INSTR -> "plot" . EM ',' EG "with" estilo           (rule 10)
-	INSTR -> "plot" . EM ',' EG                         (rule 11)
+	INSTR -> "plot" . EM ',' EG "with" '[' ']'          (rule 6)
+	INSTR -> "plot" . EM ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" . EM ',' EG "with" estilo           (rule 8)
+	INSTR -> "plot" . EM ',' EG                         (rule 9)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -162,15 +163,15 @@ State 3
 
 State 4
 
-	INSTR -> "push_back" . '(' identificador ',' EM ')'    (rule 12)
+	INSTR -> "push_back" . '(' identificador ',' EM ')'    (rule 10)
 
 	'('            shift, and enter state 13
 
 
 State 5
 
-	INSTR -> identificador . '(' identificador ')' '=' EM    (rule 6)
-	INSTR -> identificador . '=' EM                     (rule 7)
+	INSTR -> identificador . '(' identificador ')' '=' EM    (rule 4)
+	INSTR -> identificador . '=' EM                     (rule 5)
 
 	'('            shift, and enter state 11
 	'='            shift, and enter state 12
@@ -200,16 +201,16 @@ State 7
 
 State 8
 
-	CICLO -> "for" . identificador "in" EM SEC_INSTR2 "endfor"    (rule 13)
-	CICLO -> "for" . identificador "in" EM "step" int SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" . identificador "in" EM SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" . identificador "in" EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	identificador  shift, and enter state 9
 
 
 State 9
 
-	CICLO -> "for" identificador . "in" EM SEC_INSTR2 "endfor"    (rule 13)
-	CICLO -> "for" identificador . "in" EM "step" int SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" identificador . "in" EM SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador . "in" EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	"in"           shift, and enter state 45
 
@@ -223,14 +224,14 @@ State 10
 
 State 11
 
-	INSTR -> identificador '(' . identificador ')' '=' EM    (rule 6)
+	INSTR -> identificador '(' . identificador ')' '=' EM    (rule 4)
 
 	identificador  shift, and enter state 43
 
 
 State 12
 
-	INSTR -> identificador '=' . EM                     (rule 7)
+	INSTR -> identificador '=' . EM                     (rule 5)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -247,17 +248,17 @@ State 12
 
 State 13
 
-	INSTR -> "push_back" '(' . identificador ',' EM ')'    (rule 12)
+	INSTR -> "push_back" '(' . identificador ',' EM ')'    (rule 10)
 
 	identificador  shift, and enter state 41
 
 
 State 14
 
-	INSTR -> "plot" EM . ',' EG "with" '[' ']'          (rule 8)
-	INSTR -> "plot" EM . ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 9)
-	INSTR -> "plot" EM . ',' EG "with" estilo           (rule 10)
-	INSTR -> "plot" EM . ',' EG                         (rule 11)
+	INSTR -> "plot" EM . ',' EG "with" '[' ']'          (rule 6)
+	INSTR -> "plot" EM . ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM . ',' EG "with" estilo           (rule 8)
+	INSTR -> "plot" EM . ',' EG                         (rule 9)
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
@@ -742,10 +743,10 @@ State 39
 
 State 40
 
-	INSTR -> "plot" EM ',' . EG "with" '[' ']'          (rule 8)
-	INSTR -> "plot" EM ',' . EG "with" '[' SECUENCIA_ESTILO ']'    (rule 9)
-	INSTR -> "plot" EM ',' . EG "with" estilo           (rule 10)
-	INSTR -> "plot" EM ',' . EG                         (rule 11)
+	INSTR -> "plot" EM ',' . EG "with" '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' . EG "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' . EG "with" estilo           (rule 8)
+	INSTR -> "plot" EM ',' . EG                         (rule 9)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -764,14 +765,14 @@ State 40
 
 State 41
 
-	INSTR -> "push_back" '(' identificador . ',' EM ')'    (rule 12)
+	INSTR -> "push_back" '(' identificador . ',' EM ')'    (rule 10)
 
 	','            shift, and enter state 48
 
 
 State 42
 
-	INSTR -> identificador '=' EM .                     (rule 7)
+	INSTR -> identificador '=' EM .                     (rule 5)
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
@@ -783,13 +784,13 @@ State 42
 	'*'            shift, and enter state 37
 	'/'            shift, and enter state 38
 	'^'            shift, and enter state 39
-	';'            reduce using rule 7
-	"endfor"       reduce using rule 7
+	';'            reduce using rule 5
+	"endfor"       reduce using rule 5
 
 
 State 43
 
-	INSTR -> identificador '(' identificador . ')' '=' EM    (rule 6)
+	INSTR -> identificador '(' identificador . ')' '=' EM    (rule 4)
 
 	')'            shift, and enter state 47
 
@@ -806,8 +807,8 @@ State 44
 
 State 45
 
-	CICLO -> "for" identificador "in" . EM SEC_INSTR2 "endfor"    (rule 13)
-	CICLO -> "for" identificador "in" . EM "step" int SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" identificador "in" . EM SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador "in" . EM "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -824,8 +825,8 @@ State 45
 
 State 46
 
-	CICLO -> "for" identificador "in" EM . SEC_INSTR2 "endfor"    (rule 13)
-	CICLO -> "for" identificador "in" EM . "step" int SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" identificador "in" EM . SEC_INSTR_CICLO "endfor"    (rule 11)
+	CICLO -> "for" identificador "in" EM . "step" int SEC_INSTR_CICLO "endfor"    (rule 12)
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
@@ -842,19 +843,19 @@ State 46
 	"push_back"    shift, and enter state 4
 	identificador  shift, and enter state 5
 
-	SEC_INSTR2     goto state 85
-	INSTR          goto state 86
+	INSTR          goto state 85
+	SEC_INSTR_CICLOgoto state 86
 
 State 47
 
-	INSTR -> identificador '(' identificador ')' . '=' EM    (rule 6)
+	INSTR -> identificador '(' identificador ')' . '=' EM    (rule 4)
 
 	'='            shift, and enter state 84
 
 
 State 48
 
-	INSTR -> "push_back" '(' identificador ',' . EM ')'    (rule 12)
+	INSTR -> "push_back" '(' identificador ',' . EM ')'    (rule 10)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -890,21 +891,21 @@ State 49
 
 State 50
 
-	INSTR -> "plot" EM ',' EG . "with" '[' ']'          (rule 8)
-	INSTR -> "plot" EM ',' EG . "with" '[' SECUENCIA_ESTILO ']'    (rule 9)
-	INSTR -> "plot" EM ',' EG . "with" estilo           (rule 10)
-	INSTR -> "plot" EM ',' EG .                         (rule 11)
+	INSTR -> "plot" EM ',' EG . "with" '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG . "with" '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' EG . "with" estilo           (rule 8)
+	INSTR -> "plot" EM ',' EG .                         (rule 9)
 
-	';'            reduce using rule 11
+	';'            reduce using rule 9
 	"with"         shift, and enter state 82
-	"endfor"       reduce using rule 11
+	"endfor"       reduce using rule 9
 
 
 State 51
 
-	EG -> '\'' . identificador '\''                     (rule 47)
+	EG -> '\'' . archivo '\''                           (rule 47)
 
-	identificador  shift, and enter state 81
+	archivo        shift, and enter state 81
 
 
 State 52
@@ -1547,16 +1548,16 @@ State 80
 
 State 81
 
-	EG -> '\'' identificador . '\''                     (rule 47)
+	EG -> '\'' archivo . '\''                           (rule 47)
 
 	'\''           shift, and enter state 95
 
 
 State 82
 
-	INSTR -> "plot" EM ',' EG "with" . '[' ']'          (rule 8)
-	INSTR -> "plot" EM ',' EG "with" . '[' SECUENCIA_ESTILO ']'    (rule 9)
-	INSTR -> "plot" EM ',' EG "with" . estilo           (rule 10)
+	INSTR -> "plot" EM ',' EG "with" . '[' ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG "with" . '[' SECUENCIA_ESTILO ']'    (rule 7)
+	INSTR -> "plot" EM ',' EG "with" . estilo           (rule 8)
 
 	'['            shift, and enter state 93
 	estilo         shift, and enter state 94
@@ -1564,7 +1565,7 @@ State 82
 
 State 83
 
-	INSTR -> "push_back" '(' identificador ',' EM . ')'    (rule 12)
+	INSTR -> "push_back" '(' identificador ',' EM . ')'    (rule 10)
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
@@ -1581,7 +1582,7 @@ State 83
 
 State 84
 
-	INSTR -> identificador '(' identificador ')' '=' . EM    (rule 6)
+	INSTR -> identificador '(' identificador ')' '=' . EM    (rule 4)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -1598,42 +1599,42 @@ State 84
 
 State 85
 
-	SEC_INSTR2 -> SEC_INSTR2 . ';' INSTR                (rule 5)
-	CICLO -> "for" identificador "in" EM SEC_INSTR2 . "endfor"    (rule 13)
+	SEC_INSTR_CICLO -> INSTR .                          (rule 13)
+
+	';'            reduce using rule 13
+	"endfor"       reduce using rule 13
+
+
+State 86
+
+	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO . "endfor"    (rule 11)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
 
 	';'            shift, and enter state 89
 	"endfor"       shift, and enter state 90
 
 
-State 86
-
-	SEC_INSTR2 -> INSTR .                               (rule 4)
-
-	';'            reduce using rule 4
-	"endfor"       reduce using rule 4
-
-
 State 87
 
-	CICLO -> "for" identificador "in" EM "step" . int SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" identificador "in" EM "step" . int SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	int            shift, and enter state 88
 
 
 State 88
 
-	CICLO -> "for" identificador "in" EM "step" int . SEC_INSTR2 "endfor"    (rule 14)
+	CICLO -> "for" identificador "in" EM "step" int . SEC_INSTR_CICLO "endfor"    (rule 12)
 
 	"plot"         shift, and enter state 3
 	"push_back"    shift, and enter state 4
 	identificador  shift, and enter state 5
 
-	SEC_INSTR2     goto state 113
-	INSTR          goto state 86
+	INSTR          goto state 85
+	SEC_INSTR_CICLOgoto state 113
 
 State 89
 
-	SEC_INSTR2 -> SEC_INSTR2 ';' . INSTR                (rule 5)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' . INSTR      (rule 14)
 
 	"plot"         shift, and enter state 3
 	"push_back"    shift, and enter state 4
@@ -1643,17 +1644,17 @@ State 89
 
 State 90
 
-	CICLO -> "for" identificador "in" EM SEC_INSTR2 "endfor" .    (rule 13)
+	CICLO -> "for" identificador "in" EM SEC_INSTR_CICLO "endfor" .    (rule 11)
 
-	"plot"         reduce using rule 13
-	"push_back"    reduce using rule 13
-	identificador  reduce using rule 13
-	%eof           reduce using rule 13
+	"plot"         reduce using rule 11
+	"push_back"    reduce using rule 11
+	identificador  reduce using rule 11
+	%eof           reduce using rule 11
 
 
 State 91
 
-	INSTR -> identificador '(' identificador ')' '=' EM .    (rule 6)
+	INSTR -> identificador '(' identificador ')' '=' EM .    (rule 4)
 	EM -> EM . '+' EM                                   (rule 17)
 	EM -> EM . '-' EM                                   (rule 18)
 	EM -> EM . '*' EM                                   (rule 19)
@@ -1665,22 +1666,22 @@ State 91
 	'*'            shift, and enter state 37
 	'/'            shift, and enter state 38
 	'^'            shift, and enter state 39
-	';'            reduce using rule 6
-	"endfor"       reduce using rule 6
+	';'            reduce using rule 4
+	"endfor"       reduce using rule 4
 
 
 State 92
 
-	INSTR -> "push_back" '(' identificador ',' EM ')' .    (rule 12)
+	INSTR -> "push_back" '(' identificador ',' EM ')' .    (rule 10)
 
-	';'            reduce using rule 12
-	"endfor"       reduce using rule 12
+	';'            reduce using rule 10
+	"endfor"       reduce using rule 10
 
 
 State 93
 
-	INSTR -> "plot" EM ',' EG "with" '[' . ']'          (rule 8)
-	INSTR -> "plot" EM ',' EG "with" '[' . SECUENCIA_ESTILO ']'    (rule 9)
+	INSTR -> "plot" EM ',' EG "with" '[' . ']'          (rule 6)
+	INSTR -> "plot" EM ',' EG "with" '[' . SECUENCIA_ESTILO ']'    (rule 7)
 
 	']'            shift, and enter state 110
 	estilo         shift, and enter state 111
@@ -1689,15 +1690,15 @@ State 93
 
 State 94
 
-	INSTR -> "plot" EM ',' EG "with" estilo .           (rule 10)
+	INSTR -> "plot" EM ',' EG "with" estilo .           (rule 8)
 
-	';'            reduce using rule 10
-	"endfor"       reduce using rule 10
+	';'            reduce using rule 8
+	"endfor"       reduce using rule 8
 
 
 State 95
 
-	EG -> '\'' identificador '\'' .                     (rule 47)
+	EG -> '\'' archivo '\'' .                           (rule 47)
 
 	';'            reduce using rule 47
 	"with"         reduce using rule 47
@@ -1967,7 +1968,7 @@ State 108
 
 State 109
 
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO . ']'    (rule 9)
+	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO . ']'    (rule 7)
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO . ',' estilo    (rule 15)
 
 	']'            shift, and enter state 115
@@ -1976,10 +1977,10 @@ State 109
 
 State 110
 
-	INSTR -> "plot" EM ',' EG "with" '[' ']' .          (rule 8)
+	INSTR -> "plot" EM ',' EG "with" '[' ']' .          (rule 6)
 
-	';'            reduce using rule 8
-	"endfor"       reduce using rule 8
+	';'            reduce using rule 6
+	"endfor"       reduce using rule 6
 
 
 State 111
@@ -1992,16 +1993,16 @@ State 111
 
 State 112
 
-	SEC_INSTR2 -> SEC_INSTR2 ';' INSTR .                (rule 5)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO ';' INSTR .      (rule 14)
 
-	';'            reduce using rule 5
-	"endfor"       reduce using rule 5
+	';'            reduce using rule 14
+	"endfor"       reduce using rule 14
 
 
 State 113
 
-	SEC_INSTR2 -> SEC_INSTR2 . ';' INSTR                (rule 5)
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR2 . "endfor"    (rule 14)
+	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO . "endfor"    (rule 12)
+	SEC_INSTR_CICLO -> SEC_INSTR_CICLO . ';' INSTR      (rule 14)
 
 	';'            shift, and enter state 89
 	"endfor"       shift, and enter state 114
@@ -2009,20 +2010,20 @@ State 113
 
 State 114
 
-	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR2 "endfor" .    (rule 14)
+	CICLO -> "for" identificador "in" EM "step" int SEC_INSTR_CICLO "endfor" .    (rule 12)
 
-	"plot"         reduce using rule 14
-	"push_back"    reduce using rule 14
-	identificador  reduce using rule 14
-	%eof           reduce using rule 14
+	"plot"         reduce using rule 12
+	"push_back"    reduce using rule 12
+	identificador  reduce using rule 12
+	%eof           reduce using rule 12
 
 
 State 115
 
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' .    (rule 9)
+	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' .    (rule 7)
 
-	';'            reduce using rule 9
-	"endfor"       reduce using rule 9
+	';'            reduce using rule 7
+	"endfor"       reduce using rule 7
 
 
 State 116
@@ -2119,6 +2120,6 @@ State 120
 Grammar Totals
 -----------------------------------------------------------------------------
 Number of rules: 48
-Number of terminals: 36
+Number of terminals: 37
 Number of non-terminals: 10
 Number of states: 121

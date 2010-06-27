@@ -47,6 +47,7 @@ import Lexer
     "push_back"     { TkPushBack }
     estilo          { TkEstilo $$ }
     identificador   { TkIdentificador $$ }
+    archivo         { TkArchivo $$ }
 
 --nonassoc <?
 %left "AND" "OR"
@@ -74,12 +75,12 @@ INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 
        | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
 
 CICLO  : "for" identificador "in" EM
-         SEC_INSTR_CICLO "endfor"                                 { Ciclo $2 $4 $5 }
+         SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 $5 }
        | "for" identificador "in" EM 
-         "step" int SEC_INSTR_CICLO "endfor"                      { CicloStep $2 $4 $6 $7 }
+         "step" int SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 $7 }
 
 SEC_INSTR_CICLO : INSTR                                      { $1 }
-                | SEC_INSTR2 ';' INSTR                       { Secuenciacion $1 $3 }
+                | SEC_INSTR_CICLO ';' INSTR                  { Secuenciacion $1 $3 }
 
 --OJO CAMBIAR UNITARIO
 SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
@@ -118,7 +119,7 @@ COND  : EM                                     { Condicion $1 }
       | COND "==" COND                         { Igual $1 $3 }
 
 EG    : EM                                     { Graficable $1 }
-      | '\'' identificador '\''                { Archivo $2 }
+      | '\'' archivo '\''                      { Archivo $2 }
 
 {
 -- Función por Ernesto Hernández Novich

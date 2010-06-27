@@ -10,7 +10,8 @@ import qualified System.IO.UTF8 as U
 
 $digito = 0-9           -- dígitos
 $alfa = [a-zA-Z]        -- caracteres alfabéticos
-$mm = [\+\-]            -- un símbolo más, o menos
+$mm = [\+\-]            -- un símbolo más (+) o menos (-)
+$nonul = [^\0]           -- archivo de UNIX
 
 tokens :-
     $white+                                          ;
@@ -55,7 +56,7 @@ tokens :-
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerToken TkFuncion }
     $alfa+                                           { obtenerToken TkIdentificador }
-
+    $nonul+                                          { obtenerToken TkArchivo }
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de
@@ -112,6 +113,7 @@ data Token =  TkParentesisI
            |  TkPuntoYComa
            |  TkAsignacion
            |  TkFuncion String
+           |  TkArchivo String
            deriving (Eq,Show)
 
 -- Obtiene el número de línea del AlexPosn
