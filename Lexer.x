@@ -3,7 +3,6 @@ module Lexer (
     Token(..),
     lexer
 ) where
-import qualified System.IO.UTF8 as U
 }
 
 %wrapper "posn"
@@ -11,7 +10,7 @@ import qualified System.IO.UTF8 as U
 $digito = 0-9           -- dígitos
 $alfa = [a-zA-Z]        -- caracteres alfabéticos
 $mm = [\+\-]            -- un símbolo más (+) o menos (-)
-$nonul = [^\0]           -- archivo de UNIX
+$carch = [a-zA-Z\/\.\ ]           -- archivo de UNIX
 
 tokens :-
     $white+                                          ;
@@ -56,7 +55,7 @@ tokens :-
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerToken TkFuncion }
     $alfa+                                           { obtenerToken TkIdentificador }
-    $nonul+                                          { obtenerToken TkArchivo }
+    $carch+                                           { obtenerToken TkArchivo }
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de
