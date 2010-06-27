@@ -87,13 +87,13 @@ SEC_INSTR_CICLO : INSTR                                      { $1 }
 SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
                   | estilo                                   { Unitario (mkEstilo $1) }
 
-EM  : EM '+' EM                                         { Suma  $1 $3 }
+EM  : EM '+' EM                                     { Suma  $1 $3 }
     | EM '-' EM                                     { Resta $1 $3 }
     | EM '*' EM                                     { Multiplicacion $1 $3 }
     | EM '/' EM                                     { Division $1 $3 }
     | EM '^' EM                                     { Potencia $1 $3 }
     | '-' EM                                        { Menos $2 }
-    | '(' EM ')'                                    { Expresion $2 }
+    | '(' EM ')'                                    { $2 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }
     | constmat                                      { ConstMat $1 }
@@ -103,7 +103,7 @@ EM  : EM '+' EM                                         { Suma  $1 $3 }
     | '[' ']'                                       { ArregloVacio }
     | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
     | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
-    | '[' EM "for" identificador "in" EM ']'   { ArregloComprension $2 (Variable $4) $6 }
+    | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2 (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }
 
 SECUENCIA_EM  : EM                     { Unitaria $1 }
@@ -133,8 +133,7 @@ parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
 
 data Variable = Var String
 
-data EM = Expresion EM
-        | Suma EM EM
+data EM = Suma EM EM
         | Resta EM EM
         | Menos EM
         | Multiplicacion EM EM
