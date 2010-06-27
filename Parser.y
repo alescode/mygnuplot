@@ -5,11 +5,11 @@ module Main (main, parse, lexer) where
 import Lexer
 }
 
--- parse :: [Token] -> EM
 %name parse
 %tokentype { Token }
 %error { parseError }
 
+%monad { E } { thenE } { returnE }
 %token
     '+'             { TkMas }
     '-'             { TkMenos }
@@ -122,10 +122,13 @@ EG    : EM                                     { Graficable $1 }
       | archivo                                { Archivo $1 }
 
 {
+
 -- Función por Ernesto Hernández Novich
-parseError :: [Token] -> a
-parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
-                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
+parseError :: [Token] -> E a
+--parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
+--                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
+
+parseError tokens = failE "parse error"
 
 data Variable = Var String
 
@@ -195,7 +198,11 @@ mkEstilo str
 data SecuenciaEstilo = Unitario Estilo
                      | SecuenciaES SecuenciaEstilo Estilo
                      deriving (Show)
+
+-- parse :: [Token] -> P Instruccion
+
 main = do
     s <- getContents
-    print $ parse $ lexer s
+    return ()
+    print $ parse $ lexer s 
 }   

@@ -1,7 +1,6 @@
 {
 module Lexer (
-    Token(..),
-    lexer
+    module Lexer
 ) where
 }
 
@@ -108,7 +107,35 @@ data Token =  TkParentesisI
            |  TkAsignacion
            |  TkFuncion String
            |  TkArchivo String
-           deriving (Eq,Show)
+           deriving (Eq, Show)
+
+-- Happy documentation
+data E a = Ok a | Failed String
+         deriving(Show)
+
+thenE :: E a -> (a -> E b) -> E b
+m `thenE` k = 
+   case m of 
+       Ok a -> k a
+       Failed e -> Failed e
+
+returnE :: a -> E a
+returnE a = Ok a
+
+failE :: String -> E a
+failE err = Failed err
+
+catchE :: E a -> (String -> E a) -> E a
+catchE m k = 
+   case m of
+      Ok a -> Ok a
+      Failed e -> k e
+
+--type LineNumber = Int
+--type P a = String -> LineNumber -> E a
+--
+--getLineNo :: P LineNumber
+--getLineNo = \s l -> Ok l
 
 -- Obtiene el número de línea del AlexPosn
 obtenerLinea :: (AlexPosn, Char, String) -> String
