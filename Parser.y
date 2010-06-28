@@ -9,7 +9,6 @@ import Lexer
 %tokentype { Token }
 %error { parseError }
 
-%monad { E } { thenE } { returnE }
 %token
     '+'             { TkMas }
     '-'             { TkMenos }
@@ -125,7 +124,7 @@ EG    : EM                                     { Graficable $1 }
 {
 
 -- Función por Ernesto Hernández Novich
-parseError :: [Token] -> E a
+parseError :: [Token] -> a
 parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
                     "', seguido de: " ++ (unlines $ map show $ take 3 ts)
 
@@ -199,10 +198,10 @@ data SecuenciaEstilo = Unitario Estilo
                      | SecuenciaES SecuenciaEstilo Estilo
                      deriving (Show)
 
--- parse :: [Token] -> P Instruccion
+-- parse :: [Token] -> Instruccion
 
 main = do
     s <- getContents
     return ()
-    print $ parse $ lexer s 
+    print $ parse $ map token $ lexer s 
 }   

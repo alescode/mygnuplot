@@ -1,14 +1,14 @@
 {
-module Main (
-    module Main
+module Lexer (
+    module Lexer
 ) where
 }
 
 %wrapper "posn"
 
-$digito = 0-9           -- dígitos
-$alfa = [a-zA-Z]        -- caracteres alfabéticos
-$mm = [\+\-]            -- un símbolo más (+) o menos (-)
+$digito = 0-9                     -- dígitos
+$alfa = [a-zA-Z]                  -- caracteres alfabéticos
+$mm = [\+\-]                      -- un símbolo más (+) o menos (-)
 $carch = [a-zA-Z\/\.\ ]           -- archivo de UNIX
 
 tokens :-
@@ -152,9 +152,4 @@ lexer str = go (alexStartPos,'\n',str)
                                ", columna: " ++ obtColError e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
-
-main = do
-     s <- getContents
-     print $ lexer s
-
 }
