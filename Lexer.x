@@ -1,6 +1,6 @@
 {
-module Lexer (
-    module Lexer
+module Main (
+    module Main
 ) where
 }
 
@@ -161,4 +161,9 @@ lexer str = go (alexStartPos,'\n',str)
                                ", columna: " ++ obtenerColumna e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
+
+main = do
+     s <- getContents
+     print $ lexer s
+
 }
