@@ -1,4 +1,4 @@
 for b in 2 step 3
-        x = 8;
+    x = 8
 endfor
 f(x) = 7;
