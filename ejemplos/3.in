@@ -4,3 +4,4 @@ endfor
 #x = 3 causa internal happy error
 x = 3;
 j = 2;
+plot a , b with lines;

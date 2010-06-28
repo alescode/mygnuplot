@@ -1,17 +1,12 @@
-all: Parser.hs
+HERRAMIENTAS = Lexer.x Parser.y
+FUENTES = Main.hs
 
-mygnuplot: Main.hs
-	ghc --make Main.hs -o mygnuplot
+all: mygnuplot
 
-Parser.hs: Parser.y Lexer.hs
-	happy -acgsi Parser.y; ghc --make -w Parser.hs -o Parser
-
-Lexer.hs: Lexer.x
+mygnuplot: $(FUENTES) $(HERRAMIENTAS)
 	alex -g Lexer.x
+	happy -acgsi Parser.y
+	ghc --make -w Main.hs -o mygnuplot
 
-#Parser.hs: Parser.y Lexer.hs
-#	happy -a -c -g -s Parser.y
-#
-#
 clean:
 	rm -f *.o Lexer.hs Parser.hs *.hi mygnuplot

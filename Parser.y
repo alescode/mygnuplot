@@ -1,8 +1,9 @@
 {
 --module Parser where
-module Main (parse) where
+module Parser (parse) where
 
 import Lexer
+import AS
 }
 
 %name parse
@@ -124,7 +125,6 @@ EG    : EM                                     { Graficable $1 }
 
 {
 
--- Función por Ernesto Hernández Novich
 parseError :: [ParserStatus] -> a
 parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     ++ "\n\tcolumna: " ++ columna
@@ -134,78 +134,6 @@ parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     where linea = show $ numLinea t
                           columna = show $ numCol t
 
-data Variable = Var String
+-- parse :: [ParserStatus] -> Instruccion
 
-data EM = Suma EM EM
-        | Resta EM EM
-        | Menos EM
-        | Multiplicacion EM EM
-        | Division EM EM
-        | Potencia EM EM
-        | Entero String
-        | Real String
-        | ConstMat String
-        | Funcion String EM
-        | Variable String -- Como compactar?? ArregloComprension EM Variable EM
-        | ArregloVacio
-        | ArregloEM SecuenciaExpMat
-        | Rango EM EM
-        | ArregloComprension EM EM EM
-        | ExpresionCond Condicional EM EM
-        deriving (Show)
-
--- Multiple declaration: data Condicional = Expresion EM
--- Como arreglar esto?
-data Condicional = Condicion EM
-                 | Conjuncion Condicional Condicional
-                 | Disyuncion Condicional Condicional
-                 | Negacion Condicional
-                 | MayorQue EM EM
-                 | MenorQue EM EM
-                 | MayorIgual EM EM
-                 | MenorIgual EM EM
-                 | Igual EM EM
-                 deriving (Show)
-
-data SecuenciaExpMat = Unitaria EM
-                     | SecuenciaEM SecuenciaExpMat EM
-                     deriving (Show)
-
-data EG = Graficable EM
-        | Archivo String
-        deriving (Show)
-
-data Instruccion = DefFuncion String String EM
-                 | Secuenciacion Instruccion Instruccion
-                 | Asignacion String EM
-                 | GraficarVacio EM EG
-                 | GraficarArreglo EM EG SecuenciaEstilo 
-                 | GraficarEstilo EM EG Estilo
-                 | Graficar EM EG
-                 | CicloStep String EM String Instruccion
-                 | Ciclo String EM Instruccion
-                 | PB String EM
-                 deriving (Show)
-
-data Estilo = Lineas
-            | Puntos
-            | LineasPunteadas 
-            deriving (Show)
-
-mkEstilo :: String -> Estilo
-mkEstilo str
-   | str == "lines" = Lineas
-   | str == "points" = Puntos
-   | str == "linespoints" = LineasPunteadas
-
-data SecuenciaEstilo = Unitario Estilo
-                     | SecuenciaES SecuenciaEstilo Estilo
-                     deriving (Show)
-
--- parse :: [Token] -> Instruccion
-
-main = do
-    s <- getContents
-    return ()
-    print $ parse $ lexer s 
-}   
+}

@@ -1,6 +1,13 @@
-module Main where
+module Main (main) where
 
-funcion :: [Int] -> Int
-funcion = head
+import System
+import System.IO 
+import Lexer
+import Parser
 
-main = print $ funcion [1, 2, 3]
+main =
+	do
+		args <- getArgs
+		nombreArchivo <- return $ head args
+		contenido <- readFile nombreArchivo
+		print $ parse $ lexer contenido
