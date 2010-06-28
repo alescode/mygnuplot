@@ -6,46 +6,46 @@ import Lexer
 }
 
 %name parse
-%tokentype { Token }
+%tokentype { ParserStatus }
 %error { parseError }
 
 %token
-    '+'             { TkMas }
-    '-'             { TkMenos }
-    '*'             { TkPor }
-    '/'             { TkEntre }
-    '^'             { TkElevado }
-    int             { TkEntero $$ }
-    real            { TkReal $$ }
-    constmat        { TkConstanteMat $$ }
-    funcion         { TkFuncion $$ }
-    '('             { TkParentesisI }
-    ')'             { TkParentesisD }
-    '['             { TkCorcheteI }
-    ']'             { TkCorcheteD }
-    ','             { TkComa }
-    "range"         { TkRango }
-    "for"           { TkFor }
-    "in"            { TkIn }
-    "if"            { TkIf }
-    "AND"           { TkAnd }
-    "OR"            { TkOr }
-    "NOT"           { TkNot }
-    '<'             { TkMenor }
-    '>'             { TkMayor }
-    ">="            { TkMayorIg }
-    "<="            { TkMenorIg }
-    "=="            { TkIgual }
-    ';'             { TkPuntoYComa }
-    '='             { TkAsignacion }
-    "with"          { TkWith }
-    "plot"          { TkPlot }
-    "endfor"        { TkEndFor }
-    "step"          { TkStep }
-    "push_back"     { TkPushBack }
-    estilo          { TkEstilo $$ }
-    identificador   { TkIdentificador $$ }
-    archivo         { TkArchivo $$ }
+    '+'             { MkToken TkMas }
+    '-'             { MkToken TkMenos }
+    '*'             { MkToken TkPor }
+    '/'             { MkToken TkEntre }
+    '^'             { MkToken TkElevado }
+    int             { MkToken (TkEntero $$) }
+    real            { MkToken (TkReal $$) }
+    constmat        { MkToken (TkConstanteMat $$) }
+    funcion         { MkToken (TkFuncion $$) }
+    '('             { MkToken TkParentesisI }
+    ')'             { MkToken TkParentesisD }
+    '['             { MkToken TkCorcheteI }
+    ']'             { MkToken TkCorcheteD }
+    ','             { MkToken TkComa }
+    "range"         { MkToken TkRango }
+    "for"           { MkToken TkFor }
+    "in"            { MkToken TkIn }
+    "if"            { MkToken TkIf }
+    "AND"           { MkToken TkAnd }
+    "OR"            { MkToken TkOr }
+    "NOT"           { MkToken TkNot }
+    '<'             { MkToken TkMenor }
+    '>'             { MkToken TkMayor }
+    ">="            { MkToken TkMayorIg }
+    "<="            { MkToken TkMenorIg }
+    "=="            { MkToken TkIgual }
+    ';'             { MkToken TkPuntoYComa }
+    '='             { MkToken TkAsignacion }
+    "with"          { MkToken TkWith }
+    "plot"          { MkToken TkPlot }
+    "endfor"        { MkToken TkEndFor }
+    "step"          { MkToken TkStep }
+    "push_back"     { MkToken TkPushBack }
+    estilo          { MkToken (TkEstilo $$) }
+    identificador   { MkToken (TkIdentificador $$) }
+    archivo         { MkToken (TkArchivo $$) }
 
 --nonassoc <?
 %left "OR"
@@ -124,11 +124,9 @@ EG    : EM                                     { Graficable $1 }
 {
 
 -- Función por Ernesto Hernández Novich
-parseError :: [Token] -> a
-parseError (t:ts) = error $ "Error de sintaxis en el token '" ++ show t ++
-                    "', seguido de: " ++ (unlines $ map show $ take 3 ts)
-
---parseError tokens = failE "parse error"
+parseError :: [ParserStatus] -> a
+parseError (t:ts) = error $ "error sintactico en el token '" ++ show (numLinea t)
+          --          "', seguido de: " ++ (unlines $ map show $ take 3 ts)
 
 data Variable = Var String
 
@@ -203,5 +201,5 @@ data SecuenciaEstilo = Unitario Estilo
 main = do
     s <- getContents
     return ()
-    print $ parse $ map token $ lexer s 
+    print $ parse $ lexer s 
 }   

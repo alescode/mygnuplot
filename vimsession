@@ -8,15 +8,18 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 Parser.y
-badd +0 Makefile
-badd +0 Lexer.x
+badd +125 Parser.y
+badd +1 Makefile
+badd +50 Lexer.x
 badd +6 novich/happy_emhn/Lexer.x
-badd +0 novich/happy_emhn/Parser.y
+badd +1 novich/happy_emhn/Parser.y
 badd +38 Parser.info
+badd +2 NoMonad.hs
+badd +48 GNULex.x
+badd +0 Parser.hs
 args Parser.y
 set lines=38 columns=115
-edit Parser.y
+edit Parser.hs
 set splitbelow splitright
 wincmd t
 set winheight=1 winwidth=1
@@ -30,11 +33,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 25 - ((19 * winheight(0) + 17) / 35)
+let s:l = 725 - ((17 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-25
+725
 normal! 0
 tabedit novich/happy_emhn/Parser.y
 set splitbelow splitright
@@ -50,11 +53,11 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 115 - ((32 * winheight(0) + 17) / 35)
+let s:l = 113 - ((30 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-115
+113
 normal! 01l
 tabedit Lexer.x
 set splitbelow splitright
@@ -70,12 +73,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 2 - ((1 * winheight(0) + 17) / 35)
+let s:l = 126 - ((24 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
-normal! 0
+126
+normal! 032l
 tabedit Makefile
 set splitbelow splitright
 wincmd t
@@ -96,7 +99,7 @@ exe s:l
 normal! zt
 6
 normal! 011l
-tabnext 2
+tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

@@ -111,6 +111,7 @@ data ParserStatus = ParserStatus { token :: Token
                                  , numLinea :: Int
                                  , numCol :: Int
                                  }
+                  | MkToken Token
 
 instance Show ParserStatus where
     show (ParserStatus x _ _) = show x
