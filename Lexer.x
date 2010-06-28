@@ -110,7 +110,45 @@ data Token =  TkParentesisI
            |  TkAsignacion
            |  TkFuncion String
            |  TkArchivo String
-           deriving (Eq, Show)
+           deriving (Eq)
+
+instance Show Token where
+    show TkParentesisI = "("
+    show TkParentesisD = ")"
+    show TkMas = "+"
+    show TkMenos = "-"
+    show TkPor = "*"
+    show TkEntre = "/"
+    show TkElevado = "^"
+    show TkCorcheteI = "["
+    show TkCorcheteD = "]"
+    show TkRango = "range"
+    show TkIf = "if"
+    show TkAnd = "AND"
+    show TkOr = "OR"
+    show TkNot = "NOT"
+    show TkMayor = ">"
+    show TkMayorIg = ">="
+    show TkMenor = "<"
+    show TkMenorIg = "<="
+    show TkIgual = "=="
+    show TkWith = "with"
+    show TkPlot = "plot"
+    show TkPushBack = "push_back"
+    show TkFor = "for"
+    show TkIn = "in"
+    show TkStep = "step"
+    show TkEndFor = "endfor"
+    show TkComa = ","
+    show TkPuntoYComa = ";"
+    show TkAsignacion = "="
+    show (TkFuncion s) = s
+    show (TkArchivo s) = s
+    show (TkEstilo s) = s
+    show (TkIdentificador s) = s
+    show (TkConstanteMat s) = s
+    show (TkReal s) = s
+    show (TkEntero s) = s
 
 data ParserStatus = ParserStatus { token :: Token
                                  , numLinea :: Int
