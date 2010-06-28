@@ -1,6 +1,6 @@
 {
 --module Parser where
-module Main (main, parse, lexer) where
+module Main (parse) where
 
 import Lexer
 }
@@ -50,10 +50,11 @@ import Lexer
 --nonassoc <?
 %left "OR"
 %left "AND"
-%left "NOT"
+%right "NOT"
 %nonassoc "==" '>' '<' "<=" ">="
 %left '+' '-'
 %left '*' '/'
+%right menos_unario
 %right '^'
 
 %%
@@ -91,7 +92,7 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | EM '*' EM                                     { Multiplicacion $1 $3 }
     | EM '/' EM                                     { Division $1 $3 }
     | EM '^' EM                                     { Potencia $1 $3 }
-    | '-' EM                                        { Menos $2 }
+    | '-' EM  %prec menos_unario                    { Menos $2 }
     | '(' EM ')'                                    { $2 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }

@@ -112,6 +112,7 @@ data ParserStatus = ParserStatus { token :: Token
                                  , numCol :: Int
                                  }
                   | MkToken Token
+                  deriving (Eq)
 
 instance Show ParserStatus where
     show (ParserStatus x _ _) = show x

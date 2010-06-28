@@ -650,8 +650,8 @@ State 35
 
 	'+'            reduce using rule 24
 	'-'            reduce using rule 24
-	'*'            shift, and enter state 38
-	'/'            shift, and enter state 39
+	'*'            reduce using rule 24
+	'/'            reduce using rule 24
 	'^'            shift, and enter state 40
 	')'            reduce using rule 24
 	']'            reduce using rule 24

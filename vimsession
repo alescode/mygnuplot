@@ -12,14 +12,14 @@ badd +125 Parser.y
 badd +1 Makefile
 badd +50 Lexer.x
 badd +6 novich/happy_emhn/Lexer.x
-badd +1 novich/happy_emhn/Parser.y
+badd +113 novich/happy_emhn/Parser.y
 badd +38 Parser.info
 badd +2 NoMonad.hs
 badd +48 GNULex.x
-badd +0 Parser.hs
+badd +725 Parser.hs
 args Parser.y
 set lines=38 columns=115
-edit Parser.hs
+edit Parser.y
 set splitbelow splitright
 wincmd t
 set winheight=1 winwidth=1
@@ -33,32 +33,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 725 - ((17 * winheight(0) + 17) / 35)
+let s:l = 55 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-725
-normal! 0
-tabedit novich/happy_emhn/Parser.y
-set splitbelow splitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
-silent! normal! zE
-let s:l = 113 - ((30 * winheight(0) + 17) / 35)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-113
-normal! 01l
+55
+normal! 04l
 tabedit Lexer.x
 set splitbelow splitright
 wincmd t
@@ -73,12 +53,32 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 126 - ((24 * winheight(0) + 17) / 35)
+let s:l = 115 - ((20 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-126
-normal! 032l
+115
+normal! 030l
+tabedit Parser.hs
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 4 - ((3 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+4
+normal! 0
 tabedit Makefile
 set splitbelow splitright
 wincmd t
