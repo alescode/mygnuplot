@@ -11,41 +11,41 @@ import Lexer
 
 %token
     '+'             { ParserStatus TkMas _ _ }
-    '-'             { MkToken TkMenos }
-    '*'             { MkToken TkPor }
-    '/'             { MkToken TkEntre }
-    '^'             { MkToken TkElevado }
-    int             { MkToken (TkEntero $$) }
-    real            { MkToken (TkReal $$) }
-    constmat        { MkToken (TkConstanteMat $$) }
-    funcion         { MkToken (TkFuncion $$) }
+    '-'             { ParserStatus TkMenos _ _ }
+    '*'             { ParserStatus TkPor _ _ }
+    '/'             { ParserStatus TkEntre  _ _ }
+    '^'             { ParserStatus TkElevado _ _ }
+    int             { ParserStatus (TkEntero $$) _ _ }
+    real            { ParserStatus (TkReal $$) _ _ }
+    constmat        { ParserStatus (TkConstanteMat $$) _ _ }
+    funcion         { ParserStatus (TkFuncion $$) _ _ }
     '('             { ParserStatus TkParentesisI _ _ }
-    ')'             { MkToken TkParentesisD }
-    '['             { MkToken TkCorcheteI }
-    ']'             { MkToken TkCorcheteD }
-    ','             { MkToken TkComa }
-    "range"         { MkToken TkRango }
-    "for"           { MkToken TkFor }
-    "in"            { MkToken TkIn }
-    "if"            { MkToken TkIf }
-    "AND"           { MkToken TkAnd }
-    "OR"            { MkToken TkOr }
-    "NOT"           { MkToken TkNot }
-    '<'             { MkToken TkMenor }
-    '>'             { MkToken TkMayor }
-    ">="            { MkToken TkMayorIg }
-    "<="            { MkToken TkMenorIg }
-    "=="            { MkToken TkIgual }
-    ';'             { MkToken TkPuntoYComa }
-    '='             { MkToken TkAsignacion }
-    "with"          { MkToken TkWith }
-    "plot"          { MkToken TkPlot }
-    "endfor"        { MkToken TkEndFor }
-    "step"          { MkToken TkStep }
-    "push_back"     { MkToken TkPushBack }
-    estilo          { MkToken (TkEstilo $$) }
-    identificador   { MkToken (TkIdentificador $$) }
-    archivo         { MkToken (TkArchivo $$) }
+    ')'             { ParserStatus TkParentesisD _ _ }
+    '['             { ParserStatus TkCorcheteI _ _ }
+    ']'             { ParserStatus TkCorcheteD _ _ }
+    ','             { ParserStatus TkComa _ _ }
+    "range"         { ParserStatus TkRango _ _ }
+    "for"           { ParserStatus TkFor _ _ }
+    "in"            { ParserStatus TkIn _ _ }
+    "if"            { ParserStatus TkIf _ _ }
+    "AND"           { ParserStatus TkAnd _ _ }
+    "OR"            { ParserStatus TkOr _ _ }
+    "NOT"           { ParserStatus TkNot _ _ }
+    '<'             { ParserStatus TkMenor _ _ }
+    '>'             { ParserStatus TkMayor _ _ }
+    ">="            { ParserStatus TkMayorIg _ _ }
+    "<="            { ParserStatus TkMenorIg _ _ }
+    "=="            { ParserStatus TkIgual _ _ }
+    ';'             { ParserStatus TkPuntoYComa _ _ }
+    '='             { ParserStatus TkAsignacion _ _ }
+    "with"          { ParserStatus TkWith _ _ }
+    "plot"          { ParserStatus TkPlot _ _ }
+    "endfor"        { ParserStatus TkEndFor _ _ }
+    "step"          { ParserStatus TkStep _ _ }
+    "push_back"     { ParserStatus TkPushBack _ _ }
+    estilo          { ParserStatus (TkEstilo $$) _ _ }
+    identificador   { ParserStatus (TkIdentificador $$) _ _ }
+    archivo         { ParserStatus (TkArchivo $$) _ _ }
 
 --nonassoc <?
 %left "OR"
@@ -126,8 +126,13 @@ EG    : EM                                     { Graficable $1 }
 
 -- Función por Ernesto Hernández Novich
 parseError :: [ParserStatus] -> a
-parseError (t:ts) = error $ "error sintactico en el token '" ++ show (numLinea t)
-          --          "', seguido de: " ++ (unlines $ map show $ take 3 ts)
+parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
+                    ++ "\n\tcolumna: " ++ columna
+                    ++ "\n\ten el token '" ++ show (token t) ++ "'"
+                    ++ "\n\tseguido de: "
+                    ++ '\n':(unlines $ map (\s -> '\t':s) $ map show $ take 3 ts)
+                    where linea = show $ numLinea t
+                          columna = show $ numCol t
 
 data Variable = Var String
 
@@ -202,5 +207,5 @@ data SecuenciaEstilo = Unitario Estilo
 main = do
     s <- getContents
     return ()
-    print {-$ parse-} $ lexer s 
+    print $ parse $ lexer s 
 }   

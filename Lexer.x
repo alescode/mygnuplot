@@ -116,7 +116,6 @@ data ParserStatus = ParserStatus { token :: Token
                                  , numLinea :: Int
                                  , numCol :: Int
                                  }
-                  | MkToken Token
                   deriving (Eq)
 
 instance Show ParserStatus where
@@ -133,12 +132,11 @@ obtenerColumna (AlexPn _ _ x) = x
 -- con el estado del analizador
 obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
 obtenerEstado f pos s = ParserStatus (f s) (obtenerLinea pos) (obtenerColumna pos)
-
+                                       
 errorLexico :: AlexPosn -> String -> a
-errorLexico pos s = error $ "error lexico, " ++
-                    "token inesperado '" ++ s ++ 
-                    "', linea: " ++ linea ++ 
-                    ", columna: " ++ columna ++ "."
+errorLexico pos s = error $ "error lexico en la linea: " ++ linea
+                    ++ "\n\tcolumna: " ++ columna
+                    ++ "\n\ttoken inesperado '" ++ s ++ "'"
                   where linea = show $ obtenerLinea pos
                         columna = show $ obtenerColumna pos
 
