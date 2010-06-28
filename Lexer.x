@@ -15,56 +15,56 @@ tokens :-
     $white+                                          ;
     "#".*                                            ;
     \(                                               { obtenerEstado $ const TkParentesisI }
---    \)                                               { obtenerToken $ const TkParentesisD }
---    $digito+                                         { obtenerToken TkEntero }
---    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerToken TkReal }
---    ("." $digito+) ("e" $mm? $digito+)?              { obtenerToken TkReal }
---    \+                                               { obtenerToken $ const TkMas }
---    \-                                               { obtenerToken $ const TkMenos } 
---    \*                                               { obtenerToken $ const TkPor } 
---    \/                                               { obtenerToken $ const TkEntre } 
---    \^                                               { obtenerToken $ const TkElevado } 
---    "pi" | "e"                                       { obtenerToken TkConstanteMat }
---    \[                                               { obtenerToken $ const TkCorcheteI }
---    \]                                               { obtenerToken $ const TkCorcheteD }
---    "range"                                          { obtenerToken $ const TkRango }
---    "if"                                             { obtenerToken $ const TkIf }
---    "AND"                                            { obtenerToken $ const TkAnd }
---    "OR"                                             { obtenerToken $ const TkOr }
---    "NOT"                                            { obtenerToken $ const TkNot }
---    "<"                                              { obtenerToken $ const TkMenor }
---    "<="                                             { obtenerToken $ const TkMenorIg }
---    ">"                                              { obtenerToken $ const TkMayor }
---    ">="                                             { obtenerToken $ const TkMayorIg }
---    "=="                                             { obtenerToken $ const TkIgual }
---    "lines" "points"? | "points"                     { obtenerToken TkEstilo }
---    "plot"                                           { obtenerToken $ const TkPlot }
---    "with"                                           { obtenerToken $ const TkWith }
---    "push_back"                                      { obtenerToken $ const TkPushBack }
---    "for"                                            { obtenerToken $ const TkFor }
---    "in"                                             { obtenerToken $ const TkIn }
---    "step"                                           { obtenerToken $ const TkStep }
---    "endfor"                                         { obtenerToken $ const TkEndFor }
---    \;                                               { obtenerToken $ const TkPuntoYComa }
---    \,                                               { obtenerToken $ const TkComa }
---    \=                                               { obtenerToken $ const TkAsignacion }
---    "sin" | "cos" | "tan" | "exp" | "log" |
---    "ceil" | "floor"                                 { obtenerToken TkFuncion }
---    $alfa+                                           { obtenerToken TkIdentificador }
---    \'$carch*\'                                      { obtenerToken TkArchivo }
+    \)                                               { obtenerEstado $ const TkParentesisD }
+    $digito+                                         { obtenerEstado TkEntero }
+    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerEstado TkReal }
+    ("." $digito+) ("e" $mm? $digito+)?              { obtenerEstado TkReal }
+    \+                                               { obtenerEstado $ const TkMas }
+    \-                                               { obtenerEstado $ const TkMenos } 
+    \*                                               { obtenerEstado $ const TkPor } 
+    \/                                               { obtenerEstado $ const TkEntre } 
+    \^                                               { obtenerEstado $ const TkElevado } 
+    "pi" | "e"                                       { obtenerEstado TkConstanteMat }
+    \[                                               { obtenerEstado $ const TkCorcheteI }
+    \]                                               { obtenerEstado $ const TkCorcheteD }
+    "range"                                          { obtenerEstado $ const TkRango }
+    "if"                                             { obtenerEstado $ const TkIf }
+    "AND"                                            { obtenerEstado $ const TkAnd }
+    "OR"                                             { obtenerEstado $ const TkOr }
+    "NOT"                                            { obtenerEstado $ const TkNot }
+    "<"                                              { obtenerEstado $ const TkMenor }
+    "<="                                             { obtenerEstado $ const TkMenorIg }
+    ">"                                              { obtenerEstado $ const TkMayor }
+    ">="                                             { obtenerEstado $ const TkMayorIg }
+    "=="                                             { obtenerEstado $ const TkIgual }
+    "lines" "points"? | "points"                     { obtenerEstado TkEstilo }
+    "plot"                                           { obtenerEstado $ const TkPlot }
+    "with"                                           { obtenerEstado $ const TkWith }
+    "push_back"                                      { obtenerEstado $ const TkPushBack }
+    "for"                                            { obtenerEstado $ const TkFor }
+    "in"                                             { obtenerEstado $ const TkIn }
+    "step"                                           { obtenerEstado $ const TkStep }
+    "endfor"                                         { obtenerEstado $ const TkEndFor }
+    \;                                               { obtenerEstado $ const TkPuntoYComa }
+    \,                                               { obtenerEstado $ const TkComa }
+    \=                                               { obtenerEstado $ const TkAsignacion }
+    "sin" | "cos" | "tan" | "exp" | "log" |
+    "ceil" | "floor"                                 { obtenerEstado TkFuncion }
+    $alfa+                                           { obtenerEstado TkIdentificador }
+    \'$carch*\'                                      { obtenerEstado TkArchivo }
     --obtener solo lo que esta entre comillas
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de
 -- caracteres en un Token
 
--- La función obtenerToken hace que Alex devuelva tuplas con la linea
+-- La función obtenerEstado hace que Alex devuelva tuplas con la linea
 -- actual de lectura del analizador y el token leído
 -- que se obtiene al aplicar la función f sobre el string leído
---obtenerToken :: (String -> Token) -> AlexPosn -> String -> (Int, Token)
---obtenerToken f pos str = (getPosnLine pos, f str)
+--obtenerEstado :: (String -> Token) -> AlexPosn -> String -> (Int, Token)
+--obtenerEstado f pos str = (getPosnLine pos, f str)
 
--- La función obtenerToken hace que Alex devuelva tuplas con el estado
+-- La función obtenerEstado hace que Alex devuelva tuplas con el estado
 -- actual de lectura del analizador (AlexPosn) y el token leído
 -- que se obtiene al aplicar la función f sobre el string leído
 
@@ -72,13 +72,9 @@ data ParserStatus = ParserStatus { token :: Token
                                  , numLinea :: Int
                                  , numCol :: Int
                                  }
-                                 deriving (Show)
 
-obtenerToken :: (String -> Token) -> AlexPosn -> String -> Token
-obtenerToken f pos s = f s
-
-par :: (String -> Token) -> AlexPosn -> String -> (AlexPosn, Token)
-par f pos s = (pos, f s)
+instance Show ParserStatus where
+    show (ParserStatus x _ _) = show x
 
 obtenerLinea :: AlexPosn -> Int
 obtenerLinea (AlexPn _ x _) = x
