@@ -130,7 +130,7 @@ parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     ++ "\n\tcolumna: " ++ columna
                     ++ "\n\ten el token '" ++ show (token t) ++ "'"
                     ++ "\n\tseguido de: "
-                    ++ '\n':(unlines $ map (\s -> '\t':s) $ map show $ take 3 ts)
+                    ++ (unwords $ map show $ take 3 ts)
                     where linea = show $ numLinea t
                           columna = show $ numCol t
 
