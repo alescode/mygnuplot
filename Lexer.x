@@ -14,44 +14,44 @@ $carch = [a-zA-Z\/\.\ ]           -- archivo de UNIX
 tokens :-
     $white+                                          ;
     "#".*                                            ;
-    \(                                               { obtenerToken $ const TkParentesisI }
-    \)                                               { obtenerToken $ const TkParentesisD }
-    $digito+                                         { obtenerToken TkEntero }
-    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerToken TkReal }
-    ("." $digito+) ("e" $mm? $digito+)?              { obtenerToken TkReal }
-    \+                                               { obtenerToken $ const TkMas }
-    \-                                               { obtenerToken $ const TkMenos } 
-    \*                                               { obtenerToken $ const TkPor } 
-    \/                                               { obtenerToken $ const TkEntre } 
-    \^                                               { obtenerToken $ const TkElevado } 
-    "pi" | "e"                                       { obtenerToken TkConstanteMat }
-    \[                                               { obtenerToken $ const TkCorcheteI }
-    \]                                               { obtenerToken $ const TkCorcheteD }
-    "range"                                          { obtenerToken $ const TkRango }
-    "if"                                             { obtenerToken $ const TkIf }
-    "AND"                                            { obtenerToken $ const TkAnd }
-    "OR"                                             { obtenerToken $ const TkOr }
-    "NOT"                                            { obtenerToken $ const TkNot }
-    "<"                                              { obtenerToken $ const TkMenor }
-    "<="                                             { obtenerToken $ const TkMenorIg }
-    ">"                                              { obtenerToken $ const TkMayor }
-    ">="                                             { obtenerToken $ const TkMayorIg }
-    "=="                                             { obtenerToken $ const TkIgual }
-    "lines" "points"? | "points"                     { obtenerToken TkEstilo }
-    "plot"                                           { obtenerToken $ const TkPlot }
-    "with"                                           { obtenerToken $ const TkWith }
-    "push_back"                                      { obtenerToken $ const TkPushBack }
-    "for"                                            { obtenerToken $ const TkFor }
-    "in"                                             { obtenerToken $ const TkIn }
-    "step"                                           { obtenerToken $ const TkStep }
-    "endfor"                                         { obtenerToken $ const TkEndFor }
-    \;                                               { obtenerToken $ const TkPuntoYComa }
-    \,                                               { obtenerToken $ const TkComa }
-    \=                                               { obtenerToken $ const TkAsignacion }
-    "sin" | "cos" | "tan" | "exp" | "log" |
-    "ceil" | "floor"                                 { obtenerToken TkFuncion }
-    $alfa+                                           { obtenerToken TkIdentificador }
-    \'$carch*\'                                      { obtenerToken TkArchivo }
+    \(                                               { obtenerEstado $ const TkParentesisI }
+--    \)                                               { obtenerToken $ const TkParentesisD }
+--    $digito+                                         { obtenerToken TkEntero }
+--    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerToken TkReal }
+--    ("." $digito+) ("e" $mm? $digito+)?              { obtenerToken TkReal }
+--    \+                                               { obtenerToken $ const TkMas }
+--    \-                                               { obtenerToken $ const TkMenos } 
+--    \*                                               { obtenerToken $ const TkPor } 
+--    \/                                               { obtenerToken $ const TkEntre } 
+--    \^                                               { obtenerToken $ const TkElevado } 
+--    "pi" | "e"                                       { obtenerToken TkConstanteMat }
+--    \[                                               { obtenerToken $ const TkCorcheteI }
+--    \]                                               { obtenerToken $ const TkCorcheteD }
+--    "range"                                          { obtenerToken $ const TkRango }
+--    "if"                                             { obtenerToken $ const TkIf }
+--    "AND"                                            { obtenerToken $ const TkAnd }
+--    "OR"                                             { obtenerToken $ const TkOr }
+--    "NOT"                                            { obtenerToken $ const TkNot }
+--    "<"                                              { obtenerToken $ const TkMenor }
+--    "<="                                             { obtenerToken $ const TkMenorIg }
+--    ">"                                              { obtenerToken $ const TkMayor }
+--    ">="                                             { obtenerToken $ const TkMayorIg }
+--    "=="                                             { obtenerToken $ const TkIgual }
+--    "lines" "points"? | "points"                     { obtenerToken TkEstilo }
+--    "plot"                                           { obtenerToken $ const TkPlot }
+--    "with"                                           { obtenerToken $ const TkWith }
+--    "push_back"                                      { obtenerToken $ const TkPushBack }
+--    "for"                                            { obtenerToken $ const TkFor }
+--    "in"                                             { obtenerToken $ const TkIn }
+--    "step"                                           { obtenerToken $ const TkStep }
+--    "endfor"                                         { obtenerToken $ const TkEndFor }
+--    \;                                               { obtenerToken $ const TkPuntoYComa }
+--    \,                                               { obtenerToken $ const TkComa }
+--    \=                                               { obtenerToken $ const TkAsignacion }
+--    "sin" | "cos" | "tan" | "exp" | "log" |
+--    "ceil" | "floor"                                 { obtenerToken TkFuncion }
+--    $alfa+                                           { obtenerToken TkIdentificador }
+--    \'$carch*\'                                      { obtenerToken TkArchivo }
     --obtener solo lo que esta entre comillas
 {
 -- Todas las partes derechas tienen tipo (String -> Token),
@@ -67,8 +67,27 @@ tokens :-
 -- La función obtenerToken hace que Alex devuelva tuplas con el estado
 -- actual de lectura del analizador (AlexPosn) y el token leído
 -- que se obtiene al aplicar la función f sobre el string leído
+
+data ParserStatus = ParserStatus { token :: Token
+                                 , numLinea :: Int
+                                 , numCol :: Int
+                                 }
+                                 deriving (Show)
+
 obtenerToken :: (String -> Token) -> AlexPosn -> String -> Token
 obtenerToken f pos s = f s
+
+par :: (String -> Token) -> AlexPosn -> String -> (AlexPosn, Token)
+par f pos s = (pos, f s)
+
+obtenerLinea :: AlexPosn -> Int
+obtenerLinea (AlexPn _ x _) = x
+
+obtenerColumna :: AlexPosn -> Int
+obtenerColumna (AlexPn _ _ x) = x
+
+obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
+obtenerEstado f pos s = ParserStatus (f s) (obtenerLinea pos) (obtenerColumna pos)
 
 -- El tipo Token:
 data Token =  TkParentesisI
@@ -138,27 +157,23 @@ catchE m k =
 --getLineNo = \s l -> Ok l
 
 -- Obtiene el número de línea del AlexPosn
-obtenerLinea :: (AlexPosn, Char, String) -> String
-obtenerLinea (AlexPn _ x _, _, _) = show x
-
-obtenerColumna :: (AlexPosn, Char, String) -> String
-obtenerColumna (AlexPn _ _ x, _, _) = show x
 
 obtenerError :: (AlexPosn, Char, String) -> String
 obtenerError (_, _, i) = head $ lines i
 
 -- Redefinición de alexScanTokens
 --alexScanTokens :: String -> [Token]
-lexer :: String -> [Token]
+lexer :: String -> [ParserStatus]
 lexer str = go (alexStartPos,'\n',str)
   where go inp@(pos,_,str) =
           case alexScan inp 0 of
                 AlexEOF -> []
                 --Pendiente modificar
-                AlexError e -> error $ "error lexico: " ++
-                               "token inesperado '" ++ obtenerError e ++ 
-                               "', linea: " ++ obtenerLinea e ++ 
-                               ", columna: " ++ obtenerColumna e ++ "."
+                AlexError _ -> error "Hola"
+                             --   $ "error lexico: " ++
+                             --  "token inesperado '" ++ obtenerError e ++ 
+                             --  "', linea: " ++ obtenerLinea e ++ 
+                             --  ", columna: " ++ obtenerColumna e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
 
