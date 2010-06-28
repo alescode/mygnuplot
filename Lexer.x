@@ -68,23 +68,6 @@ tokens :-
 -- actual de lectura del analizador (AlexPosn) y el token leído
 -- que se obtiene al aplicar la función f sobre el string leído
 
-data ParserStatus = ParserStatus { token :: Token
-                                 , numLinea :: Int
-                                 , numCol :: Int
-                                 }
-
-instance Show ParserStatus where
-    show (ParserStatus x _ _) = show x
-
-obtenerLinea :: AlexPosn -> Int
-obtenerLinea (AlexPn _ x _) = x
-
-obtenerColumna :: AlexPosn -> Int
-obtenerColumna (AlexPn _ _ x) = x
-
-obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
-obtenerEstado f pos s = ParserStatus (f s) (obtenerLinea pos) (obtenerColumna pos)
-
 -- El tipo Token:
 data Token =  TkParentesisI
            |  TkParentesisD
@@ -124,52 +107,49 @@ data Token =  TkParentesisI
            |  TkArchivo String
            deriving (Eq, Show)
 
--- Happy documentation
-data E a = Ok a | Failed String
-         deriving(Show)
+data ParserStatus = ParserStatus { token :: Token
+                                 , numLinea :: Int
+                                 , numCol :: Int
+                                 }
 
-thenE :: E a -> (a -> E b) -> E b
-m `thenE` k = 
-   case m of 
-       Ok a -> k a
-       Failed e -> Failed e
+instance Show ParserStatus where
+    show (ParserStatus x _ _) = show x
 
-returnE :: a -> E a
-returnE a = Ok a
+-- Funciones sobre AlexPosn
+obtenerLinea :: AlexPosn -> Int
+obtenerLinea (AlexPn _ x _) = x
 
-failE :: String -> E a
-failE err = Failed err
+obtenerColumna :: AlexPosn -> Int
+obtenerColumna (AlexPn _ _ x) = x
 
-catchE :: E a -> (String -> E a) -> E a
-catchE m k = 
-   case m of
-      Ok a -> Ok a
-      Failed e -> k e
+-- Funciones para manejo de errores en Alex
+-- AlexError = (AlexPosn, Char, String)
+obtTokenError :: (AlexPosn, Char, String) -> String
+obtTokenError (_, _, i) = head $ lines i
 
---type LineNumber = Int
---type P a = String -> LineNumber -> E a
---
---getLineNo :: P LineNumber
---getLineNo = \s l -> Ok l
+obtLineaError :: (AlexPosn, Char, String) -> String
+obtLineaError (x, _, _) = show $ obtenerLinea x
 
--- Obtiene el número de línea del AlexPosn
+obtColError :: (AlexPosn, Char, String) -> String
+obtColError (x, _, _) = show $ obtenerColumna x
 
-obtenerError :: (AlexPosn, Char, String) -> String
-obtenerError (_, _, i) = head $ lines i
+-- Funcion para devolver los tokens junto
+-- con el estado del analizador
+obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
+obtenerEstado f pos s = ParserStatus (f s) (obtenerLinea pos) (obtenerColumna pos)
 
 -- Redefinición de alexScanTokens
---alexScanTokens :: String -> [Token]
+--alexScanTokens :: String -> [ParserStatus]
 lexer :: String -> [ParserStatus]
 lexer str = go (alexStartPos,'\n',str)
   where go inp@(pos,_,str) =
           case alexScan inp 0 of
                 AlexEOF -> []
                 --Pendiente modificar
-                AlexError _ -> error "Hola"
-                             --   $ "error lexico: " ++
-                             --  "token inesperado '" ++ obtenerError e ++ 
-                             --  "', linea: " ++ obtenerLinea e ++ 
-                             --  ", columna: " ++ obtenerColumna e ++ "."
+                AlexError e -> error $ "error lexico: " ++
+                               "token inesperado '" ++ obtTokenError e ++ 
+                               "', linea: " ++ obtLineaError e ++ 
+                               ", columna: " ++ obtColError e ++ "."
                 AlexSkip  inp' len     -> go inp'
                 AlexToken inp' len act -> act pos (take len str) : go inp'
 
