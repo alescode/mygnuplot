@@ -51,9 +51,14 @@ tokens :-
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerEstado TkFuncion }
     $alfa+                                           { obtenerEstado TkIdentificador }
-    \'$carch*\'                                      { obtenerEstado TkArchivo }
+    \'.*\'                                           { obtenerEstado TkArchivo }
+    .                                                { errorLexico }
     --obtener solo lo que esta entre comillas
 {
+
+
+
+
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de
 -- caracteres en un Token
@@ -124,34 +129,20 @@ obtenerLinea (AlexPn _ x _) = x
 obtenerColumna :: AlexPosn -> Int
 obtenerColumna (AlexPn _ _ x) = x
 
--- Funciones para manejo de errores en Alex
--- AlexError = (AlexPosn, Char, String)
-obtTokenError :: (AlexPosn, Char, String) -> String
-obtTokenError (_, _, i) = head $ lines i
-
-obtLineaError :: (AlexPosn, Char, String) -> String
-obtLineaError (x, _, _) = show $ obtenerLinea x
-
-obtColError :: (AlexPosn, Char, String) -> String
-obtColError (x, _, _) = show $ obtenerColumna x
-
 -- Funcion para devolver los tokens junto
 -- con el estado del analizador
 obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
 obtenerEstado f pos s = ParserStatus (f s) (obtenerLinea pos) (obtenerColumna pos)
 
+errorLexico :: AlexPosn -> String -> a
+errorLexico pos s = error $ "error lexico, " ++
+                    "token inesperado '" ++ s ++ 
+                    "', linea: " ++ linea ++ 
+                    ", columna: " ++ columna ++ "."
+                  where linea = show $ obtenerLinea pos
+                        columna = show $ obtenerColumna pos
+
 -- Redefinición de alexScanTokens
 --alexScanTokens :: String -> [ParserStatus]
-lexer :: String -> [ParserStatus]
-lexer str = go (alexStartPos,'\n',str)
-  where go inp@(pos,_,str) =
-          case alexScan inp 0 of
-                AlexEOF -> []
-                --Pendiente modificar
-                AlexError e -> error $ "error lexico: " ++
-                               "token inesperado '" ++ obtTokenError e ++ 
-                               "', linea: " ++ obtLineaError e ++ 
-                               ", columna: " ++ obtColError e ++ "."
-                AlexSkip  inp' len     -> go inp'
-                AlexToken inp' len act -> act pos (take len str) : go inp'
+lexer = alexScanTokens
 }

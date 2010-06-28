@@ -10,7 +10,7 @@ import Lexer
 %error { parseError }
 
 %token
-    '+'             { MkToken TkMas }
+    '+'             { ParserStatus TkMas _ _ }
     '-'             { MkToken TkMenos }
     '*'             { MkToken TkPor }
     '/'             { MkToken TkEntre }
@@ -19,7 +19,7 @@ import Lexer
     real            { MkToken (TkReal $$) }
     constmat        { MkToken (TkConstanteMat $$) }
     funcion         { MkToken (TkFuncion $$) }
-    '('             { MkToken TkParentesisI }
+    '('             { ParserStatus TkParentesisI _ _ }
     ')'             { MkToken TkParentesisD }
     '['             { MkToken TkCorcheteI }
     ']'             { MkToken TkCorcheteD }
@@ -202,5 +202,5 @@ data SecuenciaEstilo = Unitario Estilo
 main = do
     s <- getContents
     return ()
-    print $ parse $ lexer s 
+    print {-$ parse-} $ lexer s 
 }   

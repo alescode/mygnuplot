@@ -60,7 +60,7 @@ Grammar
 -----------------------------------------------------------------------------
 Terminals
 -----------------------------------------------------------------------------
-	'+'            { MkToken TkMas }
+	'+'            { ParserStatus TkMas _ _ }
 	'-'            { MkToken TkMenos }
 	'*'            { MkToken TkPor }
 	'/'            { MkToken TkEntre }
@@ -69,7 +69,7 @@ Terminals
 	real           { MkToken (TkReal $$) }
 	constmat       { MkToken (TkConstanteMat $$) }
 	funcion        { MkToken (TkFuncion $$) }
-	'('            { MkToken TkParentesisI }
+	'('            { ParserStatus TkParentesisI _ _ }
 	')'            { MkToken TkParentesisD }
 	'['            { MkToken TkCorcheteI }
 	']'            { MkToken TkCorcheteD }
