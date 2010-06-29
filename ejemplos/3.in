@@ -1,5 +1,6 @@
 for i in [2]
-x = 2
+x = 2;
+a = hola
 endfor
 #x = 3 causa internal happy error
 x = 3;

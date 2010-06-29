@@ -70,11 +70,11 @@ SEC_INSTR  : INSTR ';'                                       { [$1] }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
-       | "plot" EM ',' EG "with" '[' ']'                     { Graficar $2 $4 []}
+       | "plot" EM ',' EG "with" '[' ']'                     { GraficarEstilo $2 $4 []}
        | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { Graficar $2 $4 (reverse $7) }
-       | "plot" EM ',' EG "with" estilo                      { Graficar $2 $4 [(mkEstilo $6)] }
-       | "plot" EM ',' EG                                    { Graficar $2 $4 []}
+       '[' SECUENCIA_ESTILO ']'                              { GraficarEstilo $2 $4 (reverse $7) }
+       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 [(mkEstilo $6)] }
+       | "plot" EM ',' EG                                    { Graficar $2 $4}
        | "push_back" '(' identificador ',' EM ')'            { PushBack $3 $5 }
 
 CICLO  : "for" identificador "in" EM
