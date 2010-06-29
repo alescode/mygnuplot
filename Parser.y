@@ -70,12 +70,11 @@ SEC_INSTR  : INSTR ';'                                       { [$1] }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
-       | "plot" EM ',' EG "with" '[' ']'                     { GraficarVacio $2 $4 }
+       | "plot" EM ',' EG "with" '[' ']'                     { Graficar $2 $4 []}
        | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 
-                                                               (reverse $7) }
-       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 (mkEstilo $6) }
-       | "plot" EM ',' EG                                    { Graficar $2 $4 }
+       '[' SECUENCIA_ESTILO ']'                              { Graficar $2 $4 (reverse $7) }
+       | "plot" EM ',' EG "with" estilo                      { Graficar $2 $4 [(mkEstilo $6)] }
+       | "plot" EM ',' EG                                    { Graficar $2 $4 []}
        | "push_back" '(' identificador ',' EM ')'            { PushBack $3 $5 }
 
 CICLO  : "for" identificador "in" EM
@@ -100,8 +99,8 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | funcion '(' EM ')'                            { Funcion $1 $3 }
     | identificador '(' EM ')'                      { Funcion $1 $3 }
     | identificador                                 { Variable $1 }
-    | '[' ']'                                       { ArregloVacio } -- Cambiar
-    | '[' SECUENCIA_EM ']'                          { SecuenciaExpMat $ reverse $2 }
+    | '[' ']'                                       { (ArregloEM []) } -- Cambiar
+    | '[' SECUENCIA_EM ']'                          { ArregloEM $ reverse $2 }
     | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
     | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2 (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }

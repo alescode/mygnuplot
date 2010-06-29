@@ -12,9 +12,8 @@ data EM = Suma EM EM
         | Real String
         | ConstMat String
         | Funcion String EM
-        | Variable String -- Como compactar?? ArregloComprension EM Variable EM
-        | ArregloVacio
-        | SecuenciaExpMat [EM]
+        | Variable String
+        | ArregloEM [EM]
         | Rango EM EM
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
@@ -43,9 +42,7 @@ data Bloque = Secuencia [Instruccion]
 data Instruccion = DefFuncion String String EM
                  | Asignacion String EM
                  | GraficarVacio EM EG
-                 | GraficarArreglo EM EG [Estilo] 
-                 | GraficarEstilo EM EG Estilo
-                 | Graficar EM EG
+                 | Graficar EM EG [Estilo]
                  | CicloStep String EM EM Bloque
                  | Ciclo String EM Bloque
                  | PushBack String EM
