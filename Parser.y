@@ -61,32 +61,31 @@ import AS
 %%
 
 -- Exportar "Variable"
-SEC_INSTR  : INSTR ';'                                       { $1 }
-           | CICLO                                           { $1 }
-           | SEC_INSTR INSTR ';'                             { Secuenciacion $1 $2 }
-           | SEC_INSTR CICLO                                 { Secuenciacion $1 $2 }
+PROGRAMA   : SEC_INSTR                                       { Secuencia $ reverse $1 }
+
+SEC_INSTR  : INSTR ';'                                       { [$1] }
+           | CICLO                                           { [$1] }
+           | SEC_INSTR INSTR ';'                             { $2 : $1 }
+           | SEC_INSTR CICLO                                 { $2 : $1 }
 
 INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
        | identificador '=' EM                                { Asignacion $1 $3 }
        | "plot" EM ',' EG "with" '[' ']'                     { GraficarVacio $2 $4 }
        | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 $7 }
+       '[' SECUENCIA_ESTILO ']'                              { GraficarArreglo $2 $4 
+                                                               (reverse $7) }
        | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 (mkEstilo $6) }
        | "plot" EM ',' EG                                    { Graficar $2 $4 }
-       | "push_back" '(' identificador ',' EM ')'            { PB $3 $5 }
+       | "push_back" '(' identificador ',' EM ')'            { PushBack $3 $5 }
 
 CICLO  : "for" identificador "in" EM
-         SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 $5 }
+         SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 (Secuencia $ reverse $5) }
        | "for" identificador "in" EM 
-         "step" int SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 $7 }
+         "step" EM SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 (Secuencia $ reverse $7) }
 
-SEC_INSTR_CICLO : INSTR                                      { $1 }
-                | CICLO                                      { $1 }
-                | SEC_INSTR_CICLO ';' INSTR                  { Secuenciacion $1 $3 }
-
---OJO CAMBIAR UNITARIO
-SECUENCIA_ESTILO  : SECUENCIA_ESTILO ',' estilo              { SecuenciaES $1 (mkEstilo $3) }
-                  | estilo                                   { Unitario (mkEstilo $1) }
+SEC_INSTR_CICLO : INSTR                                      { [$1] }
+                | CICLO                                      { [$1] }
+                | SEC_INSTR_CICLO ';' INSTR                  { $3 : $1 }
 
 EM  : EM '+' EM                                     { Suma  $1 $3 }
     | EM '-' EM                                     { Resta $1 $3 }
@@ -101,14 +100,17 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | funcion '(' EM ')'                            { Funcion $1 $3 }
     | identificador '(' EM ')'                      { Funcion $1 $3 }
     | identificador                                 { Variable $1 }
-    | '[' ']'                                       { ArregloVacio }
-    | '[' SECUENCIA_EM ']'                          { ArregloEM $2 }
+    | '[' ']'                                       { ArregloVacio } -- Cambiar
+    | '[' SECUENCIA_EM ']'                          { SecuenciaExpMat $ reverse $2 }
     | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
     | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2 (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }
 
-SECUENCIA_EM  : EM                     { Unitaria $1 }
-              | SECUENCIA_EM ',' EM    { SecuenciaEM $1 $3 }
+SECUENCIA_EM  : EM                     { [$1] }
+              | SECUENCIA_EM ',' EM    { $3 : $1 }
+
+SECUENCIA_ESTILO : estilo                                   { [mkEstilo $1] }
+                 | SECUENCIA_ESTILO ',' estilo              { mkEstilo $3 : $1 }
 
 COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }

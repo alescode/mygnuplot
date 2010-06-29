@@ -14,7 +14,7 @@ data EM = Suma EM EM
         | Funcion String EM
         | Variable String -- Como compactar?? ArregloComprension EM Variable EM
         | ArregloVacio
-        | ArregloEM SecuenciaExpMat
+        | SecuenciaExpMat [EM]
         | Rango EM EM
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
@@ -33,34 +33,28 @@ data Condicional = Condicion EM
                  | Igual EM EM
                  deriving (Eq, Show)
 
-data SecuenciaExpMat = Unitaria EM
-                     | SecuenciaEM SecuenciaExpMat EM
-                     deriving (Eq, Show)
-
 data EG = Graficable EM
         | Archivo String
         deriving (Eq, Show)
 
+data Bloque = Secuencia [Instruccion]
+            deriving (Eq, Show)
+
 data Instruccion = DefFuncion String String EM
-                 | Secuenciacion Instruccion Instruccion
                  | Asignacion String EM
                  | GraficarVacio EM EG
-                 | GraficarArreglo EM EG SecuenciaEstilo 
+                 | GraficarArreglo EM EG [Estilo] 
                  | GraficarEstilo EM EG Estilo
                  | Graficar EM EG
-                 | CicloStep String EM String Instruccion
-                 | Ciclo String EM Instruccion
-                 | PB String EM
+                 | CicloStep String EM EM Bloque
+                 | Ciclo String EM Bloque
+                 | PushBack String EM
                  deriving (Eq, Show)
 
 data Estilo = Lineas
             | Puntos
             | LineasPunteadas 
             deriving (Eq)
-
-data SecuenciaEstilo = Unitario Estilo
-                     | SecuenciaES SecuenciaEstilo Estilo
-                     deriving (Eq, Show)
 
 mkEstilo :: String -> Estilo
 mkEstilo str
