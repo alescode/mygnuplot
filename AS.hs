@@ -66,7 +66,72 @@ instance Show Estilo where
       show Lineas = "lines"
       show Puntos = "points"
       show LineasPunteadas = "linespoints"
-      
+
+{-
+showInstruccion :: Int -> Instruccion -> String
+showInstruccion n (DefFuncion name var cuerpo) = (replicate (2*n) ' ')
+					 							++ "Declaracion\n"
+												++ (replicate (2*n + 2) ' ')
+												++ name
+												++ "( " ++ var ++ " )=\n"
+												++ showEM (n+1) cuerpo
+												++ "\n"
+showInstruccion n (Secuenciacion i1 i2) = (replicate (2*n) ' ')
+										  ++ showInstruccion (n+1) i1
+										  ++ showInstruccion (n+1) i2
+										  ++ "\n"
+showInstruccion n (Asignacion v valor) = (replicate (2*n) ' ')
+										++ "Asignacion " ++ v ++ "\n"
+										++ showEM (n+1) valor
+										++ "\n"
+showInstruccion n (GraficarVacio e g) = (replicate (2*n) ' ')
+										++ "Graficar\n"
+										++ showEM (n+1) e
+										++ showEG (n+1) g
+										++ "\n"
+showInstruccion n (GraficarArreglo e g estilos) = (replicate (2*n) ' ')
+												 ++ "Graficar\n"
+												 ++ showEM (n+1) e
+												 ++ showEG (n+1) g
+												 ++ showEstilos (n+1) estilos
+												 ++ "\n"
+showInstruccion n (GraficarEstilo e g estilo) = (replicate (2*n) ' ')
+											   ++ "Graficar\n"
+											   ++ showEM (n+1) e
+											   ++ showEG (n+1) g
+											   ++ showEstilo (n+1) estilo
+											   ++ "\n"
+showInstruccion n (Graficar e g) = (replicate (2*n) ' ')
+								  ++ "Graficar\n"
+								  ++ showEM (n+1) e
+								  ++ showEG (n+1) g
+								  ++ "\n"
+showInstruccion n (CicloStep var exp paso instr) = (replicate (2*n) ' ')
+												  ++ "Ciclo \n"
+												  ++ (replicate (2*n + 2) ' ')
+												  ++ var ++ " in \n"
+												  ++ showEM (n+1) exp
+												  ++ (replicate (2*n + 2) ' ')
+												  ++ " step " ++ paso ++ "\n"
+												  ++ showInstruccion (n+1) instr
+												  ++ "\n"
+showInstruccion n (Ciclo var exp instr) = (replicate (2*n) ' ')
+										 ++ "Ciclo \n"
+										 ++ (replicate (2*n + 2) ' ')					
+										 ++ var ++ " in \n"
+										 ++ showEM (n+1) exp
+										 ++ showInstruccion (n+1) instr
+										 ++ "\n"
+showInstruccion n (PB var exp) = (replicate (2*n) ' ')
+							   ++ "push_back " ++ var
+							   ++ showEM (n+1) exp
+							   ++ "\n"
+
+showEM n _ = show ""
+
+instance Show Instruccion where
+	  show fun = showInstruccion 0 fun
+-}
 {-
 
 instance Show Prog where

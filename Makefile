@@ -1,5 +1,5 @@
 HERRAMIENTAS = Lexer.x Parser.y
-FUENTES = Main.hs
+FUENTES = Main.hs AS.hs
 
 all: mygnuplot
 
