@@ -111,21 +111,42 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
 SECUENCIA_EM  : EM                     { [$1] }
               | SECUENCIA_EM ',' EM    { $3 : $1 }
 
+SECUENCIA_COND  : COND                       { [$1] }
+                | SECUENCIA_COND ',' COND    { $3 : $1 }
+
 SECUENCIA_ESTILO : estilo                                   { [readEstilo $1] }
                  | SECUENCIA_ESTILO ',' estilo              { readEstilo $3 : $1 }
 
-COND  : EM                                     { Condicion $1 }
-      | COND "AND" COND                        { Conjuncion $1 $3 }
-      | COND "OR" COND                         { Disyuncion $1 $3 }  
-      | "NOT" COND                             { Negacion $2 } 
-      | COND '>' COND                          { MayorQue $1 $3 }
-      | COND '<' COND                          { MenorQue $1 $3 }
-      | COND "<=" COND                         { MenorIgual $1 $3 }
-      | COND ">=" COND                         { MayorIgual $1 $3 }
-      | COND "==" COND                         { Igual $1 $3 }
+COND  : COND '+' COND                                 { CSuma $1 $3 }
+      | COND '-' COND                                 { CResta $1 $3 }
+      | COND '*' COND                                 { CMultiplicacion $1 $3 }
+      | COND '/' COND                                 { CDivision $1 $3 }
+      | COND '^' COND                                 { CPotencia $1 $3 }
+      | '-' COND  %prec menos_unario                  { CMenos $2 }
+      | '(' COND ')'                                  { $2 }
+      | int                                           { CEntero $1 }
+      | real                                          { CReal $1 }
+      | constmat                                      { CConstMat $1 }
+      | funcion '(' COND ')'                          { CondicionalLlamada (CLlamadaFuncion $1 $3) }
+      | identificador '(' COND ')'                    { CondicionalLlamada (CLlamadaFuncion $1 $3) }
+      | identificador                                 { CondicionalVariable (Variable $1) }
+      | '[' ']'                                       { ArregloCondicional [] }
+      | '[' SECUENCIA_COND ']'                        { ArregloCondicional $ reverse $2 }
+      | "range" '(' COND ',' COND ')'                 { CRango $3 $5 }
+      | '[' COND "for" identificador "in" COND ']'    { CArregloComprension $2 (Variable $4) $6 }
+      | "if" '(' COND ',' COND ',' COND ')'           { CExpresionCond $3 $5 $7 } 
+      | COND "AND" COND                           { Conjuncion $1 $3 }
+      | COND "OR" COND                            { Disyuncion $1 $3 }  
+      | "NOT" COND                                { Negacion $2 } 
+      | COND '>' COND                             { MayorQue $1 $3 }
+      | COND '<' COND                             { MenorQue $1 $3 }
+      | COND "<=" COND                            { MenorIgual $1 $3 }
+      | COND ">=" COND                            { MayorIgual $1 $3 }
+      | COND "==" COND                            { Igual $1 $3 }
 
-EG    : EM                                     { Graficable $1 }
-      | archivo                                { Archivo $1 }
+EG    : EM                                        { Graficable $1 }
+      | archivo                                   { Archivo $1 }
+
 
 {
 

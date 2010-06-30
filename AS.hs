@@ -8,6 +8,9 @@ data Variable = Variable String
 data LlamadaFuncion = LlamadaFuncion String EM
                     deriving (Eq, Show)
 
+data CLlamadaFuncion = CLlamadaFuncion String Condicional
+                    deriving (Eq, Show)
+
 data EM = Suma EM EM
         | Resta EM EM
         | Menos EM
@@ -25,7 +28,21 @@ data EM = Suma EM EM
         | ExpresionCond Condicional EM EM
         deriving (Eq)
 
-data Condicional = Condicion EM
+data Condicional = CSuma Condicional Condicional
+                 | CResta Condicional Condicional
+                 | CMenos Condicional
+                 | CMultiplicacion Condicional Condicional
+                 | CDivision Condicional Condicional
+                 | CPotencia Condicional Condicional
+                 | CEntero String
+                 | CReal String
+                 | CConstMat String
+                 | CondicionalLlamada CLlamadaFuncion
+                 | CondicionalVariable Variable
+                 | ArregloCondicional [Condicional]
+                 | CRango Condicional Condicional
+                 | CArregloComprension Condicional Variable Condicional
+                 | CExpresionCond Condicional Condicional Condicional
                  | Conjuncion Condicional Condicional
                  | Disyuncion Condicional Condicional
                  | Negacion Condicional
@@ -140,10 +157,67 @@ showArregloEM n [] = ""
 showArregloEM n (e:es) = showEM n e
 					    ++ showArregloEM n es 
 
-showCond :: Int -> Condicional -> String
-showCond n (Condicion em) = (replicate (2*n) ' ') ++ "Condicion\n"
-							++ showEM (n+1) em
+showArregloCond :: Int -> [Condicional] -> String
+showArregloCond n [] = ""
+showArregloCond n (e:es) = showCond n e
+					    ++ showArregloCond n es 
 
+showCond :: Int -> Condicional -> String
+showCond n (CSuma i d) = (replicate (2*n) ' ') ++ "Suma\n"
+					++ showCond (n+1) i
+					++ showCond (n+1) d
+
+showCond n (CResta i d) = (replicate (2*n) ' ') ++ "Resta\n"
+					  ++ showCond (n+1) i
+					  ++ showCond (n+1) d
+
+showCond n (CMenos e) = (replicate (2*n) ' ') ++ "Menos\n"
+					++ showCond (n+1) e
+
+showCond n (CMultiplicacion i d) = (replicate (2*n) ' ') ++ "Multiplicacion\n"
+							  ++ showCond (n+1) i
+							  ++ showCond (n+1) d
+
+showCond n (CDivision i d) = (replicate (2*n) ' ') ++ "Division\n"
+					    ++ showCond (n+1) i
+						  ++ showCond (n+1) d
+
+showCond n (CPotencia i d) = (replicate (2*n) ' ') ++ "Potencia\n"
+					  ++ showCond (n+1) i
+					  ++ showCond (n+1) d 
+
+showCond n (CEntero e) = (replicate (2*n) ' ') ++ "Entero " ++ e ++ "\n"
+showCond n (CReal e) = (replicate (2*n) ' ') ++ "Real " ++ e ++ "\n" 
+showCond n (CConstMat e) = (replicate (2*n) ' ') ++ "Constante " ++ e ++ "\n" 
+showCond n (CondicionalVariable v) = (replicate (2*n) ' ') ++ show v
+
+showCond n (CondicionalLlamada (CLlamadaFuncion nombre cuerpo)) = (replicate (2*n) ' ') ++ "Funcion "
+									++ nombre ++ " (\n"
+									++ showCond (n+1) cuerpo
+									++ " )\n"
+
+showCond n (ArregloCondicional e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
+							++ (replicate (2*n + 2) ' ') ++ "[\n"
+							++ showArregloCond (n+1) e
+							++ (replicate (2*n + 2) ' ') ++  "]\n"
+
+showCond n (CRango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
+						  ++ showCond (n+1) inf
+						  ++ showCond (n+1) sup
+
+showCond n (CArregloComprension exp var arr) = (replicate (2*n) ' ') ++ "Arreglo Comprension\n"
+										   ++ (replicate (2*n + 1) ' ') ++ "Expresion\n"
+										   ++ showCond (n+1) exp
+										   ++ (replicate (2*n + 1) ' ') ++ "Variable\n"
+										   ++ showCond (n+1) (CondicionalVariable var)
+										   ++ (replicate (2*n + 1) ' ') ++ "ExpresionArreglo\n"
+										   ++ showCond (n+1) arr
+
+showCond n (CExpresionCond cond r1 r2) = (replicate (2*n) ' ') ++ "Expresion Condicional\n"
+									 ++ showCond (n+1) cond
+									 ++ showCond (n+1) r1
+									 ++ showCond (n+1) r2     
+                                     
 showCond n (Conjuncion c1 c2) = (replicate (2*n) ' ') ++ "AND\n"
 							   ++ showCond (n+1) c1
 							   ++ showCond (n+1) c2
