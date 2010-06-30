@@ -60,7 +60,7 @@ import AS
 %%
 
 -- Exportar "Variable"
-PROGRAMA      : SECUENCIA_1                                  { reverse $1 }
+PROGRAMA      : SECUENCIA_1                                  { Secuencia $ reverse $1 }
 
 SECUENCIA_1   : INSTR                                        { [$1] }
               | CICLO                                        { [$1] }
