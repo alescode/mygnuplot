@@ -21,7 +21,7 @@ data EM = Suma EM EM
         | EMVariable Variable
         | ArregloEM [EM]
         | Rango EM EM
-        | ArregloComprension EM EM EM
+        | ArregloComprension EM Variable EM
         | ExpresionCond Condicional EM EM
         deriving (Eq)
 
@@ -62,6 +62,10 @@ instance Show Estilo where
     show Puntos = "Estilo points"
     show LineasPunteadas = "Estilo linespoints"
 
+readEstilo :: String -> Estilo
+readEstilo "lines" = Lineas
+readEstilo "points" = Puntos
+readEstilo "linespoints" = LineasPunteadas
 
 instance Show EM where
 	show em = showEM 0 em
@@ -122,7 +126,7 @@ showEM n (ArregloComprension exp var arr) = (replicate (2*n) ' ') ++ "Arreglo Co
 										   ++ (replicate (2*n + 1) ' ') ++ "Expresion\n"
 										   ++ showEM (n+1) exp
 										   ++ (replicate (2*n + 1) ' ') ++ "Variable\n"
-										   ++ showEM (n+1) var
+										   ++ showEM (n+1) (EMVariable var)
 										   ++ (replicate (2*n + 1) ' ') ++ "ExpresionArreglo\n"
 										   ++ showEM (n+1) arr
 

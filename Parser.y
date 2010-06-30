@@ -68,19 +68,23 @@ SEC_INSTR  : INSTR ';'                                       { [$1] }
            | SEC_INSTR INSTR ';'                             { $2 : $1 }
            | SEC_INSTR CICLO                                 { $2 : $1 }
 
-INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 $3 $6 }
-       | identificador '=' EM                                { Asignacion $1 $3 }
+INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 (Variable $3) $6 }
+       | identificador '=' EM                                { Asignacion (Variable $1) $3 }
        | "plot" EM ',' EG "with" '[' ']'                     { GraficarEstilo $2 $4 []}
        | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarEstilo $2 $4 (reverse $7) }
-       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 $4 [(mkEstilo $6)] }
+       '[' SECUENCIA_ESTILO ']'                              { GraficarEstilo $2 $4
+                                                               (reverse $7) }
+       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 
+                                                               $4 [(readEstilo $6)] }
        | "plot" EM ',' EG                                    { Graficar $2 $4}
-       | "push_back" '(' identificador ',' EM ')'            { PushBack $3 $5 }
+       | "push_back" '(' identificador ',' EM ')'            { PushBack (Variable $3) $5 }
 
 CICLO  : "for" identificador "in" EM
-         SEC_INSTR_CICLO "endfor"                            { Ciclo $2 $4 (Secuencia $ reverse $5) }
+         SEC_INSTR_CICLO "endfor"                            { Ciclo (Variable $2) 
+                                                             $4 (Secuencia $ reverse $5) }
        | "for" identificador "in" EM 
-         "step" EM SEC_INSTR_CICLO "endfor"                 { CicloStep $2 $4 $6 (Secuencia $ reverse $7) }
+         "step" EM SEC_INSTR_CICLO "endfor"                 { CicloStep (Variable $2)
+                                                              $4 $6 (Secuencia $ reverse $7) }
 
 SEC_INSTR_CICLO : INSTR                                      { [$1] }
                 | CICLO                                      { [$1] }
@@ -96,10 +100,10 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }
     | constmat                                      { ConstMat $1 }
-    | funcion '(' EM ')'                            { Funcion $1 $3 }
-    | identificador '(' EM ')'                      { Funcion $1 $3 }
-    | identificador                                 { Variable $1 }
-    | '[' ']'                                       { (ArregloEM []) } -- Cambiar
+    | funcion '(' EM ')'                            { EMLlamada (LlamadaFuncion $1 $3) }
+    | identificador '(' EM ')'                      { EMLlamada (LlamadaFuncion $1 $3) }
+    | identificador                                 { EMVariable (Variable $1) }
+    | '[' ']'                                       { ArregloEM [] }
     | '[' SECUENCIA_EM ']'                          { ArregloEM $ reverse $2 }
     | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
     | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2 (Variable $4) $6 }
@@ -108,8 +112,8 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
 SECUENCIA_EM  : EM                     { [$1] }
               | SECUENCIA_EM ',' EM    { $3 : $1 }
 
-SECUENCIA_ESTILO : estilo                                   { [mkEstilo $1] }
-                 | SECUENCIA_ESTILO ',' estilo              { mkEstilo $3 : $1 }
+SECUENCIA_ESTILO : estilo                                   { [readEstilo $1] }
+                 | SECUENCIA_ESTILO ',' estilo              { readEstilo $3 : $1 }
 
 COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }
