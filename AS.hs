@@ -116,26 +116,24 @@ showEM n (Multiplicacion i d) = (replicate (2*n) ' ') ++ "Multiplicacion\n"
 							  ++ showEM (n+1) d
 
 showEM n (Division i d) = (replicate (2*n) ' ') ++ "Division\n"
-					    ++ showEM (n+1) i
-						  ++ showEM (n+1) d
+					     ++ showEM (n+1) i
+						 ++ showEM (n+1) d
 
 showEM n (Potencia i d) = (replicate (2*n) ' ') ++ "Potencia\n"
-					  ++ showEM (n+1) i
-					  ++ showEM (n+1) d 
+						 ++ showEM (n+1) i
+						 ++ showEM (n+1) d 
 
 showEM n (Entero e) = (replicate (2*n) ' ') ++ "Entero " ++ e ++ "\n"
 showEM n (Real e) = (replicate (2*n) ' ') ++ "Real " ++ e ++ "\n" 
 showEM n (ConstMat e) = (replicate (2*n) ' ') ++ "Constante " ++ e ++ "\n" 
-showEM n (EMVariable v) = (replicate (2*n) ' ') ++ show v
+showEM n (EMVariable v) = (replicate (2*n) ' ') ++ show v ++ "\n"
 
 showEM n (EMLlamada (LlamadaFuncion nombre cuerpo)) = (replicate (2*n) ' ') ++ "Funcion "
 									++ nombre ++ "\n"
 									++ showEM (n+1) cuerpo
 
 showEM n ( ArregloEM e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
-							++ (replicate (2*n + 2) ' ')
-							++ showArregloEM (n+1) e
-							++ (replicate (2*n + 2) ' ')
+						  ++ showArregloEM (n+1) e
 
 showEM n (Rango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
 						  ++ showEM (n+1) inf
@@ -198,9 +196,7 @@ showCond n (CondicionalLlamada (CLlamadaFuncion nombre cuerpo)) = (replicate (2*
 									++ showCond (n+1) cuerpo
 
 showCond n (ArregloCondicional e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
-							++ (replicate (2*n + 2) ' ')
-							++ showArregloCond (n+1) e
-							++ (replicate (2*n + 2) ' ')
+									++ showArregloCond (n+1) e
 
 showCond n (CRango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
 						  ++ showCond (n+1) inf
@@ -219,34 +215,34 @@ showCond n (CExpresionCond cond r1 r2) = (replicate (2*n) ' ') ++ "Expresion Con
 									 ++ showCond (n+1) r1
 									 ++ showCond (n+1) r2     
                                      
-showCond n (Conjuncion c1 c2) = (replicate (2*n) ' ') ++ "AND\n"
+showCond n (Conjuncion c1 c2) = (replicate (2*n) ' ') ++ "Conjuncion\n"
 							   ++ showCond (n+1) c1
 							   ++ showCond (n+1) c2
 
-showCond n (Disyuncion i d) = (replicate (2*n) ' ') ++ "OR\n"
+showCond n (Disyuncion i d) = (replicate (2*n) ' ') ++ "Disyuncion\n"
 						    ++ showCond (n+1) i
 						    ++ showCond (n+1) d
 
-showCond n (Negacion c) = (replicate (2*n) ' ') ++ "NOT\n"
+showCond n (Negacion c) = (replicate (2*n) ' ') ++ "Negacion\n"
 						   ++ showCond (n+1) c
 
-showCond n (MayorQue i d) = (replicate (2*n) ' ') ++ ">\n"
+showCond n (MayorQue i d) = (replicate (2*n) ' ') ++ "Mayor\n"
 						   ++ showCond (n+1) i
 						   ++ showCond (n+1) d
 						   
-showCond n (MenorQue i d) = (replicate (2*n) ' ') ++ "<\n"
+showCond n (MenorQue i d) = (replicate (2*n) ' ') ++ "Menor\n"
 						   ++ showCond (n+1) i
 						   ++ showCond (n+1) d
 
-showCond n (MayorIgual i d) = (replicate (2*n) ' ') ++ ">=\n"
+showCond n (MayorIgual i d) = (replicate (2*n) ' ') ++ "MayorIgual\n"
 						     ++ showCond (n+1) i
 							 ++ showCond (n+1) d
 
-showCond n (MenorIgual i d) = (replicate (2*n) ' ') ++ "<=\n"
+showCond n (MenorIgual i d) = (replicate (2*n) ' ') ++ "MenorIgual\n"
 			 			     ++ showCond (n+1) i
 							 ++ showCond (n+1) d
 
-showCond n (Igual i d) = (replicate (2*n) ' ') ++ "==\n"
+showCond n (Igual i d) = (replicate (2*n) ' ') ++ "Igual\n"
 						++ showCond (n+1) i
 						++ showCond (n+1) d
 						   
@@ -259,7 +255,7 @@ showEG n (Archivo f) = (replicate (2*n) ' ') ++ "Archivo Graficable\n"
 showBloque :: Int -> Bloque -> String
 showBloque n (Secuencia []) = (replicate (2*n) ' ')
 showBloque n (Secuencia (x:xs)) = (replicate (2*n) ' ')
-								++ show x ++ showBloque (n+1) (Secuencia xs) 
+								++ show x ++ showBloque (n) (Secuencia xs) 
 
 showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (replicate (2*n) ' ')
@@ -267,69 +263,58 @@ showInstruccion n (DefFuncion name var cuerpo) = (replicate (2*n) ' ')
 												++ (replicate (2*n + 1) ' ')
 												++ name ++ "( " ++ show var ++ " )=\n"
 												++ showEM (n+1) cuerpo
-												++ "\n"
 
 showInstruccion n (Asignacion v valor) = (replicate (2*n) ' ')
 										++ "Asignacion\n" 
-                                        ++ showEM (n+1) (EMVariable v) ++ "\n"
+                                        ++ showEM (n+1) (EMVariable v)
 										++ showEM (n+1) valor
-										++ "\n"
 
 showInstruccion n (Graficar e g ) = (replicate (2*n) ' ')
  									 ++ "Graficar\n"
 									 ++ showEM (n+1) e
 									 ++ showEG (n+1) g
-									 ++ "\n"
 
 showInstruccion n (GraficarEstilo e g estilos) = (replicate (2*n) ' ')
 												 ++ "Graficar\n"
 												 ++ showEM (n+1) e
 												 ++ showEG (n+1) g
 												 ++ "\n" ++ (replicate (2*n + 2) ' ')
-												 ++ "with "
+												 ++ "Estilos "
 												 ++ show estilos
 												 ++ "\n"
  
 showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (2*n) ' ')
 												   ++ "Ciclo \n"
 												   ++ (replicate (2*n + 1) ' ')
-												   ++ "for " ++ show var ++ " in \n"
+												   ++ show var ++ "\n"
+												   ++ (replicate (2*n + 1) ' ')
+												   ++ "Rango " ++ "\n"
 												   ++ showEM (n+1) exp
 												   ++ (replicate (2*n + 2) ' ')
-												   ++ " step\n"
-												   ++ showEM (n+1) paso
+												   ++ " Paso\n"
+											       ++ showEM (n+1) paso
+												   ++ (replicate (2*n + 1) ' ')
+												   ++ "Cuerpo\n"
 												   ++ showBloque (n+1) cuerpo
-												   ++ "\n"
 
 showInstruccion n (Ciclo var exp cuerpo) = (replicate (2*n) ' ')
 										 ++ "Ciclo \n"
 										 ++ (replicate (2*n + 1) ' ')					
-										 ++ "for " ++ show var ++ " in \n"
+										 ++ show var ++ "\n"
+										 ++ (replicate (2*n + 1) ' ')
+										 ++ "Rango " ++ "\n"
 										 ++ showEM (n+1) exp
+										 ++ (replicate (2*n + 1) ' ')
+										 ++ "Cuerpo\n"
 										 ++ showBloque (n+1) cuerpo
-										 ++ "\n"
+
 showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
-								      ++ "push_back " ++ show var ++ "\n"
+								      ++ "PushBack\n"
+									  ++ (replicate (2*n + 2) ' ')
+									  ++ show var ++ "\n"
 									  ++ showEM (n+1) exp
-									  ++ "\n" 
 
 instance Show Instruccion where
 	  show fun = showInstruccion 0 fun
 
-{-
 
- instance Show Prog where
-      show (ExprList []) = ""
-      show (ExprList (x:xs)) = show x ++ show (ExprList xs) 
-
-instance Show Expr where
-      show expr = show' 0 expr
-            where
-                  show' n (Add exp1 exp2) = (replicate (2*n) ' ') ++ "Add\n" ++ show' (n+1) exp1 ++ show' (n+1) exp2
-                  show' n (Substract exp1 exp2) = (replicate (2*n) ' ') ++ "Substract\n" ++ show' (n+1) exp1 ++ show' (n+1) exp2
-                  show' n (Times exp1 exp2) = (replicate (2*n) ' ') ++ "Times\n" ++ show' (n+1) exp1 ++ show' (n+1) exp2
-                  show' n (Divide exp1 exp2) = (replicate (2*n) ' ') ++ "Divide\n" ++ show' (n+1) exp1 ++ show' (n+1) exp2
-                  show' n (UnaryMinus exp) = (replicate (2*n) ' ') ++ "UnaryMinus\n" ++ show' (n+1) exp
-                  show' n (Num num) = (replicate (2*n) ' ') ++ "Num: " ++ show num ++ "\n"
-                  show' n (Var s) = (replicate (2*n) ' ') ++ "Var: " ++ show s ++ "\n"
--}
