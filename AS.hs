@@ -309,7 +309,7 @@ showInstruccion n (Ciclo var exp cuerpo) = (replicate (2*n) ' ')
 										 ++ showBloque (n+1) cuerpo
 										 ++ "\n"
 showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
-								      ++ "push_back " ++ show var
+								      ++ "push_back " ++ show var ++ "\n"
 									  ++ showEM (n+1) exp
 									  ++ "\n" 
 

@@ -1,0 +1,4 @@
+#x = [3, sin(x), 34];
+#plot x, 2 with [lines, lines];
+x = if (sin(0 AND 2), 2*x, 2);
+x = 3
