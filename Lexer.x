@@ -10,6 +10,7 @@ $digito = 0-9                     -- dígitos
 $alfa = [a-zA-Z]                  -- caracteres alfabéticos
 $mm = [\+\-]                      -- un símbolo más (+) o menos (-)
 $carch = [a-zA-Z\/\.\ ]           -- archivo de UNIX
+$eof = [\0]
 
 tokens :-
     $white+                                          ;
@@ -51,13 +52,10 @@ tokens :-
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerEstado TkFuncion }
     $alfa+                                           { obtenerEstado TkIdentificador }
-    \'[^']*\'                                           { obtenerEstado TkArchivo }
+    \'[^']*\'                                        { obtenerEstado TkArchivo }
     .                                                { errorLexico }
     --obtener solo lo que esta entre comillas
 {
-
-
-
 
 -- Todas las partes derechas tienen tipo (String -> Token),
 -- especifica cuál es la función para convertir una cadena de

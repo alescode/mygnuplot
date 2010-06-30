@@ -48,11 +48,10 @@ import AS
     identificador   { ParserStatus (TkIdentificador $$) _ _ }
     archivo         { ParserStatus (TkArchivo $$) _ _ }
 
---nonassoc <?
 %left "OR"
 %left "AND"
 %right "NOT"
-%nonassoc "==" '>' '<' "<=" ">="
+%left "==" '>' '<' "<=" ">="
 %left '+' '-'
 %left '*' '/'
 %right menos_unario

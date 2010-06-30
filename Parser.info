@@ -2189,11 +2189,11 @@ State 120
 	"for"          reduce using rule 67
 	"AND"          reduce using rule 67
 	"OR"           reduce using rule 67
-	'<'            fail
-	'>'            fail
-	">="           fail
-	"<="           fail
-	"=="           fail
+	'<'            reduce using rule 67
+	'>'            reduce using rule 67
+	">="           reduce using rule 67
+	"<="           reduce using rule 67
+	"=="           reduce using rule 67
 
 
 State 121
@@ -2223,11 +2223,11 @@ State 121
 	"for"          reduce using rule 65
 	"AND"          reduce using rule 65
 	"OR"           reduce using rule 65
-	'<'            fail
-	'>'            fail
-	">="           fail
-	"<="           fail
-	"=="           fail
+	'<'            reduce using rule 65
+	'>'            reduce using rule 65
+	">="           reduce using rule 65
+	"<="           reduce using rule 65
+	"=="           reduce using rule 65
 
 
 State 122
@@ -2257,11 +2257,11 @@ State 122
 	"for"          reduce using rule 66
 	"AND"          reduce using rule 66
 	"OR"           reduce using rule 66
-	'<'            fail
-	'>'            fail
-	">="           fail
-	"<="           fail
-	"=="           fail
+	'<'            reduce using rule 66
+	'>'            reduce using rule 66
+	">="           reduce using rule 66
+	"<="           reduce using rule 66
+	"=="           reduce using rule 66
 
 
 State 123
@@ -2291,11 +2291,11 @@ State 123
 	"for"          reduce using rule 63
 	"AND"          reduce using rule 63
 	"OR"           reduce using rule 63
-	'<'            fail
-	'>'            fail
-	">="           fail
-	"<="           fail
-	"=="           fail
+	'<'            reduce using rule 63
+	'>'            reduce using rule 63
+	">="           reduce using rule 63
+	"<="           reduce using rule 63
+	"=="           reduce using rule 63
 
 
 State 124
@@ -2325,11 +2325,11 @@ State 124
 	"for"          reduce using rule 64
 	"AND"          reduce using rule 64
 	"OR"           reduce using rule 64
-	'<'            fail
-	'>'            fail
-	">="           fail
-	"<="           fail
-	"=="           fail
+	'<'            reduce using rule 64
+	'>'            reduce using rule 64
+	">="           reduce using rule 64
+	"<="           reduce using rule 64
+	"=="           reduce using rule 64
 
 
 State 125

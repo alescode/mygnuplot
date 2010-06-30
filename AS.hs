@@ -3,7 +3,7 @@ module AS (
 ) where
 
 data Variable = Variable String
-              deriving (Eq, Show)
+              deriving (Eq)
 
 data LlamadaFuncion = LlamadaFuncion String EM
                     deriving (Eq, Show)
@@ -74,6 +74,9 @@ data Estilo = Lineas
             | LineasPunteadas 
             deriving (Eq)
 
+instance Show Variable where
+    show (Variable s) = "Variable " ++ s
+
 instance Show Estilo where
     show Lineas = "Estilo lines"
     show Puntos = "Estilo points"
@@ -126,14 +129,13 @@ showEM n (ConstMat e) = (replicate (2*n) ' ') ++ "Constante " ++ e ++ "\n"
 showEM n (EMVariable v) = (replicate (2*n) ' ') ++ show v
 
 showEM n (EMLlamada (LlamadaFuncion nombre cuerpo)) = (replicate (2*n) ' ') ++ "Funcion "
-									++ nombre ++ " (\n"
+									++ nombre ++ "\n"
 									++ showEM (n+1) cuerpo
-									++ " )\n"
 
 showEM n ( ArregloEM e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
-							++ (replicate (2*n + 2) ' ') ++ "[\n"
+							++ (replicate (2*n + 2) ' ')
 							++ showArregloEM (n+1) e
-							++ (replicate (2*n + 2) ' ') ++  "]\n"
+							++ (replicate (2*n + 2) ' ')
 
 showEM n (Rango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
 						  ++ showEM (n+1) inf
@@ -189,17 +191,16 @@ showCond n (CPotencia i d) = (replicate (2*n) ' ') ++ "Potencia\n"
 showCond n (CEntero e) = (replicate (2*n) ' ') ++ "Entero " ++ e ++ "\n"
 showCond n (CReal e) = (replicate (2*n) ' ') ++ "Real " ++ e ++ "\n" 
 showCond n (CConstMat e) = (replicate (2*n) ' ') ++ "Constante " ++ e ++ "\n" 
-showCond n (CondicionalVariable v) = (replicate (2*n) ' ') ++ show v
+showCond n (CondicionalVariable v) = (replicate (2*n) ' ') ++ show v ++ "\n"
 
 showCond n (CondicionalLlamada (CLlamadaFuncion nombre cuerpo)) = (replicate (2*n) ' ') ++ "Funcion "
-									++ nombre ++ " (\n"
+									++ nombre ++ "\n"
 									++ showCond (n+1) cuerpo
-									++ " )\n"
 
 showCond n (ArregloCondicional e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
-							++ (replicate (2*n + 2) ' ') ++ "[\n"
+							++ (replicate (2*n + 2) ' ')
 							++ showArregloCond (n+1) e
-							++ (replicate (2*n + 2) ' ') ++  "]\n"
+							++ (replicate (2*n + 2) ' ')
 
 showCond n (CRango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
 						  ++ showCond (n+1) inf
