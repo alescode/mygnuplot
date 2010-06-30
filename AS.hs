@@ -23,10 +23,8 @@ data EM = Suma EM EM
         | Rango EM EM
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
-        deriving (Eq, Show)
+        deriving (Eq)
 
--- Multiple declaration: data Condicional = Expresion EM
--- Como arreglar esto?
 data Condicional = Condicion EM
                  | Conjuncion Condicional Condicional
                  | Disyuncion Condicional Condicional
@@ -36,14 +34,14 @@ data Condicional = Condicion EM
                  | MayorIgual Condicional Condicional
                  | MenorIgual Condicional Condicional
                  | Igual Condicional Condicional
-                 deriving (Eq, Show)
+                 deriving (Eq)
 
 data EG = Graficable EM
         | Archivo String
-        deriving (Eq, Show)
+        deriving (Eq)
 
 data Bloque = Secuencia [Instruccion]
-            deriving (Eq, Show)
+            deriving (Eq)
 
 data Instruccion = DefFuncion String Variable EM
                  | Asignacion Variable EM
@@ -52,7 +50,7 @@ data Instruccion = DefFuncion String Variable EM
                  | CicloStep Variable EM EM Bloque
                  | Ciclo Variable EM Bloque
                  | PushBack Variable EM
-                 deriving (Eq, Show)
+                 deriving (Eq)
 
 data Estilo = Lineas
             | Puntos
@@ -60,80 +58,75 @@ data Estilo = Lineas
             deriving (Eq)
 
 instance Show Estilo where
-show Lineas = "Estilo lines"
-show Puntos = "Estilo points"
-show LineasPunteadas = "Estilo linespoints"
+    show Lineas = "Estilo lines"
+    show Puntos = "Estilo points"
+    show LineasPunteadas = "Estilo linespoints"
 
-{-
+
 instance Show EM where
 	show em = showEM 0 em
 
 instance Show EG where
 	show e = showEG 0 e
 
-instance Show Estilo where
-      show Lineas = "lines"
-      show Puntos = "points"
-      show LineasPunteadas = "linespoints"
-
 instance Show Bloque where
-	  show bloque = showBloque 0 bloque
+    show bloque = showBloque 0 bloque
 
 instance Show Condicional where
 	show cond = showCond 0 cond
 
 showEM :: Int -> EM -> String
-showEM n (Suma i d) = (replicate (2*n) ' ') ++ "Suma:\n"
+showEM n (Suma i d) = (replicate (2*n) ' ') ++ "Suma\n"
 					++ showEM (n+1) i
 					++ showEM (n+1) d
 
-showEM n (Resta i d) = (replicate (2*n) ' ') ++ "Resta:\n"
+showEM n (Resta i d) = (replicate (2*n) ' ') ++ "Resta\n"
 					  ++ showEM (n+1) i
 					  ++ showEM (n+1) d
 
-showEM n (Menos e) = (replicate (2*n) ' ') ++ "Menos:\n"
+showEM n (Menos e) = (replicate (2*n) ' ') ++ "Menos\n"
 					++ showEM (n+1) e
 
-showEM n (Multiplicacion i d) = (replicate (2*n) ' ') ++ "Multiplicacion:\n"
+showEM n (Multiplicacion i d) = (replicate (2*n) ' ') ++ "Multiplicacion\n"
 							  ++ showEM (n+1) i
 							  ++ showEM (n+1) d
 
-showEM n (Division i d) = (replicate (2*n) ' ') ++ "Division:\n"
+showEM n (Division i d) = (replicate (2*n) ' ') ++ "Division\n"
 					    ++ showEM (n+1) i
 						  ++ showEM (n+1) d
 
-showEM n (Potencia i d) = (replicate (2*n) ' ') ++ "Potencia:\n"
+showEM n (Potencia i d) = (replicate (2*n) ' ') ++ "Potencia\n"
 					  ++ showEM (n+1) i
 					  ++ showEM (n+1) d 
 
-showEM n (Entero e) = (replicate (2*n) ' ') ++ "Entero: " ++ e ++ "\n"
-showEM n (Real e) = (replicate (2*n) ' ') ++ "Real: " ++ e ++ "\n" 
-showEM n (ConstMat e) = (replicate (2*n) ' ') ++ "Constante: " ++ e ++ "\n" 
-showEM n (Variable v) = (replicate (2*n) ' ') ++ "Variable: " ++ v ++ "\n" 
+showEM n (Entero e) = (replicate (2*n) ' ') ++ "Entero " ++ e ++ "\n"
+showEM n (Real e) = (replicate (2*n) ' ') ++ "Real " ++ e ++ "\n" 
+showEM n (ConstMat e) = (replicate (2*n) ' ') ++ "Constante " ++ e ++ "\n" 
+showEM n (EMVariable v) = (replicate (2*n) ' ') ++ show v
 
-showEM n (Funcion nombre cuerpo) = (replicate (2*n) ' ') ++ "Funcion "
+showEM n (EMLlamada (LlamadaFuncion nombre cuerpo)) = (replicate (2*n) ' ') ++ "Funcion "
 									++ nombre ++ " (\n"
 									++ showEM (n+1) cuerpo
 									++ " )\n"
 
-showEM n ( ArregloEM e ) = (replicate (2*n) ' ') ++ "Arreglo:\n"
+showEM n ( ArregloEM e ) = (replicate (2*n) ' ') ++ "Arreglo\n"
 							++ (replicate (2*n + 2) ' ') ++ "[\n"
 							++ showArregloEM (n+1) e
 							++ (replicate (2*n + 2) ' ') ++  "]\n"
 
-showEM n (Rango inf sup) = (replicate (2*n) ' ') ++ "Rango:\n"
+showEM n (Rango inf sup) = (replicate (2*n) ' ') ++ "Rango\n"
 						  ++ showEM (n+1) inf
 						  ++ showEM (n+1) sup
 
-showEM n (ArregloComprension exp var arr) = (replicate (2*n) ' ') ++ "Arreglo Comprension:\n"
-										   ++ (replicate (2*n + 1) ' ') ++ "Expresion:\n"
+showEM n (ArregloComprension exp var arr) = (replicate (2*n) ' ') ++ "Arreglo Comprension\n"
+										   ++ (replicate (2*n + 1) ' ') ++ "Expresion\n"
 										   ++ showEM (n+1) exp
-										   ++ (replicate (2*n + 1) ' ') ++ "Variable:\n"
+										   ++ (replicate (2*n + 1) ' ') ++ "Variable\n"
 										   ++ showEM (n+1) var
-										   ++ (replicate (2*n + 1) ' ') ++ "ExpresionArreglo:\n"
+										   ++ (replicate (2*n + 1) ' ') ++ "ExpresionArreglo\n"
 										   ++ showEM (n+1) arr
 
-showEM n (ExpresionCond cond r1 r2) = (replicate (2*n) ' ') ++ "Expresion Condicional:\n"
+showEM n (ExpresionCond cond r1 r2) = (replicate (2*n) ' ') ++ "Expresion Condicional\n"
 									 ++ showCond (n+1) cond
 									 ++ showEM (n+1) r1
 									 ++ showEM (n+1) r2
@@ -144,7 +137,7 @@ showArregloEM n (e:es) = showEM n e
 					    ++ showArregloEM n es 
 
 showCond :: Int -> Condicional -> String
-showCond n (Condicion em) = (replicate (2*n) ' ') ++ "Condicion:\n"
+showCond n (Condicion em) = (replicate (2*n) ' ') ++ "Condicion\n"
 							++ showEM (n+1) em
 
 showCond n (Conjuncion c1 c2) = (replicate (2*n) ' ') ++ "AND\n"
@@ -159,33 +152,33 @@ showCond n (Negacion c) = (replicate (2*n) ' ') ++ "NOT\n"
 						   ++ showCond (n+1) c
 
 showCond n (MayorQue i d) = (replicate (2*n) ' ') ++ ">\n"
-						   ++ showEM (n+1) i
-						   ++ showEM (n+1) d
+						   ++ showCond (n+1) i
+						   ++ showCond (n+1) d
 						   
 showCond n (MenorQue i d) = (replicate (2*n) ' ') ++ "<\n"
-						   ++ showEM (n+1) i
-						   ++ showEM (n+1) d
+						   ++ showCond (n+1) i
+						   ++ showCond (n+1) d
 
 showCond n (MayorIgual i d) = (replicate (2*n) ' ') ++ ">=\n"
-						     ++ showEM (n+1) i
-							 ++ showEM (n+1) d
+						     ++ showCond (n+1) i
+							 ++ showCond (n+1) d
 
 showCond n (MenorIgual i d) = (replicate (2*n) ' ') ++ "<=\n"
-			 			     ++ showEM (n+1) i
-							 ++ showEM (n+1) d
+			 			     ++ showCond (n+1) i
+							 ++ showCond (n+1) d
 
 showCond n (Igual i d) = (replicate (2*n) ' ') ++ "==\n"
-						++ showEM (n+1) i
-						++ showEM (n+1) d
+						++ showCond (n+1) i
+						++ showCond (n+1) d
 						   
 showEG :: Int -> EG -> String
-showEG n (Graficable em) = (replicate (2*n) ' ') ++ "Expresion Graficable:\n"
+showEG n (Graficable em) = (replicate (2*n) ' ') ++ "Expresion Graficable\n"
 							++ showEM (n+1) em
-showEG n (Archivo f) = (replicate (2*n) ' ') ++ "Archivo Graficable:\n"
+showEG n (Archivo f) = (replicate (2*n) ' ') ++ "Archivo Graficable\n"
 						++ (replicate (2*n + 2) ' ') ++ f ++ "\n"
 
 showBloque :: Int -> Bloque -> String
-showBloque n (Secuencia []) = (replicate (2*n) ' ') ++ ""
+showBloque n (Secuencia []) = (replicate (2*n) ' ')
 showBloque n (Secuencia (x:xs)) = (replicate (2*n) ' ')
 								++ show x ++ showBloque (n+1) (Secuencia xs) 
 
@@ -193,12 +186,13 @@ showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (replicate (2*n) ' ')
 					 							++ "Declaracion\n"
 												++ (replicate (2*n + 1) ' ')
-												++ name ++ "( " ++ var ++ " )=\n"
+												++ name ++ "( " ++ show var ++ " )=\n"
 												++ showEM (n+1) cuerpo
 												++ "\n"
 
 showInstruccion n (Asignacion v valor) = (replicate (2*n) ' ')
-										++ "Asignacion " ++ v ++ " =\n"
+										++ "Asignacion\n" 
+                                        ++ showEM (n+1) (EMVariable v) ++ "\n"
 										++ showEM (n+1) valor
 										++ "\n"
 
@@ -220,7 +214,7 @@ showInstruccion n (GraficarEstilo e g estilos) = (replicate (2*n) ' ')
 showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (2*n) ' ')
 												   ++ "Ciclo \n"
 												   ++ (replicate (2*n + 1) ' ')
-												   ++ "for " ++ var ++ " in \n"
+												   ++ "for " ++ show var ++ " in \n"
 												   ++ showEM (n+1) exp
 												   ++ (replicate (2*n + 2) ' ')
 												   ++ " step\n"
@@ -231,18 +225,19 @@ showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (2*n) ' ')
 showInstruccion n (Ciclo var exp cuerpo) = (replicate (2*n) ' ')
 										 ++ "Ciclo \n"
 										 ++ (replicate (2*n + 1) ' ')					
-										 ++ "for " ++ var ++ " in \n"
+										 ++ "for " ++ show var ++ " in \n"
 										 ++ showEM (n+1) exp
 										 ++ showBloque (n+1) cuerpo
 										 ++ "\n"
 showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
-								      ++ "push_back " ++ var
+								      ++ "push_back " ++ show var
 									  ++ showEM (n+1) exp
 									  ++ "\n" 
 
 instance Show Instruccion where
 	  show fun = showInstruccion 0 fun
--}{-
+
+{-
 
  instance Show Prog where
       show (ExprList []) = ""
