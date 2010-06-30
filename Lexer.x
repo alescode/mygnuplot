@@ -51,7 +51,7 @@ tokens :-
     "sin" | "cos" | "tan" | "exp" | "log" |
     "ceil" | "floor"                                 { obtenerEstado TkFuncion }
     $alfa+                                           { obtenerEstado TkIdentificador }
-    \'.*\'                                           { obtenerEstado TkArchivo }
+    \'[^']*\'                                           { obtenerEstado TkArchivo }
     .                                                { errorLexico }
     --obtener solo lo que esta entre comillas
 {
