@@ -17,8 +17,8 @@ badd +38 Parser.info
 badd +2 NoMonad.hs
 badd +48 GNULex.x
 badd +725 Parser.hs
-badd +0 AS.hs
-badd +0 5.in
+badd +1 AS.hs
+badd +1 5.in
 args Parser.y
 set lines=38 columns=115
 edit Parser.y
@@ -35,7 +35,7 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 91 - ((34 * winheight(0) + 17) / 35)
+let s:l = 91 - ((35 * winheight(0) + 18) / 36)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -75,12 +75,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 9 - ((8 * winheight(0) + 17) / 35)
+let s:l = 195 - ((31 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-9
-normal! 03l
+195
+normal! 077l
 tabedit Lexer.x
 set splitbelow splitright
 wincmd t
