@@ -115,11 +115,11 @@ COND  : EM                                     { Condicion $1 }
       | COND "AND" COND                        { Conjuncion $1 $3 }
       | COND "OR" COND                         { Disyuncion $1 $3 }  
       | "NOT" COND                             { Negacion $2 } 
-      | EM '>' EM                              { MayorQue $1 $3 }
-      | EM '<' EM                              { MenorQue $1 $3 }
-      | EM "<=" EM                             { MenorIgual $1 $3 }
-      | EM ">=" EM                             { MayorIgual $1 $3 }
-      | EM "==" EM                             { Igual $1 $3 }
+      | COND '>' COND                          { MayorQue $1 $3 }
+      | COND '<' COND                          { MenorQue $1 $3 }
+      | COND "<=" COND                         { MenorIgual $1 $3 }
+      | COND ">=" COND                         { MayorIgual $1 $3 }
+      | COND "==" COND                         { Igual $1 $3 }
 
 EG    : EM                                     { Graficable $1 }
       | archivo                                { Archivo $1 }

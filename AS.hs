@@ -159,24 +159,24 @@ showCond n (Negacion c) = (replicate (2*n) ' ') ++ "NOT\n"
 						   ++ showCond (n+1) c
 
 showCond n (MayorQue i d) = (replicate (2*n) ' ') ++ ">\n"
-						   ++ showEM (n+1) i
-						   ++ showEM (n+1) d
+						   ++ showCond (n+1) i
+						   ++ showCond (n+1) d
 						   
 showCond n (MenorQue i d) = (replicate (2*n) ' ') ++ "<\n"
-						   ++ showEM (n+1) i
-						   ++ showEM (n+1) d
+						   ++ showCond (n+1) i
+						   ++ showCond (n+1) d
 
 showCond n (MayorIgual i d) = (replicate (2*n) ' ') ++ ">=\n"
-						     ++ showEM (n+1) i
-							 ++ showEM (n+1) d
+						     ++ showCond (n+1) i
+							 ++ showCond (n+1) d
 
 showCond n (MenorIgual i d) = (replicate (2*n) ' ') ++ "<=\n"
-			 			     ++ showEM (n+1) i
-							 ++ showEM (n+1) d
+			 			     ++ showCond (n+1) i
+							 ++ showCond (n+1) d
 
 showCond n (Igual i d) = (replicate (2*n) ' ') ++ "==\n"
-						++ showEM (n+1) i
-						++ showEM (n+1) d
+						++ showCond (n+1) i
+						++ showCond (n+1) d
 						   
 showEG :: Int -> EG -> String
 showEG n (Graficable em) = (replicate (2*n) ' ') ++ "Expresion Graficable:\n"
