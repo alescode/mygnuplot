@@ -17,6 +17,8 @@ badd +38 Parser.info
 badd +2 NoMonad.hs
 badd +48 GNULex.x
 badd +725 Parser.hs
+badd +0 AS.hs
+badd +0 5.in
 args Parser.y
 set lines=38 columns=115
 edit Parser.y
@@ -33,12 +35,52 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 55 - ((0 * winheight(0) + 17) / 35)
+let s:l = 91 - ((34 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-55
-normal! 04l
+91
+normal! 0
+tabedit 5.in
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 3 - ((2 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+3
+normal! 05l
+tabedit AS.hs
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let s:l = 9 - ((8 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+9
+normal! 03l
 tabedit Lexer.x
 set splitbelow splitright
 wincmd t
@@ -58,7 +100,7 @@ if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 115
-normal! 030l
+normal! 024l
 tabedit Parser.hs
 set splitbelow splitright
 wincmd t
@@ -99,7 +141,7 @@ exe s:l
 normal! zt
 6
 normal! 011l
-tabnext 1
+tabnext 3
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

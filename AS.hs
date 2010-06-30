@@ -2,6 +2,12 @@ module AS (
       module AS
 ) where
 
+data Variable = Variable String
+              deriving (Eq, Show)
+
+data LlamadaFuncion = LlamadaFuncion String EM
+                    deriving (Eq, Show)
+
 data EM = Suma EM EM
         | Resta EM EM
         | Menos EM
@@ -11,13 +17,13 @@ data EM = Suma EM EM
         | Entero String
         | Real String
         | ConstMat String
-        | Funcion String EM
-        | Variable String
+        | EMLlamada LlamadaFuncion
+        | EMVariable Variable
         | ArregloEM [EM]
         | Rango EM EM
         | ArregloComprension EM EM EM
         | ExpresionCond Condicional EM EM
-        deriving (Eq)
+        deriving (Eq, Show)
 
 -- Multiple declaration: data Condicional = Expresion EM
 -- Como arreglar esto?
@@ -25,40 +31,40 @@ data Condicional = Condicion EM
                  | Conjuncion Condicional Condicional
                  | Disyuncion Condicional Condicional
                  | Negacion Condicional
-                 | MayorQue EM EM
-                 | MenorQue EM EM
-                 | MayorIgual EM EM
-                 | MenorIgual EM EM
-                 | Igual EM EM
-                 deriving (Eq)
+                 | MayorQue Condicional Condicional
+                 | MenorQue Condicional Condicional
+                 | MayorIgual Condicional Condicional
+                 | MenorIgual Condicional Condicional
+                 | Igual Condicional Condicional
+                 deriving (Eq, Show)
 
 data EG = Graficable EM
         | Archivo String
-        deriving (Eq)
+        deriving (Eq, Show)
 
 data Bloque = Secuencia [Instruccion]
-            deriving (Eq)
+            deriving (Eq, Show)
 
-data Instruccion = DefFuncion String String EM
-                 | Asignacion String EM
+data Instruccion = DefFuncion String Variable EM
+                 | Asignacion Variable EM
 				 | Graficar EM EG
                  | GraficarEstilo EM EG [Estilo]
-                 | CicloStep String EM EM Bloque
-                 | Ciclo String EM Bloque
-                 | PushBack String EM
-                 deriving (Eq)
+                 | CicloStep Variable EM EM Bloque
+                 | Ciclo Variable EM Bloque
+                 | PushBack Variable EM
+                 deriving (Eq, Show)
 
 data Estilo = Lineas
             | Puntos
             | LineasPunteadas 
             deriving (Eq)
 
-mkEstilo :: String -> Estilo
-mkEstilo str
-   | str == "lines" = Lineas
-   | str == "points" = Puntos
-   | str == "linespoints" = LineasPunteadas
+instance Show Estilo where
+show Lineas = "Estilo lines"
+show Puntos = "Estilo points"
+show LineasPunteadas = "Estilo linespoints"
 
+{-
 instance Show EM where
 	show em = showEM 0 em
 
@@ -236,7 +242,7 @@ showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
 
 instance Show Instruccion where
 	  show fun = showInstruccion 0 fun
-{-
+-}{-
 
  instance Show Prog where
       show (ExprList []) = ""
