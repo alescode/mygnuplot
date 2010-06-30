@@ -44,6 +44,7 @@ import AS
     "endfor"        { ParserStatus TkEndFor _ _ }
     "step"          { ParserStatus TkStep _ _ }
     "push_back"     { ParserStatus TkPushBack _ _ }
+    eof             { ParserStatus TkEOF _ _ }
     estilo          { ParserStatus (TkEstilo $$) _ _ }
     identificador   { ParserStatus (TkIdentificador $$) _ _ }
     archivo         { ParserStatus (TkArchivo $$) _ _ }
@@ -59,8 +60,7 @@ import AS
 
 %%
 
--- Exportar "Variable"
-PROGRAMA      : SECUENCIA_1                                  { Secuencia $ reverse $1 }
+PROGRAMA      : SECUENCIA_1 eof                              { Secuencia $ reverse $1 }
 
 SECUENCIA_1   : INSTR                                        { [$1] }
               | CICLO                                        { [$1] }
@@ -152,6 +152,7 @@ EG    : EM                                        { Graficable $1 }
 {
 
 parseError :: [ParserStatus] -> a
+parseError (ParserStatus TkEOF _ _:ts) = error $ "error sintactico en el fin de archivo"
 parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     ++ "\n\tcolumna: " ++ columna
                     ++ "\n\ten el token '" ++ show (token t) ++ "'"

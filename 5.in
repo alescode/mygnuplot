@@ -1,4 +1,13 @@
 #x = [3, sin(x), 34];
 #plot x, 2 with [lines, lines];
-x = if (sin(0 AND 2), 2*x, 2);
-x = 3
+#x = if (sin(0 AND 2), 2*x, 2);
+#x = sin(0);
+#x = 3;
+#x = if (1 AND (0 OR 2), 2, 2)
+#sin(x) = 3
+for i in range(3, sin(3))
+    push_back(f, 2);
+    x = 2
+endfor
+x = 2;
+x = 7;

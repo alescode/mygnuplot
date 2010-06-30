@@ -26,7 +26,7 @@ data EM = Suma EM EM
         | Rango EM EM
         | ArregloComprension EM Variable EM
         | ExpresionCond Condicional EM EM
-        deriving (Eq)
+        deriving (Eq, Show)
 
 data Condicional = CSuma Condicional Condicional
                  | CResta Condicional Condicional
@@ -51,14 +51,14 @@ data Condicional = CSuma Condicional Condicional
                  | MayorIgual Condicional Condicional
                  | MenorIgual Condicional Condicional
                  | Igual Condicional Condicional
-                 deriving (Eq)
+                 deriving (Eq, Show)
 
 data EG = Graficable EM
         | Archivo String
-        deriving (Eq)
+        deriving (Eq, Show)
 
 data Bloque = Secuencia [Instruccion]
-            deriving (Eq)
+            deriving (Eq, Show)
 
 data Instruccion = DefFuncion String Variable EM
                  | Asignacion Variable EM
@@ -67,7 +67,7 @@ data Instruccion = DefFuncion String Variable EM
                  | CicloStep Variable EM EM Bloque
                  | Ciclo Variable EM Bloque
                  | PushBack Variable EM
-                 deriving (Eq)
+                 deriving (Eq, Show)
 
 data Estilo = Lineas
             | Puntos
@@ -86,7 +86,7 @@ readEstilo :: String -> Estilo
 readEstilo "lines" = Lineas
 readEstilo "points" = Puntos
 readEstilo "linespoints" = LineasPunteadas
-
+{-
 instance Show EM where
 	show em = showEM 0 em
 
@@ -315,7 +315,7 @@ showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
 
 instance Show Instruccion where
 	  show fun = showInstruccion 0 fun
-
+-}
 {-
 
  instance Show Prog where
