@@ -8,3 +8,14 @@ for i in a+b
 	x = hola + pupu;
 	y = que + rico + pupu
 endfor
+#x = if (sin(0 AND 2), 2*x, 2);
+#x = sin(0);
+#x = 3;
+#x = if (1 AND (0 OR 2), 2, 2)
+#sin(x) = 3
+for i in range(3, sin(3))
+    push_back(f, 2);
+    x = 2
+endfor
+x = 2;
+x = 7

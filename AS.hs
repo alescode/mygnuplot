@@ -6,10 +6,10 @@ data Variable = Variable String
               deriving (Eq)
 
 data LlamadaFuncion = LlamadaFuncion String EM
-                    deriving (Eq, Show)
+                    deriving (Eq)
 
 data CLlamadaFuncion = CLlamadaFuncion String Condicional
-                    deriving (Eq, Show)
+                    deriving (Eq)
 
 data EM = Suma EM EM
         | Resta EM EM
@@ -316,5 +316,4 @@ showInstruccion n (PushBack var exp) = (replicate (2*n) ' ')
 
 instance Show Instruccion where
 	  show fun = showInstruccion 0 fun
-
 
