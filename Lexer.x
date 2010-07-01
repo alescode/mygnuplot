@@ -108,7 +108,6 @@ data Token =  TkParentesisI
            |  TkAsignacion
            |  TkFuncion String
            |  TkArchivo String
-           |  TkEOF
            deriving (Eq)
 
 instance Show Token where
@@ -141,7 +140,6 @@ instance Show Token where
     show TkComa = ","
     show TkPuntoYComa = ";"
     show TkAsignacion = "="
-    show TkEOF = "{EOF}"
     show (TkFuncion s) = s
     show (TkArchivo s) = s
     show (TkEstilo s) = s
@@ -180,5 +178,5 @@ errorLexico pos s = error $ "error lexico en la linea: " ++ linea
 
 -- Redefinición de alexScanTokens
 --alexScanTokens :: String -> [ParserStatus]
-lexer s = (alexScanTokens s) ++ [ParserStatus TkEOF 0 0]
+lexer = alexScanTokens
 }
