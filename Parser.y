@@ -59,35 +59,42 @@ import AS
 
 %%
 
-PROGRAMA      : SECUENCIA_1                                  { Secuencia $ reverse $1 }
+PROGRAMA      : SECUENCIA_1                            { Secuencia $
+                                                             reverse $1 }
 
-SECUENCIA_1   : INSTR                                        { [$1] }
-              | CICLO                                        { [$1] }
-              | SECUENCIA_2 INSTR                            { $2 : $1 }   
-              | SECUENCIA_2 CICLO                            { $2 : $1 }   
-                                                                
-SECUENCIA_2   : INSTR ';'                                    { [$1] }   
-              | CICLO                                        { [$1] }   
-              | SECUENCIA_2 INSTR ';'                        { $2 : $1 }
-              | SECUENCIA_2 CICLO                            { $2 : $1 }
-                                                                
-INSTR  : identificador '(' identificador ')' '=' EM          { DefFuncion $1 (Variable $3) $6 }
-       | identificador '=' EM                                { Asignacion (Variable $1) $3 }
-       | "plot" EM ',' EG "with" '[' ']'                     { GraficarEstilo $2 $4 []}
+SECUENCIA_1   : INSTR                                  { [$1] }
+              | CICLO                                  { [$1] }
+              | SECUENCIA_2 INSTR                      { $2 : $1 }   
+              | SECUENCIA_2 CICLO                      { $2 : $1 }   
+                                                          
+SECUENCIA_2   : INSTR ';'                              { [$1] }   
+              | CICLO                                  { [$1] }   
+              | SECUENCIA_2 INSTR ';'                  { $2 : $1 }
+              | SECUENCIA_2 CICLO                      { $2 : $1 }
+                                                               
+INSTR  : identificador '(' identificador ')' '=' EM    { DefFuncion $1
+                                                             (Variable $3) $6 }
+       | identificador '=' EM                          { Asignacion
+                                                             (Variable $1) $3 }
+       | "plot" EM ',' EG "with" '[' ']'               { GraficarEstilo 
+                                                             $2 $4 []}
        | "plot" EM ',' EG "with"
-       '[' SECUENCIA_ESTILO ']'                              { GraficarEstilo $2 $4
-                                                               (reverse $7) }
-       | "plot" EM ',' EG "with" estilo                      { GraficarEstilo $2 
-                                                               $4 [(readEstilo $6)] }
-       | "plot" EM ',' EG                                    { Graficar $2 $4 }
-       | "push_back" '(' identificador ',' EM ')'            { PushBack (Variable $3) $5 }
+       '[' SECUENCIA_ESTILO ']'                        { GraficarEstilo $2 $4
+                                                         (reverse $7) }
+       | "plot" EM ',' EG "with" estilo                { GraficarEstilo $2 
+                                                         $4 [(readEstilo $6)] }
+       | "plot" EM ',' EG                              { Graficar $2 $4 }
+       | "push_back" '(' identificador ',' EM ')'      { PushBack 
+                                                             (Variable $3) $5 }
 
 CICLO  : "for" identificador "in" EM
-         SECUENCIA_1 "endfor"                                { Ciclo (Variable $2) 
-                                                               $4 (Secuencia $ reverse $5) }
+         SECUENCIA_1 "endfor"                          { Ciclo (Variable $2) 
+                                                             $4 (Secuencia $
+                                                             reverse $5) }
        | "for" identificador "in" EM 
-         "step" EM SECUENCIA_1 "endfor"                      { CicloStep (Variable $2) 
-                                                               $4 $6 (Secuencia $ reverse $7) }
+         "step" EM SECUENCIA_1 "endfor"                { CicloStep (Variable $2)
+                                                          $4 $6 (Secuencia $
+                                                          reverse $7) }
 
 EM  : EM '+' EM                                     { Suma  $1 $3 }
     | EM '-' EM                                     { Resta $1 $3 }
@@ -99,8 +106,10 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }
     | constmat                                      { ConstMat $1 }
-    | funcion '(' EM ')'                            { EMLlamada (LlamadaFuncion $1 $3) }
-    | identificador '(' EM ')'                      { EMLlamada (LlamadaFuncion $1 $3) }
+    | funcion '(' EM ')'                            { EMLlamada 
+                                                          (LlamadaFuncion $1 $3) }
+    | identificador '(' EM ')'                      { EMLlamada 
+                                                          (LlamadaFuncion $1 $3) }
     | identificador                                 { EMVariable (Variable $1) }
     | '[' ']'                                       { ArregloEM [] }
     | '[' SECUENCIA_EM ']'                          { ArregloEM $ reverse $2 }

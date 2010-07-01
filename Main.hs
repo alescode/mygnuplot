@@ -5,8 +5,8 @@ import Lexer
 import Parser
 
 main =
-	do
-		args <- S.getArgs
-		nombreArchivo <- return $ head args
-		contenido <- readFile nombreArchivo
-		print $ parse $ lexer contenido
+    do
+        args <- S.getArgs
+        nombreArchivo <- return $ head args
+        contenido <- readFile nombreArchivo
+        print $ parse $ lexer contenido
