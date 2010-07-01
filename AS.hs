@@ -254,14 +254,14 @@ showEG n (Archivo f) = (replicate (4*n) ' ') ++ "Archivo Graficable\n"
 
 showBloque :: Int -> Bloque -> String
 showBloque n (Secuencia []) = (replicate (4*n) ' ')
-showBloque n (Secuencia (x:xs)) = (replicate (4*n) ' ') ++ "Instruccion\n"
+showBloque n (Secuencia (x:xs)) = (replicate (4*n) '>') ++ "Instruccion\n"
 								++ showInstruccion (n+1) x ++ showBloque (n) (Secuencia xs) 
 
 showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (replicate (4*n) ' ')
-					 							++ "Declaracion\n"
+					 							++ "Definicion\n"
 												++ (replicate (4*n + 1) ' ')
-												++ name ++ "( " ++ show var ++ " )=\n"
+												++ name ++ "( " ++ show var ++ "\n"
 												++ showEM (n+1) cuerpo
 
 showInstruccion n (Asignacion v valor) = (replicate (4*n) ' ')
@@ -284,27 +284,28 @@ showInstruccion n (GraficarEstilo e g estilos) = (replicate (4*n) ' ')
 												 ++ "\n"
  
 showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (4*n) ' ')
-												   ++ "Ciclo \n"
-												   ++ (replicate (4*n + 1) ' ')
+												   ++ "Ciclo\n"
+												   ++ (replicate (4*n + 4) ' ')
 												   ++ show var ++ "\n"
-												   ++ (replicate (4*n + 1) ' ')
-												   ++ "Rango " ++ "\n"
-												   ++ showEM (n+1) exp
-												   ++ (replicate (4*n + 2) ' ')
-												   ++ " Paso\n"
+												   ++ (replicate (4*n + 4) ' ')
+												   ++ "In\n"
+												   ++ showEM (n+2) exp
+												   ++ (replicate (4*n) ' ')
+												   ++ "Paso\n"
 											       ++ showEM (n+1) paso
 												   ++ (replicate (4*n + 1) ' ')
 												   ++ showBloque (n+1) cuerpo
 
 showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
-										 ++ "Ciclo \n"
+										 ++ "Ciclo\n"
 										 ++ (replicate (4*n + 4) ' ')					
 										 ++ show var ++ "\n"
 										 ++ (replicate (4*n + 4) ' ')
-										 ++ "In " ++ "\n"
+										 ++ "In\n"
 										 ++ showEM (n+2) exp
 										 ++ (replicate (4*n-4) ' ')
 										 ++ showBloque (n+1) cuerpo
+										 ++ "\n"
 
 showInstruccion n (PushBack var exp) = (replicate (4*n) ' ')
 								      ++ "PushBack\n"
