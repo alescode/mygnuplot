@@ -282,7 +282,7 @@ showInstruccion n (GraficarEstilo e g estilos) = (replicate (4*n) ' ')
 												 ++ "Graficar\n"
 												 ++ showEM (n+1) e
 												 ++ showEG (n+1) g
-												 ++ "\n" ++ (replicate (4*n + 4) ' ')
+												 ++ (replicate (4*n + 4) ' ')
 												 ++ "Estilos "
 												 ++ show estilos
 												 ++ "\n"
@@ -297,7 +297,6 @@ showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (4*n) ' ')
 												   ++ (replicate (4*n) ' ')
 												   ++ "Paso\n"
 											       ++ showEM (n+1) paso
-												   ++ (replicate (4*n + 4) ' ')
 												   ++ showBloque (n+1) cuerpo
 
 showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
@@ -307,7 +306,6 @@ showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
 										 ++ (replicate (4*n + 4) ' ')
 										 ++ "In\n"
 										 ++ showEM (n+2) exp
-										 ++ (replicate (4*n-4) ' ')
 										 ++ showBloque (n+1) cuerpo
 
 showInstruccion n (PushBack var exp) = (replicate (4*n) ' ')
