@@ -265,7 +265,9 @@ showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (indentar n)
 					 							++ "Definicion\n"
 												++ (indentar (n+1))
-												++ name ++ "( " ++ show var ++ "\n"
+												++ name ++ "\n"
+												++ (indentar (n+1))
+												++ show var ++ "\n"
 												++ showEM (n+1) cuerpo
 
 showInstruccion n (Asignacion v valor) = (indentar n)
