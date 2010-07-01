@@ -253,9 +253,10 @@ showEG n (Archivo f) = (replicate (4*n) ' ') ++ "Archivo Graficable\n"
 						++ (replicate (4*n + 2) ' ') ++ f ++ "\n"
 
 showBloque :: Int -> Bloque -> String
-showBloque n (Secuencia []) = (replicate (4*n) ' ')
+showBloque n (Secuencia []) = ""
 showBloque n (Secuencia (x:xs)) = (replicate (4*n) '>') ++ "Instruccion\n"
-								++ showInstruccion (n+1) x ++ showBloque (n) (Secuencia xs) 
+								++ showInstruccion (n+1) x
+								++ showBloque (n) (Secuencia xs) 
 
 showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (replicate (4*n) ' ')
@@ -305,7 +306,6 @@ showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
 										 ++ showEM (n+2) exp
 										 ++ (replicate (4*n-4) ' ')
 										 ++ showBloque (n+1) cuerpo
-										 ++ "\n"
 
 showInstruccion n (PushBack var exp) = (replicate (4*n) ' ')
 								      ++ "PushBack\n"
