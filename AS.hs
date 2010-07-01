@@ -282,7 +282,6 @@ showInstruccion n (GraficarEstilo e g estilos) = (indentar n)
 												 ++ "Graficar\n"
 												 ++ showEM (n+1) e
 												 ++ showEG (n+1) g
-												 ++ (replicate (4*n + 4) ' ')
 												 ++ (indentar (n+1))
 												 ++ "Estilos "
 												 ++ show estilos
