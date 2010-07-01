@@ -19,7 +19,8 @@ badd +48 GNULex.x
 badd +725 Parser.hs
 badd +1 AS.hs
 badd +1 5.in
-badd +0 ricardo/Parser.y
+badd +48 ricardo/Parser.y
+badd +0 Main.hs
 args Parser.y
 set lines=38 columns=115
 edit Parser.y
@@ -36,13 +37,13 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 88 - ((27 * winheight(0) + 17) / 35)
+let s:l = 87 - ((30 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-88
-normal! 037l
-tabedit ricardo/Parser.y
+87
+normal! 067l
+tabedit Main.hs
 set splitbelow splitright
 wincmd t
 set winheight=1 winwidth=1
@@ -56,12 +57,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 48 - ((30 * winheight(0) + 17) / 35)
+let s:l = 12 - ((11 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-48
-normal! 0
+12
+normal! 010l
 tabedit 5.in
 set splitbelow splitright
 wincmd t
@@ -76,12 +77,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 3 - ((2 * winheight(0) + 17) / 35)
+let s:l = 1 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
-normal! 05l
+1
+normal! 04l
 tabedit AS.hs
 set splitbelow splitright
 wincmd t
@@ -96,12 +97,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 25 - ((0 * winheight(0) + 17) / 35)
+let s:l = 311 - ((28 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-25
-normal! 05l
+311
+normal! 011l
 tabedit Lexer.x
 set splitbelow splitright
 wincmd t
@@ -116,12 +117,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 115 - ((20 * winheight(0) + 17) / 35)
+let s:l = 143 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-115
-normal! 024l
+143
+normal! 04l
 tabedit Parser.hs
 set splitbelow splitright
 wincmd t
@@ -156,12 +157,12 @@ setlocal fml=1
 setlocal fdn=20
 setlocal fen
 silent! normal! zE
-let s:l = 39 - ((32 * winheight(0) + 17) / 35)
+let s:l = 1620 - ((27 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-39
-normal! 017l
+1620
+normal! 0
 tabedit Makefile
 set splitbelow splitright
 wincmd t
@@ -182,7 +183,7 @@ exe s:l
 normal! zt
 1
 normal! 032l
-tabnext 1
+tabnext 4
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
