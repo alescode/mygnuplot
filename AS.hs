@@ -5,12 +5,17 @@ module AS (
 data Variable = Variable String
               deriving (Eq)
 
+-- Tipo de datos que representa una llamada a una funcion,
+-- una expresion matematica del estilo f(x)
 data LlamadaFuncion = LlamadaFuncion String EM
                     deriving (Eq)
 
+-- Tipo de datos (analogo al anterior) que representa una llamada a una funcion,
+-- una condicion del estilo f(x)
 data CLlamadaFuncion = CLlamadaFuncion String Condicional
                     deriving (Eq)
 
+-- Tipo de datos para Expresion Matematica
 data EM = Suma EM EM
         | Resta EM EM
         | Menos EM
@@ -28,6 +33,9 @@ data EM = Suma EM EM
         | ExpresionCond Condicional EM EM
         deriving (Eq)
 
+-- Tipo de datos para expresiones condicionales
+-- Debe contener constructores analogos a los de
+-- Expresion Matematica, y algunos adicionales
 data Condicional = CSuma Condicional Condicional
                  | CResta Condicional Condicional
                  | CMenos Condicional
@@ -53,13 +61,17 @@ data Condicional = CSuma Condicional Condicional
                  | Igual Condicional Condicional
                  deriving (Eq)
 
+-- Tipo de datos de expresion graficable
 data EG = Graficable EM
         | Archivo String
         deriving (Eq)
 
+-- Tipo de datos que almacena la secuencia normal de instrucciones
+-- del programa, o de un ciclo (bloque de codigo)
 data Bloque = Secuencia [Instruccion]
             deriving (Eq)
 
+-- Tipo de datos para representar instrucciones
 data Instruccion = DefFuncion String Variable EM
                  | Asignacion Variable EM
 				 | Graficar EM EG
@@ -69,6 +81,7 @@ data Instruccion = DefFuncion String Variable EM
                  | PushBack Variable EM
                  deriving (Eq)
 
+-- Tipo de datos para representar distintos estilos de graficacion
 data Estilo = Lineas
             | Puntos
             | LineasPunteadas 
@@ -82,11 +95,17 @@ instance Show Estilo where
     show Puntos = "Estilo points"
     show LineasPunteadas = "Estilo linespoints"
 
+{- Esta funcion permite construir un estilo con el
+- constructor apropiado a partir de la cadena de caracteres leida
+-}
 readEstilo :: String -> Estilo
 readEstilo "lines" = Lineas
 readEstilo "points" = Puntos
 readEstilo "linespoints" = LineasPunteadas
 
+{- A continuacion se presentan funciones
+- para mostrar de forma legible el arbol sintactico
+-}
 indentar :: Int -> String
 indentar n = concat $ replicate n "|   "
 

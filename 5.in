@@ -23,9 +23,12 @@ x = 7;
 #Prueba del lenguaje 1x1
 f(x) = 2;
 idjdsx = 2;
-plot (2+3), 'hola.txt' with [];
+plot (2+3), '././././hola.txt' with [];
 plot (sin(8)*23), ((-22)) with [lines, points];
 plot (e^pi+i), -i^2 with linespoints;
+
+x = if(sin(8) AND 7 <8 == 2, (x+3)*8, 7);
+
 push_back(fe, EJmd);
 for i in []
     for j in [7] step (((((11000)))))
