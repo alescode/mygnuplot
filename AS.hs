@@ -292,6 +292,9 @@ showInstruccion n (CicloStep var exp paso cuerpo) = (indentar n)
 												   ++ (indentar (n+1)) ++ show var ++ "\n"
 												   ++ (indentar (n+1)) ++ "In\n"
 												   ++ showEM (n+2) exp
+												   ++ (replicate (4*n) ' ')
+												   ++ "Paso\n"
+											       ++ showEM (n+1) paso
 												   ++ (indentar (n+1)) ++ "Paso\n"
 											       ++ showEM (n+2) paso
 												   ++ showBloque (n+1) cuerpo
