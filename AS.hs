@@ -87,6 +87,9 @@ readEstilo "lines" = Lineas
 readEstilo "points" = Puntos
 readEstilo "linespoints" = LineasPunteadas
 
+indentar :: Int -> String
+indentar n = concat $ replicate n "|   "
+
 instance Show EM where
 	show em = showEM 0 em
 
@@ -100,7 +103,7 @@ instance Show Condicional where
 	show cond = showCond 0 cond
 
 showEM :: Int -> EM -> String
-showEM n (Suma i d) = (replicate (4*n) ' ') ++ "Suma\n"
+showEM n (Suma i d) = indentar n ++ "Suma\n"
 					++ showEM (n+1) i
 					++ showEM (n+1) d
 
@@ -203,11 +206,11 @@ showCond n (CRango inf sup) = (replicate (4*n) ' ') ++ "Rango\n"
 						  ++ showCond (n+1) sup
 
 showCond n (CArregloComprension exp var arr) = (replicate (4*n) ' ') ++ "Arreglo Comprension\n"
-										   ++ (replicate (4*n + 1) ' ') ++ "Expresion\n"
+										   ++ (replicate (4*n + 4) ' ') ++ "Expresion\n"
 										   ++ showCond (n+1) exp
-										   ++ (replicate (4*n + 1) ' ') ++ "Variable\n"
+										   ++ (replicate (4*n + 4) ' ') ++ "Variable\n"
 										   ++ showCond (n+1) (CondicionalVariable var)
-										   ++ (replicate (4*n + 1) ' ') ++ "ExpresionArreglo\n"
+										   ++ (replicate (4*n + 4) ' ') ++ "ExpresionArreglo\n"
 										   ++ showCond (n+1) arr
 
 showCond n (CExpresionCond cond r1 r2) = (replicate (4*n) ' ') ++ "Expresion Condicional\n"
@@ -250,7 +253,7 @@ showEG :: Int -> EG -> String
 showEG n (Graficable em) = (replicate (4*n) ' ') ++ "Expresion Graficable\n"
 							++ showEM (n+1) em
 showEG n (Archivo f) = (replicate (4*n) ' ') ++ "Archivo Graficable\n"
-						++ (replicate (4*n + 2) ' ') ++ f ++ "\n"
+						++ (replicate (4*n + 4) ' ') ++ f ++ "\n"
 
 showBloque :: Int -> Bloque -> String
 showBloque n (Secuencia []) = ""
@@ -261,7 +264,7 @@ showBloque n (Secuencia (x:xs)) = (replicate (4*n) '>') ++ "Instruccion\n"
 showInstruccion :: Int -> Instruccion -> String
 showInstruccion n (DefFuncion name var cuerpo) = (replicate (4*n) ' ')
 					 							++ "Definicion\n"
-												++ (replicate (4*n + 1) ' ')
+												++ (replicate (4*n + 4) ' ')
 												++ name ++ "( " ++ show var ++ "\n"
 												++ showEM (n+1) cuerpo
 
@@ -279,7 +282,7 @@ showInstruccion n (GraficarEstilo e g estilos) = (replicate (4*n) ' ')
 												 ++ "Graficar\n"
 												 ++ showEM (n+1) e
 												 ++ showEG (n+1) g
-												 ++ "\n" ++ (replicate (4*n + 2) ' ')
+												 ++ "\n" ++ (replicate (4*n + 4) ' ')
 												 ++ "Estilos "
 												 ++ show estilos
 												 ++ "\n"
@@ -294,7 +297,7 @@ showInstruccion n (CicloStep var exp paso cuerpo) = (replicate (4*n) ' ')
 												   ++ (replicate (4*n) ' ')
 												   ++ "Paso\n"
 											       ++ showEM (n+1) paso
-												   ++ (replicate (4*n + 1) ' ')
+												   ++ (replicate (4*n + 4) ' ')
 												   ++ showBloque (n+1) cuerpo
 
 showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
@@ -309,7 +312,7 @@ showInstruccion n (Ciclo var exp cuerpo) = (replicate (4*n) ' ')
 
 showInstruccion n (PushBack var exp) = (replicate (4*n) ' ')
 								      ++ "PushBack\n"
-									  ++ (replicate (4*n + 2) ' ')
+									  ++ (replicate (4*n + 4) ' ')
 									  ++ show var ++ "\n"
 									  ++ showEM (n+1) exp
 
