@@ -1,6 +1,8 @@
 {
 module Lexer (
-    module Lexer
+    Token(..),
+    ParserStatus(..),
+    lexer
 ) where
 }
 

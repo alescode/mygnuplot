@@ -1,1 +1,20 @@
-Repo del 2do proyecto
+Segundo proyecto -- Traductores e Interpretadores
+Universidad Simón Bolívar
+Kelwin Fernández - Alejandro Machado
+
+Notas:
+    Existe una ambigüedad en el enunciado del proyecto al especificar
+    que las condiciones son "como" las expresiones matemáticas.
+    Se consideró que esto significa:
+        Una condición puede tomar la forma de cualquier expresión matemática
+        (además de sus operadores únicos como AND, OR, NOT...),
+        y toda producción de parte izquierda EM tiene una producción de COND
+        como contraparte que es igual a ésta, pero tiene en sus partes derechas
+        el no terminal COND en lugar de EM.
+
+    Luego, f(2+x) es una condición válida, y
+    if (f(x AND y), 1, 2) es una expresión matemática válida,
+    También se permiten arreglos de condiciones, por la similaridad
+    supuesta entre EM y COND.
+    Esto será ajustado para la segunda entrega si llega a haber un cambio
+    en la formulación del lenguaje.

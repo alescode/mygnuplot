@@ -1,5 +1,14 @@
 module AS (
-      module AS
+      Variable(..),
+      LlamadaFuncion(..),
+      CLlamadaFuncion(..),
+      EM(..),
+      Condicional(..),
+      EG(..),
+      Bloque(..),
+      Instruccion(..),
+      Estilo(..),
+      readEstilo
 ) where
 
 data Variable = Variable String

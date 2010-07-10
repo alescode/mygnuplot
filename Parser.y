@@ -1,5 +1,4 @@
 {
---module Parser where
 module Parser (parse) where
 
 import Lexer
@@ -48,6 +47,7 @@ import AS
     identificador   { ParserStatus (TkIdentificador $$) _ _ }
     archivo         { ParserStatus (TkArchivo $$) _ _ }
 
+-- Precedencias
 %left "OR"
 %left "AND"
 %right "NOT"
@@ -107,14 +107,15 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | real                                          { Real $1 }
     | constmat                                      { ConstMat $1 }
     | funcion '(' EM ')'                            { EMLlamada 
-                                                          (LlamadaFuncion $1 $3) }
+                                                        (LlamadaFuncion $1 $3) }
     | identificador '(' EM ')'                      { EMLlamada 
-                                                          (LlamadaFuncion $1 $3) }
+                                                        (LlamadaFuncion $1 $3) }
     | identificador                                 { EMVariable (Variable $1) }
     | '[' ']'                                       { ArregloEM [] }
     | '[' SECUENCIA_EM ']'                          { ArregloEM $ reverse $2 }
     | "range" '(' EM ',' EM ')'                     { Rango $3 $5 }
-    | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2 (Variable $4) $6 }
+    | '[' EM "for" identificador "in" EM ']'        { ArregloComprension $2
+                                                         (Variable $4) $6 }
     | "if" '(' COND ',' EM ',' EM ')'               { ExpresionCond $3 $5 $7 }
 
 SECUENCIA_EM  : EM                     { [$1] }
@@ -123,27 +124,32 @@ SECUENCIA_EM  : EM                     { [$1] }
 SECUENCIA_COND  : COND                       { [$1] }
                 | SECUENCIA_COND ',' COND    { $3 : $1 }
 
-SECUENCIA_ESTILO : estilo                                   { [readEstilo $1] }
-                 | SECUENCIA_ESTILO ',' estilo              { readEstilo $3 : $1 }
+SECUENCIA_ESTILO : estilo                           { [readEstilo $1] }
+                 | SECUENCIA_ESTILO ',' estilo      { readEstilo $3 : $1 }
 
-COND  : COND '+' COND                                 { CSuma $1 $3 }
-      | COND '-' COND                                 { CResta $1 $3 }
-      | COND '*' COND                                 { CMultiplicacion $1 $3 }
-      | COND '/' COND                                 { CDivision $1 $3 }
-      | COND '^' COND                                 { CPotencia $1 $3 }
-      | '-' COND  %prec menos_unario                  { CMenos $2 }
-      | '(' COND ')'                                  { $2 }
-      | int                                           { CEntero $1 }
-      | real                                          { CReal $1 }
-      | constmat                                      { CConstMat $1 }
-      | funcion '(' COND ')'                          { CondicionalLlamada (CLlamadaFuncion $1 $3) }
-      | identificador '(' COND ')'                    { CondicionalLlamada (CLlamadaFuncion $1 $3) }
-      | identificador                                 { CondicionalVariable (Variable $1) }
-      | '[' ']'                                       { ArregloCondicional [] }
-      | '[' SECUENCIA_COND ']'                        { ArregloCondicional $ reverse $2 }
-      | "range" '(' COND ',' COND ')'                 { CRango $3 $5 }
-      | '[' COND "for" identificador "in" COND ']'    { CArregloComprension $2 (Variable $4) $6 }
-      | "if" '(' COND ',' COND ',' COND ')'           { CExpresionCond $3 $5 $7 } 
+COND  : COND '+' COND                               { CSuma $1 $3 }
+      | COND '-' COND                               { CResta $1 $3 }
+      | COND '*' COND                               { CMultiplicacion $1 $3 }
+      | COND '/' COND                               { CDivision $1 $3 }
+      | COND '^' COND                               { CPotencia $1 $3 }
+      | '-' COND  %prec menos_unario                { CMenos $2 }
+      | '(' COND ')'                                { $2 }
+      | int                                         { CEntero $1 }
+      | real                                        { CReal $1 }
+      | constmat                                    { CConstMat $1 }
+      | funcion '(' COND ')'                        { CondicionalLlamada
+                                                     (CLlamadaFuncion $1 $3) }
+      | identificador '(' COND ')'                  { CondicionalLlamada 
+                                                     (CLlamadaFuncion $1 $3) }
+      | identificador                               { CondicionalVariable 
+                                                          (Variable $1) }
+      | '[' ']'                                     { ArregloCondicional [] }
+      | '[' SECUENCIA_COND ']'                      { ArregloCondicional $ 
+                                                          reverse $2 }
+      | "range" '(' COND ',' COND ')'               { CRango $3 $5 }
+      | '[' COND "for" identificador "in" COND ']'  { CArregloComprension $2
+                                                          (Variable $4) $6 }
+      | "if" '(' COND ',' COND ',' COND ')'         { CExpresionCond $3 $5 $7 } 
       | COND "AND" COND                           { Conjuncion $1 $3 }
       | COND "OR" COND                            { Disyuncion $1 $3 }  
       | "NOT" COND                                { Negacion $2 } 
@@ -156,11 +162,12 @@ COND  : COND '+' COND                                 { CSuma $1 $3 }
 EG    : EM                                        { Graficable $1 }
       | archivo                                   { Archivo $1 }
 
-
 {
 
+-- Funcion de error estandar
 parseError :: [ParserStatus] -> a
-parseError [_] = error $ "error sintactico en el fin de archivo"
+parseError [_] = error $ "error sintactico en el ultimo token,\
+                         antes del fin de archivo"
 parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     ++ "\n\tcolumna: " ++ columna
                     ++ "\n\ten el token '" ++ show (token t) ++ "'"
@@ -169,6 +176,7 @@ parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     where linea = show $ numLinea t
                           columna = show $ numCol t
 
--- parse :: [ParserStatus] -> Instruccion
+-- Funcion del analizador (definida por Happy)
+parse :: [ParserStatus] -> Bloque
 
 }
