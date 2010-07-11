@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
-gnuplot $1 > "$1.ps"
-ps2pdf "$1.ps"
-rm "$1.ps"
+archivo=${1%.*}
+gnuplot $1 > "$archivo.ps"
+ps2pdf "$archivo.ps"
+rm "$archivo.ps"
