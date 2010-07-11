@@ -15,9 +15,12 @@ import AS
 --stringHash' [] _         = 0
 --stringHash' (char:str) n = (toEnum $ ord char)*n + stringHash' str 2*n
 
-type Simbolo = EM
+type Simbolo = (String, EM)
 
 type TablaDeSimbolos = HashTable String Simbolo
+
+--instance Show HashTable key value where
+--show x = show $ toList x
 
 nuevaTablaDeSimbolos :: IO (TablaDeSimbolos)
 nuevaTablaDeSimbolos = new (==) hashString

@@ -1,36 +1,28 @@
-module GeneracionCodigo (procesar) where
+module GeneracionCodigo (generarCodigo) where
 import AS
 import TablaSimbolos
+import System.IO
 
-procesar :: Bloque -> TablaDeSimbolos -> IO ()
-procesar bloque tabla = do
-                        obtenerVariables bloque tabla
-                        return ()
+generarCodigo :: Bloque -> TablaDeSimbolos -> Handle -> IO ()
+generarCodigo (Secuencia lista) tabla aSalida = do
+                                              --b <- return $ map (traducir tabla) lista
+                                              mapM_ (traducir tabla aSalida) lista
 
-obtenerVariables :: Bloque -> TablaDeSimbolos -> IO ()
-obtenerVariables (Secuencia lista) tabla = do
-                                           --return $ map (llenarTabla tabla) lista
-                                           --llenarTabla tabla (lista !! 0)
-                                           --insert tabla "hola" (Entero "2")
-                                           llenarTabla tabla lista
-                                           a <- toList tabla
-                                           print a
-                                           return ()
+traducir :: TablaDeSimbolos -> Handle -> Instruccion -> IO ()
+-- Definicion de funciones
+traducir tabla _ (DefFuncion nombre (Variable var) expresion) = do
+    update tabla nombre (var, expresion) -- se actualiza la tabla de simbolos
+    a <- toList tabla
+    return ()
+-- Cualquier otro caso
+traducir _ aSalida _ = do
+                 --hPutStrLn aSalida "HOLA"
+                 return () -- no se genera codigo 
 
---llenarTabla :: TablaDeSimbolos -> Instruccion -> IO ()
---llenarTabla tabla (Asignacion (Variable nombre) expresion) = do
---        print "HOLA"
---        insert tabla nombre expresion
---        a <- toList tabla
---        return ()
---llenarTabla _ _ = do
---    print "BASURA"
---    return ()
-
-llenarTabla :: TablaDeSimbolos -> [Instruccion] -> IO ()
-llenarTabla _ [] = return ()
-llenarTabla tabla ((Asignacion (Variable nombre) expresion):ins) = do
-    update tabla nombre expresion
-    llenarTabla tabla ins
-llenarTabla _ _ = return ()
+--traducir :: TablaDeSimbolos -> [Instruccion] -> IO ()
+--traducir _ [] = return ()
+--traducir tabla ((DefFuncion nombre (Variable var) expresion):ins) = do
+--    update tabla nombre (var, expresion)
+--    traducir tabla ins
+--traducir tabla (_:ins) = traducir tabla ins
 

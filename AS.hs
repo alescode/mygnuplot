@@ -31,8 +31,8 @@ data EM = Suma EM EM
         | Multiplicacion EM EM
         | Division EM EM
         | Potencia EM EM
-        | Entero String
-        | Real String
+        | Entero Integer
+        | Real Double
         | ConstMat String
         | EMLlamada LlamadaFuncion
         | EMVariable Variable
@@ -51,8 +51,8 @@ data Condicional = CSuma Condicional Condicional
                  | CMultiplicacion Condicional Condicional
                  | CDivision Condicional Condicional
                  | CPotencia Condicional Condicional
-                 | CEntero String
-                 | CReal String
+                 | CEntero Integer
+                 | CReal Double
                  | CConstMat String
                  | CondicionalLlamada CLlamadaFuncion
                  | CondicionalVariable Variable
@@ -154,8 +154,8 @@ showEM n (Potencia i d) = (indentar n) ++ "Potencia\n"
                          ++ showEM (n+1) i
                          ++ showEM (n+1) d 
 
-showEM n (Entero e) = (indentar n) ++ "Entero " ++ e ++ "\n"
-showEM n (Real e) = (indentar n) ++ "Real " ++ e ++ "\n" 
+showEM n (Entero e) = (indentar n) ++ "Entero " ++ show e ++ "\n"
+showEM n (Real e) = (indentar n) ++ "Real " ++ show e ++ "\n" 
 showEM n (ConstMat e) = (indentar n) ++ "Constante " ++ e ++ "\n" 
 showEM n (EMVariable v) = (indentar n) ++ show v ++ "\n"
 
@@ -217,8 +217,8 @@ showCond n (CPotencia i d) = (indentar n) ++ "Potencia\n"
                       ++ showCond (n+1) i
                       ++ showCond (n+1) d 
 
-showCond n (CEntero e) = (indentar n) ++ "Entero " ++ e ++ "\n"
-showCond n (CReal e) = (indentar n) ++ "Real " ++ e ++ "\n" 
+showCond n (CEntero e) = (indentar n) ++ "Entero " ++ show e ++ "\n"
+showCond n (CReal e) = (indentar n) ++ "Real " ++ show e ++ "\n" 
 showCond n (CConstMat e) = (indentar n) ++ "Constante " ++ e ++ "\n" 
 showCond n (CondicionalVariable v) = (indentar n) ++ show v ++ "\n"
 

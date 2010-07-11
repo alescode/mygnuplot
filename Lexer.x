@@ -20,9 +20,9 @@ tokens :-
                                                            const TkParentesisI }
     \)                                               { obtenerEstado $
                                                            const TkParentesisD }
-    $digito+                                         { obtenerEstado TkEntero }
-    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerEstado TkReal }
-    ("." $digito+) ("e" $mm? $digito+)?              { obtenerEstado TkReal }
+    $digito+                                         { obtenerEstado (\s -> TkEntero (read s)) }
+    $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerEstado (\s -> TkReal (read s)) }
+    ("." $digito+) ("e" $mm? $digito+)?              { obtenerEstado (\s -> TkReal (read s)) }
     \+                                               { obtenerEstado $
                                                            const TkMas }
     \-                                               { obtenerEstado $
@@ -105,8 +105,8 @@ obtenerEstado f pos s = ParserStatus (f s)
 -- El tipo Token:
 data Token =  TkParentesisI
            |  TkParentesisD
-           |  TkEntero String
-           |  TkReal String
+           |  TkEntero Integer
+           |  TkReal Double
            |  TkMas
            |  TkMenos
            |  TkPor
@@ -176,8 +176,8 @@ instance Show Token where
     show (TkEstilo s) = s
     show (TkIdentificador s) = s
     show (TkConstanteMat s) = s
-    show (TkReal s) = s
-    show (TkEntero s) = s
+    show (TkReal s) = show s
+    show (TkEntero s) = show s
 
 -- El estado del parser contiene el token actual,
 -- el numero de linea y de columna que estan siendo analizados

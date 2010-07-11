@@ -6,12 +6,21 @@ import Parser
 import TablaSimbolos
 import TablaSimbolos
 import GeneracionCodigo
+import System.IO
 
 main = do
        args <- S.getArgs
-       nombreArchivo <- return $ head args
-       contenido <- readFile nombreArchivo
+       nombreEntrada <- return $ head args
+       nombreSalida <- return $ (head args) ++ ".pl"
+
+       aSalida <- openFile nombreSalida WriteMode
+
+       contenido <- readFile nombreEntrada
        tabla <- nuevaTablaDeSimbolos
        arbol <- return $ parse (lexer contenido)
        print arbol
-       procesar arbol tabla
+
+       generarCodigo arbol tabla aSalida
+       a <- toList tabla
+       print a  
+       hClose aSalida
