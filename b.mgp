@@ -1,5 +1,5 @@
 x = 3;
-x = 2;
+x = .2e-2;
 f(z) = sin(z*x);
 f(z) = sin(z^2*x);
 g(z) = sin(z*x);

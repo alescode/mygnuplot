@@ -22,7 +22,7 @@ tokens :-
                                                            const TkParentesisD }
     $digito+                                         { obtenerEstado (\s -> TkEntero (read s)) }
     $digito+ ("." $digito+)? ("e" $mm? $digito+)?    { obtenerEstado (\s -> TkReal (read s)) }
-    ("." $digito+) ("e" $mm? $digito+)?              { obtenerEstado (\s -> TkReal (read s)) }
+    ("." $digito+) ("e" $mm? $digito+)?              { obtenerEstado leerRealSeguro }
     \+                                               { obtenerEstado $
                                                            const TkMas }
     \-                                               { obtenerEstado $
@@ -101,6 +101,9 @@ obtenerEstado :: (String -> Token) -> AlexPosn -> String -> ParserStatus
 obtenerEstado f pos s = ParserStatus (f s) 
                                      (obtenerLinea pos) 
                                      (obtenerColumna pos)
+
+leerRealSeguro :: String -> Token
+leerRealSeguro s = TkReal (read ('0':s))
 
 -- El tipo Token:
 data Token =  TkParentesisI
