@@ -17,7 +17,6 @@ import AS
     '^'             { ParserStatus TkElevado _ _ }
     int             { ParserStatus (TkEntero $$) _ _ }
     real            { ParserStatus (TkReal $$) _ _ }
-    constmat        { ParserStatus (TkConstanteMat $$) _ _ }
     funcion         { ParserStatus (TkFuncion $$) _ _ }
     '('             { ParserStatus TkParentesisI _ _ }
     ')'             { ParserStatus TkParentesisD _ _ }
@@ -105,7 +104,6 @@ EM  : EM '+' EM                                     { Suma  $1 $3 }
     | '(' EM ')'                                    { $2 }
     | int                                           { Entero $1 }
     | real                                          { Real $1 }
-    | constmat                                      { ConstMat $1 }
     | funcion '(' EM ')'                            { EMLlamada 
                                                         (LlamadaFuncion $1 $3) }
     | identificador '(' EM ')'                      { EMLlamada 
@@ -136,7 +134,6 @@ COND  : COND '+' COND                               { CSuma $1 $3 }
       | '(' COND ')'                                { $2 }
       | int                                         { CEntero $1 }
       | real                                        { CReal $1 }
-      | constmat                                    { CConstMat $1 }
       | funcion '(' COND ')'                        { CondicionalLlamada
                                                      (CLlamadaFuncion $1 $3) }
       | identificador '(' COND ')'                  { CondicionalLlamada 

@@ -1,4 +1,4 @@
-f(z) = sin(z*x);
-f(z) = sin(z^.2*x);
+f(z) = sin(z*x*e);
+f(z) = sin(pi*z^.2*x);
 g(z) = sin(z*x);
 plot x, x with lines

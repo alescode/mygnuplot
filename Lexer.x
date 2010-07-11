@@ -34,7 +34,7 @@ tokens :-
     \^                                               { obtenerEstado $
                                                            const TkElevado } 
     "pi" | "e"                                       { obtenerEstado 
-                                                           TkConstanteMat }
+                                                           leerConstanteMat }
     \[                                               { obtenerEstado $
                                                            const TkCorcheteI }
     \]                                               { obtenerEstado $
@@ -105,6 +105,10 @@ obtenerEstado f pos s = ParserStatus (f s)
 leerRealSeguro :: String -> Token
 leerRealSeguro s = TkReal (read ('0':s))
 
+leerConstanteMat :: String -> Token
+leerConstanteMat "e" = TkReal (exp 1)
+leerConstanteMat "pi" = TkReal pi
+
 -- El tipo Token:
 data Token =  TkParentesisI
            |  TkParentesisD
@@ -115,7 +119,6 @@ data Token =  TkParentesisI
            |  TkPor
            |  TkEntre
            |  TkElevado
-           |  TkConstanteMat String
            |  TkIdentificador String
            |  TkCorcheteI
            |  TkCorcheteD    
@@ -178,7 +181,6 @@ instance Show Token where
     show (TkArchivo s) = s
     show (TkEstilo s) = s
     show (TkIdentificador s) = s
-    show (TkConstanteMat s) = s
     show (TkReal s) = show s
     show (TkEntero s) = show s
 

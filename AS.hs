@@ -33,7 +33,6 @@ data EM = Suma EM EM
         | Potencia EM EM
         | Entero Integer
         | Real Double
-        | ConstMat String
         | EMLlamada LlamadaFuncion
         | EMVariable Variable
         | ArregloEM [EM]
@@ -53,7 +52,6 @@ data Condicional = CSuma Condicional Condicional
                  | CPotencia Condicional Condicional
                  | CEntero Integer
                  | CReal Double
-                 | CConstMat String
                  | CondicionalLlamada CLlamadaFuncion
                  | CondicionalVariable Variable
                  | ArregloCondicional [Condicional]
@@ -156,7 +154,6 @@ showEM n (Potencia i d) = (indentar n) ++ "Potencia\n"
 
 showEM n (Entero e) = (indentar n) ++ "Entero " ++ show e ++ "\n"
 showEM n (Real e) = (indentar n) ++ "Real " ++ show e ++ "\n" 
-showEM n (ConstMat e) = (indentar n) ++ "Constante " ++ e ++ "\n" 
 showEM n (EMVariable v) = (indentar n) ++ show v ++ "\n"
 
 showEM n (EMLlamada (LlamadaFuncion nombre cuerpo)) = (indentar n) ++ "Funcion "
@@ -219,7 +216,6 @@ showCond n (CPotencia i d) = (indentar n) ++ "Potencia\n"
 
 showCond n (CEntero e) = (indentar n) ++ "Entero " ++ show e ++ "\n"
 showCond n (CReal e) = (indentar n) ++ "Real " ++ show e ++ "\n" 
-showCond n (CConstMat e) = (indentar n) ++ "Constante " ++ e ++ "\n" 
 showCond n (CondicionalVariable v) = (indentar n) ++ show v ++ "\n"
 
 showCond n (CondicionalLlamada (CLlamadaFuncion nombre cuerpo)) = (indentar n) ++ "Funcion "
