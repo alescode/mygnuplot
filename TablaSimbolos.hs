@@ -20,5 +20,12 @@ type Simbolo = (String, EM) -- nombre de la variable, EM
 type TablaDeSimbolos = Map String Simbolo -- key: nombre de la funcion
 
 funcionesPredefinidas :: [(String, Simbolo)] 
-funcionesPredefinidas = [("sin", ("z", Entero 2))]
+funcionesPredefinidas = [("sin", ("z", Entero 2)), 
+                         ("cos", ("z", Entero 2)), 
+                         ("tan", ("z", Entero 2)), 
+                         ("exp", ("z", Entero 2)), 
+                         ("log", ("z", Entero 2)), 
+                         ("ceil", ("z", Entero 2)), 
+                         ("floor", ("z", Entero 2)) 
+                        ]
 
