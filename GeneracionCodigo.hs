@@ -2,17 +2,17 @@ module GeneracionCodigo (generarCodigo) where
 import AS
 import TablaSimbolos
 import System.IO
+import qualified Data.Map as Map
 
-generarCodigo :: Bloque -> TablaDeSimbolos -> Handle -> IO ()
-generarCodigo (Secuencia lista) tabla aSalida = return () --do
-                                              --b <- return $ map (traducir tabla) lista
-                                              --mapM_ (traducir tabla aSalida) lista
+generarCodigo :: Bloque -> TablaDeSimbolos -> Handle -> [TablaDeSimbolos]
+generarCodigo (Secuencia lista) tabla aSalida = do
+                                                --b <- return $ map (traducir tabla) lista
+                                                map (traducir tabla aSalida) lista
 
---traducir :: TablaDeSimbolos -> Handle -> Instruccion -> IO ()
+traducir :: TablaDeSimbolos -> Handle -> Instruccion -> TablaDeSimbolos
 ---- Definicion de funciones
---traducir tabla _ (DefFuncion nombre (Variable var) expresion) = do
---    update tabla nombre (var, expresion) -- se actualiza la tabla de simbolos
---    return ()
+traducir tabla _ (DefFuncion nombre (Variable var) expresion) = 
+    Map.insert nombre (var, expresion) tabla -- se actualiza la tabla de simbolos
 --traducir tabla _ (Asignacion _ em) = do
 --    putStrLn $ evaluarEM tabla em 
 --

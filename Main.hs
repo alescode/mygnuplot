@@ -6,7 +6,7 @@ import Parser
 import TablaSimbolos
 import GeneracionCodigo
 import System.IO
-import Data.Map as Map
+import qualified Data.Map as Map
 
 main = do
        args <- S.getArgs
@@ -19,5 +19,5 @@ main = do
        arbol <- return $ parse (lexer contenido)
        print arbol
 
-       generarCodigo arbol Map.empty aSalida
+       tabla <- return $ generarCodigo arbol Map.empty aSalida
        hClose aSalida
