@@ -10,8 +10,9 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
           traducir tabla ((DefFuncion nombre (Variable var) expresion):ls) =  
               traducir (Map.insert nombre (var, expresion) tabla) ls 
           traducir tabla ((Graficar rango expresion):ls) = 
-              (evaluarEM tabla expresion:traducir tabla ls)
-          traducir tabla _ = []
+              instruccionGraficar : traducir tabla ls
+              where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
+          traducir tabla (_:ls) = traducir tabla ls
 
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
 --traducir tabla [] = ""
