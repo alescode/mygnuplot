@@ -1,9 +1,8 @@
-module TablaSimbolos (module Data.HashTable,
-nuevaTablaDeSimbolos,
+module TablaSimbolos (
 TablaDeSimbolos,
 Simbolo) where
 
-import Data.HashTable
+import Data.Map
 import Data.Int
 import Data.Char
 import AS
@@ -15,12 +14,6 @@ import AS
 --stringHash' [] _         = 0
 --stringHash' (char:str) n = (toEnum $ ord char)*n + stringHash' str 2*n
 
-type Simbolo = (String, EM)
+type Simbolo = (String, EM) -- nombre de la variable, EM
 
-type TablaDeSimbolos = HashTable String Simbolo
-
---instance Show HashTable key value where
---show x = show $ toList x
-
-nuevaTablaDeSimbolos :: IO (TablaDeSimbolos)
-nuevaTablaDeSimbolos = new (==) hashString
+type TablaDeSimbolos = Map String Simbolo -- key: nombre de la funcion
