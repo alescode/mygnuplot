@@ -1,5 +1,6 @@
 module TablaSimbolos (
 TablaDeSimbolos,
+funcionesPredefinidas,
 Simbolo) where
 
 import Data.Map
@@ -17,3 +18,7 @@ import AS
 type Simbolo = (String, EM) -- nombre de la variable, EM
 
 type TablaDeSimbolos = Map String Simbolo -- key: nombre de la funcion
+
+funcionesPredefinidas :: [(String, Simbolo)] 
+funcionesPredefinidas = [("sin", ("z", Entero 2))]
+

@@ -2,17 +2,42 @@ module GeneracionCodigo (generarCodigo) where
 import AS
 import TablaSimbolos
 import System.IO
+import Debug.Trace
 import qualified Data.Map as Map
 
 generarCodigo :: Bloque -> TablaDeSimbolos -> [String]
 generarCodigo (Secuencia lista) tabla = traducir tabla lista
-    where traducir tabla [] = []
+    where 
           traducir tabla ((DefFuncion nombre (Variable var) expresion):ls) =  
-              traducir (Map.insert nombre (var, expresion) tabla) ls 
+              --trace (show $ Map.insert nombre (var, expresion) tabla)
+                    traducir (Map.insert nombre (var, expresion) tabla) ls 
           traducir tabla ((Graficar rango expresion):ls) = 
+              trace (show tabla)
               instruccionGraficar : traducir tabla ls
               where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
           traducir tabla (_:ls) = traducir tabla ls
+          traducir tabla [] = trace "final " []
+
+evaluarEM :: TablaDeSimbolos -> EM -> String
+evaluarEM tabla (Suma e1 e2) =
+         concat ["(", evaluarEM tabla e1, ") + (", evaluarEM tabla e2, ")"]
+evaluarEM tabla (Resta e1 e2) =
+         concat ["(", evaluarEM tabla e1, ") - (", evaluarEM tabla e2, ")"]
+evaluarEM tabla (Multiplicacion e1 e2) =
+         concat ["(", evaluarEM tabla e1, ") * (", evaluarEM tabla e2, ")"]
+evaluarEM tabla (Division e1 e2) =
+         concat ["(", evaluarEM tabla e1, ") / (", evaluarEM tabla e2, ")"]
+evaluarEM tabla (Potencia e1 e2) =
+         concat ["(", evaluarEM tabla e1, ") ** (", evaluarEM tabla e2, ")"]
+evaluarEM tabla (Menos e1) =
+         concat ["-(", evaluarEM tabla e1, ")"]
+evaluarEM tabla (Entero e1) = show e1
+evaluarEM tabla (Real e1) = show e1
+evaluarEM tabla (EMVariable (Variable s)) = "x"
+evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
+        case Map.lookup nombre tabla of
+              Nothing -> error $ "error: no se encontro la funcion " ++ nombre
+              Just e  -> evaluarEM tabla (snd e)    
 
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
 --traducir tabla [] = ""
@@ -55,23 +80,7 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
 --myReturn :: (Monad m) => m a -> a
 --myReturn m a = a
 
-evaluarEM :: TablaDeSimbolos -> EM -> String
-evaluarEM tabla (Suma e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") + (", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Resta e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") - (", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Multiplicacion e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") * (", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Division e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") / (", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Potencia e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") ** (", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Menos e1) =
-         concat ["-(", evaluarEM tabla e1, ")"]
-evaluarEM tabla (Entero e1) = show e1
-evaluarEM tabla (Real e1) = show e1
-evaluarEM tabla (EMVariable (Variable s)) = "x"
---evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) = do
+
 --         case TablaSimbolos.lookup tabla nombre of
 --              Nothing -> "a"
 --              Just _ -> "b"

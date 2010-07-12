@@ -19,6 +19,7 @@ main = do
        arbol <- return $ parse (lexer contenido)
        print arbol
 
-       lista_codigo <- return $ generarCodigo arbol Map.empty
+       lista_codigo <- return $ 
+            "set term postscript" : generarCodigo arbol (Map.fromList funcionesPredefinidas)
        print lista_codigo
        hClose aSalida

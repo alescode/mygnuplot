@@ -5,4 +5,4 @@ g(z) = sin(z*x);
 #u = z(20);
 u = 20+8*x;
 u = fi(x);
-plot i, 20 
+plot i, g(20) 
