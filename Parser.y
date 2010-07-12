@@ -44,7 +44,7 @@ import AS
     "push_back"     { ParserStatus TkPushBack _ _ }
     estilo          { ParserStatus (TkEstilo $$) _ _ }
     identificador   { ParserStatus (TkIdentificador $$) _ _ }
-    archivo         { ParserStatus (TkArchivo $$) _ _ }
+--    archivo         { ParserStatus (TkArchivo $$) _ _ }
 
 -- Precedencias
 %left "OR"
@@ -75,14 +75,14 @@ INSTR  : identificador '(' identificador ')' '=' EM    { DefFuncion $1
                                                              (Variable $3) $6 }
        | identificador '=' EM                          { Asignacion
                                                              (Variable $1) $3 }
-       | "plot" EM ',' EG "with" '[' ']'               { GraficarEstilo 
+       | "plot" EM ',' EM "with" '[' ']'               { GraficarEstilo 
                                                              $2 $4 []}
-       | "plot" EM ',' EG "with"
+       | "plot" EM ',' EM "with"
        '[' SECUENCIA_ESTILO ']'                        { GraficarEstilo $2 $4
                                                          (reverse $7) }
-       | "plot" EM ',' EG "with" estilo                { GraficarEstilo $2 
+       | "plot" EM ',' EM "with" estilo                { GraficarEstilo $2 
                                                          $4 [(readEstilo $6)] }
-       | "plot" EM ',' EG                              { Graficar $2 $4 }
+       | "plot" EM ',' EM                              { Graficar $2 $4 }
        | "push_back" '(' identificador ',' EM ')'      { PushBack 
                                                              (Variable $3) $5 }
 
@@ -155,9 +155,6 @@ COND  : COND '+' COND                               { CSuma $1 $3 }
       | COND "<=" COND                            { MenorIgual $1 $3 }
       | COND ">=" COND                            { MayorIgual $1 $3 }
       | COND "==" COND                            { Igual $1 $3 }
-
-EG    : EM                                        { Graficable $1 }
-      | archivo                                   { Archivo $1 }
 
 {
 

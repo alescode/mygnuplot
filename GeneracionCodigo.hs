@@ -4,15 +4,24 @@ import TablaSimbolos
 import System.IO
 import qualified Data.Map as Map
 
-generarCodigo :: Bloque -> TablaDeSimbolos -> Handle -> [TablaDeSimbolos]
-generarCodigo (Secuencia lista) tabla aSalida = do
-                                                --b <- return $ map (traducir tabla) lista
-                                                map (traducir tabla aSalida) lista
+generarCodigo :: Bloque -> TablaDeSimbolos -> [String]
+generarCodigo (Secuencia lista) tabla = traducir tabla lista
+    where traducir tabla [] = []
+          traducir tabla ((DefFuncion nombre (Variable var) expresion):ls) =  
+              traducir (Map.insert nombre (var, expresion) tabla) ls 
+          traducir tabla ((Graficar rango expresion):ls) = 
+              (evaluarEM tabla expresion:traducir tabla ls)
+          traducir tabla _ = []
 
-traducir :: TablaDeSimbolos -> Handle -> Instruccion -> TablaDeSimbolos
----- Definicion de funciones
-traducir tabla _ (DefFuncion nombre (Variable var) expresion) = 
-    Map.insert nombre (var, expresion) tabla -- se actualiza la tabla de simbolos
+--traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
+--traducir tabla [] = ""
+------ Definicion de funciones
+--traducir tabla  ((DefFuncion nombre (Variable var) expresion):ls) = 
+--    traducir (Map.insert nombre (var, expresion) tabla) ls
+
+    --m <- Map.insert nombre (var, expresion) tabla -- se actualiza la tabla de simbolos
+--traducir _ aSalida _ = ""
+    
 --traducir tabla _ (Asignacion _ em) = do
 --    putStrLn $ evaluarEM tabla em 
 --

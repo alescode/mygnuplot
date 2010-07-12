@@ -18,10 +18,10 @@ Grammar
 	SECUENCIA_2 -> SECUENCIA_2 CICLO                   (9)
 	INSTR -> identificador '(' identificador ')' '=' EM   (10)
 	INSTR -> identificador '=' EM                      (11)
-	INSTR -> "plot" EM ',' EG "with" '[' ']'           (12)
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']'   (13)
-	INSTR -> "plot" EM ',' EG "with" estilo            (14)
-	INSTR -> "plot" EM ',' EG                          (15)
+	INSTR -> "plot" EM ',' EM "with" '[' ']'           (12)
+	INSTR -> "plot" EM ',' EM "with" '[' SECUENCIA_ESTILO ']'   (13)
+	INSTR -> "plot" EM ',' EM "with" estilo            (14)
+	INSTR -> "plot" EM ',' EM                          (15)
 	INSTR -> "push_back" '(' identificador ',' EM ')'   (16)
 	CICLO -> "for" identificador "in" EM SECUENCIA_1 "endfor"   (17)
 	CICLO -> "for" identificador "in" EM "step" EM SECUENCIA_1 "endfor"   (18)
@@ -73,8 +73,6 @@ Grammar
 	COND -> COND "<=" COND                             (64)
 	COND -> COND ">=" COND                             (65)
 	COND -> COND "==" COND                             (66)
-	EG -> EM                                           (67)
-	EG -> archivo                                      (68)
 
 -----------------------------------------------------------------------------
 Terminals
@@ -113,7 +111,6 @@ Terminals
 	"push_back"    { ParserStatus TkPushBack _ _ }
 	estilo         { ParserStatus (TkEstilo $$) _ _ }
 	identificador  { ParserStatus (TkIdentificador $$) _ _ }
-	archivo        { ParserStatus (TkArchivo $$) _ _ }
 
 -----------------------------------------------------------------------------
 Non-terminals
@@ -129,7 +126,6 @@ Non-terminals
 	SECUENCIA_COND  rules 38, 39
 	SECUENCIA_ESTILO rules 40, 41
 	COND            rules 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66
-	EG              rules 67, 68
 
 -----------------------------------------------------------------------------
 States
@@ -216,10 +212,10 @@ State 6
 
 State 7
 
-	INSTR -> "plot" . EM ',' EG "with" '[' ']'          (rule 12)
-	INSTR -> "plot" . EM ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
-	INSTR -> "plot" . EM ',' EG "with" estilo           (rule 14)
-	INSTR -> "plot" . EM ',' EG                         (rule 15)
+	INSTR -> "plot" . EM ',' EM "with" '[' ']'          (rule 12)
+	INSTR -> "plot" . EM ',' EM "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" . EM ',' EM "with" estilo           (rule 14)
+	INSTR -> "plot" . EM ',' EM                         (rule 15)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -288,10 +284,10 @@ State 13
 
 State 14
 
-	INSTR -> "plot" EM . ',' EG "with" '[' ']'          (rule 12)
-	INSTR -> "plot" EM . ',' EG "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
-	INSTR -> "plot" EM . ',' EG "with" estilo           (rule 14)
-	INSTR -> "plot" EM . ',' EG                         (rule 15)
+	INSTR -> "plot" EM . ',' EM "with" '[' ']'          (rule 12)
+	INSTR -> "plot" EM . ',' EM "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" EM . ',' EM "with" estilo           (rule 14)
+	INSTR -> "plot" EM . ',' EM                         (rule 15)
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
 	EM -> EM . '*' EM                                   (rule 21)
@@ -516,7 +512,7 @@ State 29
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 76
+	EM             goto state 74
 
 State 30
 
@@ -532,24 +528,24 @@ State 30
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 75
+	EM             goto state 73
 
 State 31
 
 	EM -> "if" '(' . COND ',' EM ',' EM ')'             (rule 35)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 64
+	COND           goto state 62
 
 State 32
 
@@ -565,7 +561,7 @@ State 32
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 63
+	EM             goto state 61
 
 State 33
 
@@ -584,7 +580,7 @@ State 33
 	'^'            shift, and enter state 43
 	']'            reduce using rule 36
 	','            reduce using rule 36
-	"for"          shift, and enter state 62
+	"for"          shift, and enter state 60
 
 
 State 34
@@ -592,8 +588,8 @@ State 34
 	EM -> '[' SECUENCIA_EM . ']'                        (rule 32)
 	SECUENCIA_EM -> SECUENCIA_EM . ',' EM               (rule 37)
 
-	']'            shift, and enter state 60
-	','            shift, and enter state 61
+	']'            shift, and enter state 58
+	','            shift, and enter state 59
 
 
 State 35
@@ -633,7 +629,7 @@ State 36
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 59
+	')'            shift, and enter state 57
 
 
 State 37
@@ -650,7 +646,7 @@ State 37
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 58
+	EM             goto state 56
 
 State 38
 
@@ -694,7 +690,7 @@ State 39
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 57
+	EM             goto state 55
 
 State 40
 
@@ -710,7 +706,7 @@ State 40
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 56
+	EM             goto state 54
 
 State 41
 
@@ -726,7 +722,7 @@ State 41
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 55
+	EM             goto state 53
 
 State 42
 
@@ -742,7 +738,7 @@ State 42
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 54
+	EM             goto state 52
 
 State 43
 
@@ -758,14 +754,14 @@ State 43
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 53
+	EM             goto state 51
 
 State 44
 
-	INSTR -> "plot" EM ',' . EG "with" '[' ']'          (rule 12)
-	INSTR -> "plot" EM ',' . EG "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
-	INSTR -> "plot" EM ',' . EG "with" estilo           (rule 14)
-	INSTR -> "plot" EM ',' . EG                         (rule 15)
+	INSTR -> "plot" EM ',' . EM "with" '[' ']'          (rule 12)
+	INSTR -> "plot" EM ',' . EM "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" EM ',' . EM "with" estilo           (rule 14)
+	INSTR -> "plot" EM ',' . EM                         (rule 15)
 
 	'-'            shift, and enter state 15
 	int            shift, and enter state 16
@@ -776,10 +772,8 @@ State 44
 	"range"        shift, and enter state 21
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
-	archivo        shift, and enter state 52
 
 	EM             goto state 50
-	EG             goto state 51
 
 State 45
 
@@ -818,7 +812,7 @@ State 48
 
 	INSTR -> identificador '(' identificador ')' . '=' EM    (rule 10)
 
-	'='            shift, and enter state 109
+	'='            shift, and enter state 107
 
 
 State 49
@@ -835,52 +829,32 @@ State 49
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 108
+	EM             goto state 106
 
 State 50
 
+	INSTR -> "plot" EM ',' EM . "with" '[' ']'          (rule 12)
+	INSTR -> "plot" EM ',' EM . "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" EM ',' EM . "with" estilo           (rule 14)
+	INSTR -> "plot" EM ',' EM .                         (rule 15)
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
 	EM -> EM . '*' EM                                   (rule 21)
 	EM -> EM . '/' EM                                   (rule 22)
 	EM -> EM . '^' EM                                   (rule 23)
-	EG -> EM .                                          (rule 67)
 
 	'+'            shift, and enter state 39
 	'-'            shift, and enter state 40
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	';'            reduce using rule 67
-	"with"         reduce using rule 67
-	"endfor"       reduce using rule 67
-	%eof           reduce using rule 67
-
-
-State 51
-
-	INSTR -> "plot" EM ',' EG . "with" '[' ']'          (rule 12)
-	INSTR -> "plot" EM ',' EG . "with" '[' SECUENCIA_ESTILO ']'    (rule 13)
-	INSTR -> "plot" EM ',' EG . "with" estilo           (rule 14)
-	INSTR -> "plot" EM ',' EG .                         (rule 15)
-
 	';'            reduce using rule 15
-	"with"         shift, and enter state 107
+	"with"         shift, and enter state 105
 	"endfor"       reduce using rule 15
 	%eof           reduce using rule 15
 
 
-State 52
-
-	EG -> archivo .                                     (rule 68)
-
-	';'            reduce using rule 68
-	"with"         reduce using rule 68
-	"endfor"       reduce using rule 68
-	%eof           reduce using rule 68
-
-
-State 53
+State 51
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -908,7 +882,7 @@ State 53
 	%eof           reduce using rule 23
 
 
-State 54
+State 52
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -936,7 +910,7 @@ State 54
 	%eof           reduce using rule 22
 
 
-State 55
+State 53
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -964,7 +938,7 @@ State 55
 	%eof           reduce using rule 21
 
 
-State 56
+State 54
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -992,7 +966,7 @@ State 56
 	%eof           reduce using rule 20
 
 
-State 57
+State 55
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM '+' EM .                                   (rule 19)
@@ -1020,7 +994,7 @@ State 57
 	%eof           reduce using rule 19
 
 
-State 58
+State 56
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -1034,10 +1008,10 @@ State 58
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 106
+	')'            shift, and enter state 104
 
 
-State 59
+State 57
 
 	EM -> '(' EM ')' .                                  (rule 25)
 
@@ -1060,7 +1034,7 @@ State 59
 	%eof           reduce using rule 25
 
 
-State 60
+State 58
 
 	EM -> '[' SECUENCIA_EM ']' .                        (rule 32)
 
@@ -1083,7 +1057,7 @@ State 60
 	%eof           reduce using rule 32
 
 
-State 61
+State 59
 
 	SECUENCIA_EM -> SECUENCIA_EM ',' . EM               (rule 37)
 
@@ -1097,16 +1071,16 @@ State 61
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 105
+	EM             goto state 103
 
-State 62
+State 60
 
 	EM -> '[' EM "for" . identificador "in" EM ']'      (rule 34)
 
-	identificador  shift, and enter state 104
+	identificador  shift, and enter state 102
 
 
-State 63
+State 61
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -1120,10 +1094,10 @@ State 63
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	','            shift, and enter state 103
+	','            shift, and enter state 101
 
 
-State 64
+State 62
 
 	EM -> "if" '(' COND . ',' EM ',' EM ')'             (rule 35)
 	COND -> COND . '+' COND                             (rule 42)
@@ -1139,39 +1113,39 @@ State 64
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	','            shift, and enter state 95
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	','            shift, and enter state 93
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 65
+State 63
 
 	COND -> '-' . COND                                  (rule 47)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 89
+	COND           goto state 87
 
-State 66
+State 64
 
 	COND -> int .                                       (rule 49)
 
@@ -1193,7 +1167,7 @@ State 66
 	"=="           reduce using rule 49
 
 
-State 67
+State 65
 
 	COND -> real .                                      (rule 50)
 
@@ -1215,83 +1189,83 @@ State 67
 	"=="           reduce using rule 50
 
 
-State 68
+State 66
 
 	COND -> funcion . '(' COND ')'                      (rule 51)
 
-	'('            shift, and enter state 88
+	'('            shift, and enter state 86
 
 
-State 69
+State 67
 
 	COND -> '(' . COND ')'                              (rule 48)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 87
+	COND           goto state 85
 
-State 70
+State 68
 
 	COND -> '[' . ']'                                   (rule 54)
 	COND -> '[' . SECUENCIA_COND ']'                    (rule 55)
 	COND -> '[' . COND "for" identificador "in" COND ']'    (rule 57)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	']'            shift, and enter state 86
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	']'            shift, and enter state 84
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	SECUENCIA_COND goto state 84
-	COND           goto state 85
+	SECUENCIA_COND goto state 82
+	COND           goto state 83
 
-State 71
+State 69
 
 	COND -> "range" . '(' COND ',' COND ')'             (rule 56)
 
-	'('            shift, and enter state 83
+	'('            shift, and enter state 81
 
 
-State 72
+State 70
 
 	COND -> "if" . '(' COND ',' COND ',' COND ')'       (rule 58)
 
-	'('            shift, and enter state 82
+	'('            shift, and enter state 80
 
 
-State 73
+State 71
 
 	COND -> "NOT" . COND                                (rule 61)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 81
+	COND           goto state 79
 
-State 74
+State 72
 
 	COND -> identificador . '(' COND ')'                (rule 52)
 	COND -> identificador .                             (rule 53)
@@ -1301,7 +1275,7 @@ State 74
 	'*'            reduce using rule 53
 	'/'            reduce using rule 53
 	'^'            reduce using rule 53
-	'('            shift, and enter state 80
+	'('            shift, and enter state 78
 	')'            reduce using rule 53
 	']'            reduce using rule 53
 	','            reduce using rule 53
@@ -1315,7 +1289,7 @@ State 74
 	"=="           reduce using rule 53
 
 
-State 75
+State 73
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -1329,10 +1303,10 @@ State 75
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 79
+	')'            shift, and enter state 77
 
 
-State 76
+State 74
 
 	CICLO -> "for" identificador "in" EM . SECUENCIA_1 "endfor"    (rule 17)
 	CICLO -> "for" identificador "in" EM . "step" EM SECUENCIA_1 "endfor"    (rule 18)
@@ -1349,23 +1323,23 @@ State 76
 	'^'            shift, and enter state 43
 	"for"          shift, and enter state 6
 	"plot"         shift, and enter state 7
-	"step"         shift, and enter state 78
+	"step"         shift, and enter state 76
 	"push_back"    shift, and enter state 8
 	identificador  shift, and enter state 9
 
-	SECUENCIA_1    goto state 77
+	SECUENCIA_1    goto state 75
 	SECUENCIA_2    goto state 3
 	INSTR          goto state 4
 	CICLO          goto state 5
 
-State 77
+State 75
 
 	CICLO -> "for" identificador "in" EM SECUENCIA_1 . "endfor"    (rule 17)
 
-	"endfor"       shift, and enter state 138
+	"endfor"       shift, and enter state 136
 
 
-State 78
+State 76
 
 	CICLO -> "for" identificador "in" EM "step" . EM SECUENCIA_1 "endfor"    (rule 18)
 
@@ -1379,9 +1353,9 @@ State 78
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 137
+	EM             goto state 135
 
-State 79
+State 77
 
 	EM -> identificador '(' EM ')' .                    (rule 29)
 
@@ -1404,24 +1378,24 @@ State 79
 	%eof           reduce using rule 29
 
 
-State 80
+State 78
 
 	COND -> identificador '(' . COND ')'                (rule 52)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 136
+	COND           goto state 134
 
-State 81
+State 79
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -1437,68 +1411,68 @@ State 81
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 61
 	']'            reduce using rule 61
 	','            reduce using rule 61
 	"for"          reduce using rule 61
 	"AND"          reduce using rule 61
 	"OR"           reduce using rule 61
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 82
+State 80
 
 	COND -> "if" '(' . COND ',' COND ',' COND ')'       (rule 58)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 135
+	COND           goto state 133
 
-State 83
+State 81
 
 	COND -> "range" '(' . COND ',' COND ')'             (rule 56)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 134
+	COND           goto state 132
 
-State 84
+State 82
 
 	SECUENCIA_COND -> SECUENCIA_COND . ',' COND         (rule 39)
 	COND -> '[' SECUENCIA_COND . ']'                    (rule 55)
 
-	']'            shift, and enter state 132
-	','            shift, and enter state 133
+	']'            shift, and enter state 130
+	','            shift, and enter state 131
 
 
-State 85
+State 83
 
 	SECUENCIA_COND -> COND .                            (rule 38)
 	COND -> COND . '+' COND                             (rule 42)
@@ -1515,24 +1489,24 @@ State 85
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	']'            reduce using rule 38
 	','            reduce using rule 38
-	"for"          shift, and enter state 131
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	"for"          shift, and enter state 129
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 86
+State 84
 
 	COND -> '[' ']' .                                   (rule 54)
 
@@ -1554,7 +1528,7 @@ State 86
 	"=="           reduce using rule 54
 
 
-State 87
+State 85
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -1570,39 +1544,39 @@ State 87
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	')'            shift, and enter state 130
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	')'            shift, and enter state 128
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 88
+State 86
 
 	COND -> funcion '(' . COND ')'                      (rule 51)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 129
+	COND           goto state 127
 
-State 89
+State 87
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -1622,7 +1596,7 @@ State 89
 	'-'            reduce using rule 47
 	'*'            reduce using rule 47
 	'/'            reduce using rule 47
-	'^'            shift, and enter state 94
+	'^'            shift, and enter state 92
 	')'            reduce using rule 47
 	']'            reduce using rule 47
 	','            reduce using rule 47
@@ -1636,92 +1610,92 @@ State 89
 	"=="           reduce using rule 47
 
 
-State 90
+State 88
 
 	COND -> COND '+' . COND                             (rule 42)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
-
-	COND           goto state 128
-
-State 91
-
-	COND -> COND '-' . COND                             (rule 43)
-
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
-
-	COND           goto state 127
-
-State 92
-
-	COND -> COND '*' . COND                             (rule 44)
-
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 126
 
-State 93
+State 89
 
-	COND -> COND '/' . COND                             (rule 45)
+	COND -> COND '-' . COND                             (rule 43)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 125
 
-State 94
+State 90
 
-	COND -> COND '^' . COND                             (rule 46)
+	COND -> COND '*' . COND                             (rule 44)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 124
 
-State 95
+State 91
+
+	COND -> COND '/' . COND                             (rule 45)
+
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
+
+	COND           goto state 123
+
+State 92
+
+	COND -> COND '^' . COND                             (rule 46)
+
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
+
+	COND           goto state 122
+
+State 93
 
 	EM -> "if" '(' COND ',' . EM ',' EM ')'             (rule 35)
 
@@ -1735,128 +1709,128 @@ State 95
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 123
+	EM             goto state 121
 
-State 96
+State 94
 
 	COND -> COND "AND" . COND                           (rule 59)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
-
-	COND           goto state 122
-
-State 97
-
-	COND -> COND "OR" . COND                            (rule 60)
-
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
-
-	COND           goto state 121
-
-State 98
-
-	COND -> COND '<' . COND                             (rule 63)
-
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 120
 
-State 99
+State 95
 
-	COND -> COND '>' . COND                             (rule 62)
+	COND -> COND "OR" . COND                            (rule 60)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 119
 
-State 100
+State 96
 
-	COND -> COND ">=" . COND                            (rule 65)
+	COND -> COND '<' . COND                             (rule 63)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 118
 
-State 101
+State 97
 
-	COND -> COND "<=" . COND                            (rule 64)
+	COND -> COND '>' . COND                             (rule 62)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 117
 
-State 102
+State 98
 
-	COND -> COND "==" . COND                            (rule 66)
+	COND -> COND ">=" . COND                            (rule 65)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
 	COND           goto state 116
 
-State 103
+State 99
+
+	COND -> COND "<=" . COND                            (rule 64)
+
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
+
+	COND           goto state 115
+
+State 100
+
+	COND -> COND "==" . COND                            (rule 66)
+
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
+
+	COND           goto state 114
+
+State 101
 
 	EM -> "range" '(' EM ',' . EM ')'                   (rule 33)
 
@@ -1870,16 +1844,16 @@ State 103
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 115
+	EM             goto state 113
 
-State 104
+State 102
 
 	EM -> '[' EM "for" identificador . "in" EM ']'      (rule 34)
 
-	"in"           shift, and enter state 114
+	"in"           shift, and enter state 112
 
 
-State 105
+State 103
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -1897,7 +1871,7 @@ State 105
 	','            reduce using rule 37
 
 
-State 106
+State 104
 
 	EM -> funcion '(' EM ')' .                          (rule 28)
 
@@ -1920,17 +1894,17 @@ State 106
 	%eof           reduce using rule 28
 
 
-State 107
+State 105
 
-	INSTR -> "plot" EM ',' EG "with" . '[' ']'          (rule 12)
-	INSTR -> "plot" EM ',' EG "with" . '[' SECUENCIA_ESTILO ']'    (rule 13)
-	INSTR -> "plot" EM ',' EG "with" . estilo           (rule 14)
+	INSTR -> "plot" EM ',' EM "with" . '[' ']'          (rule 12)
+	INSTR -> "plot" EM ',' EM "with" . '[' SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" EM ',' EM "with" . estilo           (rule 14)
 
-	'['            shift, and enter state 112
-	estilo         shift, and enter state 113
+	'['            shift, and enter state 110
+	estilo         shift, and enter state 111
 
 
-State 108
+State 106
 
 	INSTR -> "push_back" '(' identificador ',' EM . ')'    (rule 16)
 	EM -> EM . '+' EM                                   (rule 19)
@@ -1944,10 +1918,10 @@ State 108
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 111
+	')'            shift, and enter state 109
 
 
-State 109
+State 107
 
 	INSTR -> identificador '(' identificador ')' '=' . EM    (rule 10)
 
@@ -1961,9 +1935,9 @@ State 109
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 110
+	EM             goto state 108
 
-State 110
+State 108
 
 	INSTR -> identificador '(' identificador ')' '=' EM .    (rule 10)
 	EM -> EM . '+' EM                                   (rule 19)
@@ -1982,7 +1956,7 @@ State 110
 	%eof           reduce using rule 10
 
 
-State 111
+State 109
 
 	INSTR -> "push_back" '(' identificador ',' EM ')' .    (rule 16)
 
@@ -1991,26 +1965,26 @@ State 111
 	%eof           reduce using rule 16
 
 
-State 112
+State 110
 
-	INSTR -> "plot" EM ',' EG "with" '[' . ']'          (rule 12)
-	INSTR -> "plot" EM ',' EG "with" '[' . SECUENCIA_ESTILO ']'    (rule 13)
+	INSTR -> "plot" EM ',' EM "with" '[' . ']'          (rule 12)
+	INSTR -> "plot" EM ',' EM "with" '[' . SECUENCIA_ESTILO ']'    (rule 13)
 
-	']'            shift, and enter state 150
-	estilo         shift, and enter state 151
+	']'            shift, and enter state 148
+	estilo         shift, and enter state 149
 
-	SECUENCIA_ESTILOgoto state 149
+	SECUENCIA_ESTILOgoto state 147
 
-State 113
+State 111
 
-	INSTR -> "plot" EM ',' EG "with" estilo .           (rule 14)
+	INSTR -> "plot" EM ',' EM "with" estilo .           (rule 14)
 
 	';'            reduce using rule 14
 	"endfor"       reduce using rule 14
 	%eof           reduce using rule 14
 
 
-State 114
+State 112
 
 	EM -> '[' EM "for" identificador "in" . EM ']'      (rule 34)
 
@@ -2024,9 +1998,9 @@ State 114
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 148
+	EM             goto state 146
 
-State 115
+State 113
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -2040,10 +2014,10 @@ State 115
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 147
+	')'            shift, and enter state 145
 
 
-State 116
+State 114
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2059,11 +2033,11 @@ State 116
 	COND -> COND . "==" COND                            (rule 66)
 	COND -> COND "==" COND .                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 66
 	']'            reduce using rule 66
 	','            reduce using rule 66
@@ -2077,7 +2051,7 @@ State 116
 	"=="           reduce using rule 66
 
 
-State 117
+State 115
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2093,11 +2067,11 @@ State 117
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 64
 	']'            reduce using rule 64
 	','            reduce using rule 64
@@ -2111,7 +2085,7 @@ State 117
 	"=="           reduce using rule 64
 
 
-State 118
+State 116
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2127,11 +2101,11 @@ State 118
 	COND -> COND ">=" COND .                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 65
 	']'            reduce using rule 65
 	','            reduce using rule 65
@@ -2145,7 +2119,7 @@ State 118
 	"=="           reduce using rule 65
 
 
-State 119
+State 117
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2161,11 +2135,11 @@ State 119
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 62
 	']'            reduce using rule 62
 	','            reduce using rule 62
@@ -2179,7 +2153,7 @@ State 119
 	"=="           reduce using rule 62
 
 
-State 120
+State 118
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2195,11 +2169,11 @@ State 120
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 63
 	']'            reduce using rule 63
 	','            reduce using rule 63
@@ -2213,7 +2187,7 @@ State 120
 	"=="           reduce using rule 63
 
 
-State 121
+State 119
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2229,25 +2203,25 @@ State 121
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 60
 	']'            reduce using rule 60
 	','            reduce using rule 60
 	"for"          reduce using rule 60
-	"AND"          shift, and enter state 96
+	"AND"          shift, and enter state 94
 	"OR"           reduce using rule 60
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 122
+State 120
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2263,25 +2237,25 @@ State 122
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 59
 	']'            reduce using rule 59
 	','            reduce using rule 59
 	"for"          reduce using rule 59
 	"AND"          reduce using rule 59
 	"OR"           reduce using rule 59
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 123
+State 121
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -2295,10 +2269,10 @@ State 123
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	','            shift, and enter state 146
+	','            shift, and enter state 144
 
 
-State 124
+State 122
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2318,7 +2292,7 @@ State 124
 	'-'            reduce using rule 46
 	'*'            reduce using rule 46
 	'/'            reduce using rule 46
-	'^'            shift, and enter state 94
+	'^'            shift, and enter state 92
 	')'            reduce using rule 46
 	']'            reduce using rule 46
 	','            reduce using rule 46
@@ -2332,7 +2306,7 @@ State 124
 	"=="           reduce using rule 46
 
 
-State 125
+State 123
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2352,7 +2326,7 @@ State 125
 	'-'            reduce using rule 45
 	'*'            reduce using rule 45
 	'/'            reduce using rule 45
-	'^'            shift, and enter state 94
+	'^'            shift, and enter state 92
 	')'            reduce using rule 45
 	']'            reduce using rule 45
 	','            reduce using rule 45
@@ -2366,7 +2340,7 @@ State 125
 	"=="           reduce using rule 45
 
 
-State 126
+State 124
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2386,7 +2360,7 @@ State 126
 	'-'            reduce using rule 44
 	'*'            reduce using rule 44
 	'/'            reduce using rule 44
-	'^'            shift, and enter state 94
+	'^'            shift, and enter state 92
 	')'            reduce using rule 44
 	']'            reduce using rule 44
 	','            reduce using rule 44
@@ -2400,7 +2374,7 @@ State 126
 	"=="           reduce using rule 44
 
 
-State 127
+State 125
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2418,9 +2392,9 @@ State 127
 
 	'+'            reduce using rule 43
 	'-'            reduce using rule 43
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 43
 	']'            reduce using rule 43
 	','            reduce using rule 43
@@ -2434,7 +2408,7 @@ State 127
 	"=="           reduce using rule 43
 
 
-State 128
+State 126
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND '+' COND .                             (rule 42)
@@ -2452,9 +2426,9 @@ State 128
 
 	'+'            reduce using rule 42
 	'-'            reduce using rule 42
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	')'            reduce using rule 42
 	']'            reduce using rule 42
 	','            reduce using rule 42
@@ -2468,7 +2442,7 @@ State 128
 	"=="           reduce using rule 42
 
 
-State 129
+State 127
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2484,22 +2458,22 @@ State 129
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	')'            shift, and enter state 145
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	')'            shift, and enter state 143
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 130
+State 128
 
 	COND -> '(' COND ')' .                              (rule 48)
 
@@ -2521,14 +2495,14 @@ State 130
 	"=="           reduce using rule 48
 
 
-State 131
+State 129
 
 	COND -> '[' COND "for" . identificador "in" COND ']'    (rule 57)
 
-	identificador  shift, and enter state 144
+	identificador  shift, and enter state 142
 
 
-State 132
+State 130
 
 	COND -> '[' SECUENCIA_COND ']' .                    (rule 55)
 
@@ -2550,24 +2524,24 @@ State 132
 	"=="           reduce using rule 55
 
 
-State 133
+State 131
 
 	SECUENCIA_COND -> SECUENCIA_COND ',' . COND         (rule 39)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 143
+	COND           goto state 141
 
-State 134
+State 132
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2583,22 +2557,22 @@ State 134
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	','            shift, and enter state 142
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	','            shift, and enter state 140
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 135
+State 133
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2614,22 +2588,22 @@ State 135
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	','            shift, and enter state 141
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	','            shift, and enter state 139
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 136
+State 134
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2645,22 +2619,22 @@ State 136
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	')'            shift, and enter state 140
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	')'            shift, and enter state 138
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 137
+State 135
 
 	CICLO -> "for" identificador "in" EM "step" EM . SECUENCIA_1 "endfor"    (rule 18)
 	EM -> EM . '+' EM                                   (rule 19)
@@ -2679,12 +2653,12 @@ State 137
 	"push_back"    shift, and enter state 8
 	identificador  shift, and enter state 9
 
-	SECUENCIA_1    goto state 139
+	SECUENCIA_1    goto state 137
 	SECUENCIA_2    goto state 3
 	INSTR          goto state 4
 	CICLO          goto state 5
 
-State 138
+State 136
 
 	CICLO -> "for" identificador "in" EM SECUENCIA_1 "endfor" .    (rule 17)
 
@@ -2696,14 +2670,14 @@ State 138
 	%eof           reduce using rule 17
 
 
-State 139
+State 137
 
 	CICLO -> "for" identificador "in" EM "step" EM SECUENCIA_1 . "endfor"    (rule 18)
 
-	"endfor"       shift, and enter state 159
+	"endfor"       shift, and enter state 157
 
 
-State 140
+State 138
 
 	COND -> identificador '(' COND ')' .                (rule 52)
 
@@ -2725,41 +2699,41 @@ State 140
 	"=="           reduce using rule 52
 
 
-State 141
+State 139
 
 	COND -> "if" '(' COND ',' . COND ',' COND ')'       (rule 58)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 158
+	COND           goto state 156
 
-State 142
+State 140
 
 	COND -> "range" '(' COND ',' . COND ')'             (rule 56)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 157
+	COND           goto state 155
 
-State 143
+State 141
 
 	SECUENCIA_COND -> SECUENCIA_COND ',' COND .         (rule 39)
 	COND -> COND . '+' COND                             (rule 42)
@@ -2775,30 +2749,30 @@ State 143
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
 	']'            reduce using rule 39
 	','            reduce using rule 39
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 144
+State 142
 
 	COND -> '[' COND "for" identificador . "in" COND ']'    (rule 57)
 
-	"in"           shift, and enter state 156
+	"in"           shift, and enter state 154
 
 
-State 145
+State 143
 
 	COND -> funcion '(' COND ')' .                      (rule 51)
 
@@ -2820,7 +2794,7 @@ State 145
 	"=="           reduce using rule 51
 
 
-State 146
+State 144
 
 	EM -> "if" '(' COND ',' EM ',' . EM ')'             (rule 35)
 
@@ -2834,9 +2808,9 @@ State 146
 	"if"           shift, and enter state 22
 	identificador  shift, and enter state 23
 
-	EM             goto state 155
+	EM             goto state 153
 
-State 147
+State 145
 
 	EM -> "range" '(' EM ',' EM ')' .                   (rule 33)
 
@@ -2859,7 +2833,7 @@ State 147
 	%eof           reduce using rule 33
 
 
-State 148
+State 146
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -2873,28 +2847,28 @@ State 148
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	']'            shift, and enter state 154
+	']'            shift, and enter state 152
 
 
-State 149
+State 147
 
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO . ']'    (rule 13)
+	INSTR -> "plot" EM ',' EM "with" '[' SECUENCIA_ESTILO . ']'    (rule 13)
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO . ',' estilo    (rule 41)
 
-	']'            shift, and enter state 152
-	','            shift, and enter state 153
+	']'            shift, and enter state 150
+	','            shift, and enter state 151
 
 
-State 150
+State 148
 
-	INSTR -> "plot" EM ',' EG "with" '[' ']' .          (rule 12)
+	INSTR -> "plot" EM ',' EM "with" '[' ']' .          (rule 12)
 
 	';'            reduce using rule 12
 	"endfor"       reduce using rule 12
 	%eof           reduce using rule 12
 
 
-State 151
+State 149
 
 	SECUENCIA_ESTILO -> estilo .                        (rule 40)
 
@@ -2902,23 +2876,23 @@ State 151
 	','            reduce using rule 40
 
 
-State 152
+State 150
 
-	INSTR -> "plot" EM ',' EG "with" '[' SECUENCIA_ESTILO ']' .    (rule 13)
+	INSTR -> "plot" EM ',' EM "with" '[' SECUENCIA_ESTILO ']' .    (rule 13)
 
 	';'            reduce using rule 13
 	"endfor"       reduce using rule 13
 	%eof           reduce using rule 13
 
 
-State 153
+State 151
 
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' . estilo    (rule 41)
 
-	estilo         shift, and enter state 164
+	estilo         shift, and enter state 162
 
 
-State 154
+State 152
 
 	EM -> '[' EM "for" identificador "in" EM ']' .      (rule 34)
 
@@ -2941,7 +2915,7 @@ State 154
 	%eof           reduce using rule 34
 
 
-State 155
+State 153
 
 	EM -> EM . '+' EM                                   (rule 19)
 	EM -> EM . '-' EM                                   (rule 20)
@@ -2955,27 +2929,27 @@ State 155
 	'*'            shift, and enter state 41
 	'/'            shift, and enter state 42
 	'^'            shift, and enter state 43
-	')'            shift, and enter state 163
+	')'            shift, and enter state 161
 
 
-State 156
+State 154
 
 	COND -> '[' COND "for" identificador "in" . COND ']'    (rule 57)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 162
+	COND           goto state 160
 
-State 157
+State 155
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -2991,22 +2965,22 @@ State 157
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	')'            shift, and enter state 161
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	')'            shift, and enter state 159
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 158
+State 156
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -3022,22 +2996,22 @@ State 158
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	','            shift, and enter state 160
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	','            shift, and enter state 158
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 159
+State 157
 
 	CICLO -> "for" identificador "in" EM "step" EM SECUENCIA_1 "endfor" .    (rule 18)
 
@@ -3049,24 +3023,24 @@ State 159
 	%eof           reduce using rule 18
 
 
-State 160
+State 158
 
 	COND -> "if" '(' COND ',' COND ',' . COND ')'       (rule 58)
 
-	'-'            shift, and enter state 65
-	int            shift, and enter state 66
-	real           shift, and enter state 67
-	funcion        shift, and enter state 68
-	'('            shift, and enter state 69
-	'['            shift, and enter state 70
-	"range"        shift, and enter state 71
-	"if"           shift, and enter state 72
-	"NOT"          shift, and enter state 73
-	identificador  shift, and enter state 74
+	'-'            shift, and enter state 63
+	int            shift, and enter state 64
+	real           shift, and enter state 65
+	funcion        shift, and enter state 66
+	'('            shift, and enter state 67
+	'['            shift, and enter state 68
+	"range"        shift, and enter state 69
+	"if"           shift, and enter state 70
+	"NOT"          shift, and enter state 71
+	identificador  shift, and enter state 72
 
-	COND           goto state 166
+	COND           goto state 164
 
-State 161
+State 159
 
 	COND -> "range" '(' COND ',' COND ')' .             (rule 56)
 
@@ -3088,7 +3062,7 @@ State 161
 	"=="           reduce using rule 56
 
 
-State 162
+State 160
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -3104,22 +3078,22 @@ State 162
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	']'            shift, and enter state 165
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	']'            shift, and enter state 163
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 163
+State 161
 
 	EM -> "if" '(' COND ',' EM ',' EM ')' .             (rule 35)
 
@@ -3142,7 +3116,7 @@ State 163
 	%eof           reduce using rule 35
 
 
-State 164
+State 162
 
 	SECUENCIA_ESTILO -> SECUENCIA_ESTILO ',' estilo .    (rule 41)
 
@@ -3150,7 +3124,7 @@ State 164
 	','            reduce using rule 41
 
 
-State 165
+State 163
 
 	COND -> '[' COND "for" identificador "in" COND ']' .    (rule 57)
 
@@ -3172,7 +3146,7 @@ State 165
 	"=="           reduce using rule 57
 
 
-State 166
+State 164
 
 	COND -> COND . '+' COND                             (rule 42)
 	COND -> COND . '-' COND                             (rule 43)
@@ -3188,22 +3162,22 @@ State 166
 	COND -> COND . ">=" COND                            (rule 65)
 	COND -> COND . "==" COND                            (rule 66)
 
-	'+'            shift, and enter state 90
-	'-'            shift, and enter state 91
-	'*'            shift, and enter state 92
-	'/'            shift, and enter state 93
-	'^'            shift, and enter state 94
-	')'            shift, and enter state 167
-	"AND"          shift, and enter state 96
-	"OR"           shift, and enter state 97
-	'<'            shift, and enter state 98
-	'>'            shift, and enter state 99
-	">="           shift, and enter state 100
-	"<="           shift, and enter state 101
-	"=="           shift, and enter state 102
+	'+'            shift, and enter state 88
+	'-'            shift, and enter state 89
+	'*'            shift, and enter state 90
+	'/'            shift, and enter state 91
+	'^'            shift, and enter state 92
+	')'            shift, and enter state 165
+	"AND"          shift, and enter state 94
+	"OR"           shift, and enter state 95
+	'<'            shift, and enter state 96
+	'>'            shift, and enter state 97
+	">="           shift, and enter state 98
+	"<="           shift, and enter state 99
+	"=="           shift, and enter state 100
 
 
-State 167
+State 165
 
 	COND -> "if" '(' COND ',' COND ',' COND ')' .       (rule 58)
 
@@ -3228,7 +3202,7 @@ State 167
 -----------------------------------------------------------------------------
 Grammar Totals
 -----------------------------------------------------------------------------
-Number of rules: 69
-Number of terminals: 35
-Number of non-terminals: 12
-Number of states: 168
+Number of rules: 67
+Number of terminals: 34
+Number of non-terminals: 11
+Number of states: 166

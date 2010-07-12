@@ -4,7 +4,6 @@ module AS (
       CLlamadaFuncion(..),
       EM(..),
       Condicional(..),
-      EG(..),
       Bloque(..),
       Instruccion(..),
       Estilo(..),
@@ -68,11 +67,6 @@ data Condicional = CSuma Condicional Condicional
                  | Igual Condicional Condicional
                  deriving (Eq)
 
--- Tipo de datos de expresion graficable
-data EG = Graficable EM
-        | Archivo String
-        deriving (Eq)
-
 -- Tipo de datos que almacena la secuencia normal de instrucciones
 -- del programa, o de un ciclo (bloque de codigo)
 data Bloque = Secuencia [Instruccion]
@@ -81,8 +75,8 @@ data Bloque = Secuencia [Instruccion]
 -- Tipo de datos para representar instrucciones
 data Instruccion = DefFuncion String Variable EM
                  | Asignacion Variable EM
-                 | Graficar EM EG
-                 | GraficarEstilo EM EG [Estilo]
+                 | Graficar EM EM
+                 | GraficarEstilo EM EM [Estilo]
                  | CicloStep Variable EM EM Bloque
                  | Ciclo Variable EM Bloque
                  | PushBack Variable EM
@@ -118,9 +112,6 @@ indentar n = concat $ replicate n "|   "
 
 instance Show EM where
     show em = showEM 0 em
-
-instance Show EG where
-    show e = showEG 0 e
 
 instance Show Bloque where
     show bloque = showBloque 0 bloque
@@ -273,12 +264,6 @@ showCond n (Igual i d) = (indentar n) ++ "Igual\n"
                         ++ showCond (n+1) i
                         ++ showCond (n+1) d
                            
-showEG :: Int -> EG -> String
-showEG n (Graficable em) = (indentar n) ++ "Expresion Graficable\n"
-                            ++ showEM (n+1) em
-showEG n (Archivo f) = (indentar n) ++ "Archivo Graficable\n"
-                        ++ (indentar (n+1)) ++ f ++ "\n"
-
 showBloque :: Int -> Bloque -> String
 showBloque n (Secuencia []) = ""
 showBloque n (Secuencia (x:xs)) = (indentar n) ++ "Instruccion\n"
@@ -302,12 +287,12 @@ showInstruccion n (Asignacion v valor) = (indentar n)
 showInstruccion n (Graficar e g ) = (indentar n)
                                       ++ "Graficar\n"
                                      ++ showEM (n+1) e
-                                     ++ showEG (n+1) g
+                                     ++ showEM (n+1) g
 
 showInstruccion n (GraficarEstilo e g estilos) = (indentar n)
                                                  ++ "Graficar\n"
                                                  ++ showEM (n+1) e
-                                                 ++ showEG (n+1) g
+                                                 ++ showEM (n+1) g
                                                  ++ (indentar (n+1))
                                                  ++ "Estilos "
                                                  ++ show estilos

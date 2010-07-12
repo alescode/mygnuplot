@@ -19,5 +19,6 @@ main = do
        arbol <- return $ parse (lexer contenido)
        print arbol
 
-       tabla <- return $ generarCodigo arbol Map.empty aSalida
+       lista_codigo <- return $ generarCodigo arbol Map.empty
+       print lista_codigo
        hClose aSalida
