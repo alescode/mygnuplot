@@ -20,6 +20,6 @@ main = do
        print arbol
 
        lista_codigo <- return $ 
-            "set term postscript" : generarCodigo arbol (Map.fromList funcionesPredefinidas)
+            "set term postscript" : generarCodigo arbol (Map.empty)
        print lista_codigo
        hClose aSalida

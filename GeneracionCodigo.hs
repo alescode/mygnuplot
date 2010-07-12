@@ -16,7 +16,7 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
               instruccionGraficar : traducir tabla ls
               where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
           traducir tabla (_:ls) = traducir tabla ls
-          traducir tabla [] = trace "final " []
+          traducir tabla [] = []
 
 evaluarEM :: TablaDeSimbolos -> EM -> String
 evaluarEM tabla (Suma e1 e2) =
@@ -36,8 +36,10 @@ evaluarEM tabla (Real e1) = show e1
 evaluarEM tabla (EMVariable (Variable s)) = "x"
 evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
         case Map.lookup nombre tabla of
-              Nothing -> error $ "error: no se encontro la funcion " ++ nombre
-              Just e  -> evaluarEM tabla (snd e)    
+              Nothing -> if nombre `elem` funcionesPredefinidas 
+                         then concat [nombre, "(", evaluarEM tabla expresion, ")"] 
+                         else error $ "error: no se encontro la funcion " ++ nombre
+              Just e  -> evaluarEM tabla expresion -- desenrollar esta funcion!   
 
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
 --traducir tabla [] = ""
