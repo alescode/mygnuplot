@@ -79,7 +79,7 @@ expresionSimple tabla expresion =
                            then (EMLlamada (LlamadaFuncion nombre
                                 (expresionSimple tabla expr)))
                            else error $ "error: no se encontro la funcion " ++ nombre
-                Just (var, exprFuncion) -> exprFuncion
+                Just (var, exprFuncion) -> evaluarFuncion expr exprFuncion
         base            -> base
 
 -- Esta funcion se encarga de sustituir cada variable de su segundo argumento 
