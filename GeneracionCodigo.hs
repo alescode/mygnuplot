@@ -1,4 +1,4 @@
-module GeneracionCodigo (generarCodigo) where
+module GeneracionCodigo (module GeneracionCodigo) where
 import AS
 import TablaSimbolos
 import System.IO
@@ -17,7 +17,10 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
               case revisarFuncion var expresion of
                   Nothing -> traducir (Map.insert nombre (var, simple) tabla) ls
                              where simple = expresionSimple tabla expresion
-                             -- lazy!
+                             -- como Haskell es flojo, no se queja cuando
+                             -- hay errores del tipo f(x) = t(x+1) y t
+                             -- no esta definida.
+                             -- Deberia quejarse cuando se imprima el plot.
                              -- se "desenrollan" las llamadas a funciones
                              -- que puedan ocurrir en la parte derecha de
                              -- esta definicion de funcion
@@ -76,24 +79,25 @@ expresionSimple tabla expresion =
                            then (EMLlamada (LlamadaFuncion nombre
                                 (expresionSimple tabla expr)))
                            else error $ "error: no se encontro la funcion " ++ nombre
-                Just (var, exprFuncion) -> reemplazar var expresion exprFuncion
+                Just (var, exprFuncion) -> exprFuncion
         base            -> base
 
-reemplazar :: String -> EM -> EM -> EM
-reemplazar var expresion exprFuncion =
-    case exprFuncion of
-        Suma e1 e2           -> Suma (reemplazar var expresion exprFuncion)
-                                     (reemplazar var expresion exprFuncion)
-        Resta e1 e2          -> Resta (reemplazar var expresion exprFuncion)
-                                      (reemplazar var expresion exprFuncion)
-        Multiplicacion e1 e2 -> Multiplicacion (reemplazar var expresion exprFuncion)
-                                               (reemplazar var expresion exprFuncion)
-        Division e1 e2       -> Division (reemplazar var expresion exprFuncion)
-                                         (reemplazar var expresion exprFuncion)
-        Potencia e1 e2       -> Potencia (reemplazar var expresion exprFuncion)
-                                         (reemplazar var expresion exprFuncion)
-        Menos e1             -> Menos (reemplazar var expresion exprFuncion) 
-        EMVariable _         -> expresion
+-- Creo que no hace falta, ya lo esta haciendo la funcion anterior
+--reemplazar :: String -> EM -> EM -> EM
+--reemplazar var expresion exprFuncion =
+--    case exprFuncion of
+--        Suma e1 e2           -> Suma (reemplazar var expresion exprFuncion)
+--                                     (reemplazar var expresion exprFuncion)
+--        Resta e1 e2          -> Resta (reemplazar var expresion exprFuncion)
+--                                      (reemplazar var expresion exprFuncion)
+--        Multiplicacion e1 e2 -> Multiplicacion (reemplazar var expresion exprFuncion)
+--                                               (reemplazar var expresion exprFuncion)
+--        Division e1 e2       -> Division (reemplazar var expresion exprFuncion)
+--                                         (reemplazar var expresion exprFuncion)
+--        Potencia e1 e2       -> Potencia (reemplazar var expresion exprFuncion)
+--                                         (reemplazar var expresion exprFuncion)
+--        Menos e1             -> Menos (reemplazar var expresion exprFuncion) 
+--        EMVariable _         -> expresion
 
 -- Devuelve la representacion en String de la expresion
 -- matematica que toma como argumento
@@ -121,6 +125,7 @@ evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
                          else error $ "error: no se encontro la funcion " ++ nombre
               Just e  -> evaluarEM tabla (expresionSimple tabla expresion) -- desenrollar esta funcion!   
 
+-- Codigo que ya no se usa, quizas pueda ser util despues
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
 --traducir tabla [] = ""
 ------ Definicion de funciones

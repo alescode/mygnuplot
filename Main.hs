@@ -19,6 +19,9 @@ main = do
        arbol <- return $ parse (lexer contenido)
        print arbol
 
-       hPutStr aSalida
-               (unlines $ "set term postscript" : generarCodigo arbol (Map.empty))
+       putStr (unlines $ "set term postscript" : generarCodigo arbol (Map.empty))
+       --Cuando este listo activar esto, escribe en el archivo de texto
+       --directamente!
+       --hPutStr aSalida
+       --        (unlines $ "set term postscript" : generarCodigo arbol (Map.empty))
        hClose aSalida
