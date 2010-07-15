@@ -1,4 +1,4 @@
-module GeneracionCodigo (module GeneracionCodigo) where
+module GeneracionCodigo (module GeneracionCodigo, module AS) where
 import AS
 import TablaSimbolos
 import System.IO
@@ -30,7 +30,7 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
           traducir tabla ((Graficar rango expresion):ls) = 
               --trace (show tabla)
               instruccionGraficar : traducir tabla ls
-              where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
+              where instruccionGraficar = "plot " ++ generarString tabla expresion 
          
           -- faltan: arreglos de expresiones Y estilos
           traducir tabla (_:ls) = traducir tabla ls
@@ -55,7 +55,6 @@ revisarFuncion var expresion =
         _                    -> Nothing -- casos base
 
 -- Devuelve una version desenrollada de 'expresion'
--- Tiene errores
 expresionSimple :: TablaDeSimbolos -> EM -> EM
 expresionSimple tabla expresion =
     case expresion of
@@ -82,48 +81,51 @@ expresionSimple tabla expresion =
                 Just (var, exprFuncion) -> exprFuncion
         base            -> base
 
--- Creo que no hace falta, ya lo esta haciendo la funcion anterior
---reemplazar :: String -> EM -> EM -> EM
---reemplazar var expresion exprFuncion =
---    case exprFuncion of
---        Suma e1 e2           -> Suma (reemplazar var expresion exprFuncion)
---                                     (reemplazar var expresion exprFuncion)
---        Resta e1 e2          -> Resta (reemplazar var expresion exprFuncion)
---                                      (reemplazar var expresion exprFuncion)
---        Multiplicacion e1 e2 -> Multiplicacion (reemplazar var expresion exprFuncion)
---                                               (reemplazar var expresion exprFuncion)
---        Division e1 e2       -> Division (reemplazar var expresion exprFuncion)
---                                         (reemplazar var expresion exprFuncion)
---        Potencia e1 e2       -> Potencia (reemplazar var expresion exprFuncion)
---                                         (reemplazar var expresion exprFuncion)
---        Menos e1             -> Menos (reemplazar var expresion exprFuncion) 
---        EMVariable _         -> expresion
+-- Esta funcion se encarga de sustituir cada variable de su segundo argumento 
+-- por la expresion que esta en su primer argumento
+evaluarFuncion :: EM -> EM -> EM
+evaluarFuncion expresion exprFuncion =
+    case exprFuncion of
+        Suma e1 e2           -> Suma (evaluarFuncion expresion e1)
+                                     (evaluarFuncion expresion e2)
+        Resta e1 e2          -> Resta (evaluarFuncion expresion e1)
+                                      (evaluarFuncion expresion e2)
+        Multiplicacion e1 e2 -> Multiplicacion (evaluarFuncion expresion e1)
+                                               (evaluarFuncion expresion e2)
+        Division e1 e2       -> Division (evaluarFuncion expresion e1)
+                                         (evaluarFuncion expresion e2)
+        Potencia e1 e2       -> Potencia (evaluarFuncion expresion e1)
+                                         (evaluarFuncion expresion e2)
+        Menos e1             -> Menos (evaluarFuncion expresion e1) 
+        EMVariable _         -> expresion
+        base                 -> base
 
 -- Devuelve la representacion en String de la expresion
 -- matematica que toma como argumento
-evaluarEM :: TablaDeSimbolos -> EM -> String
-evaluarEM tabla (Suma e1 e2) =
-         concat ["(", evaluarEM tabla e1, " + ", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Resta e1 e2) =
-         concat ["(", evaluarEM tabla e1, " - ", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Multiplicacion e1 e2) =
-         concat ["(", evaluarEM tabla e1, " * ", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Division e1 e2) =
+generarString :: TablaDeSimbolos -> EM -> String
+generarString tabla (Suma e1 e2) =
+         concat ["(", generarString tabla e1, " + ", generarString tabla e2, ")"]
+generarString tabla (Resta e1 e2) =
+         concat ["(", generarString tabla e1, " - ", generarString tabla e2, ")"]
+generarString tabla (Multiplicacion e1 e2) =
+         concat ["(", generarString tabla e1, " * ", generarString tabla e2, ")"]
+generarString tabla (Division e1 e2) =
 
-         concat ["(", evaluarEM tabla e1, " / ", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Potencia e1 e2) =
-         concat ["(", evaluarEM tabla e1, " ** ", evaluarEM tabla e2, ")"]
-evaluarEM tabla (Menos e1) =
-         concat ["-(", evaluarEM tabla e1, ")"]
-evaluarEM tabla (Entero e1) = show e1
-evaluarEM tabla (Real e1) = show e1
-evaluarEM tabla (EMVariable (Variable s)) = "x"
-evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
+         concat ["(", generarString tabla e1, " / ", generarString tabla e2, ")"]
+generarString tabla (Potencia e1 e2) =
+         concat ["(", generarString tabla e1, " ** ", generarString tabla e2, ")"]
+generarString tabla (Menos e1) =
+         concat ["-(", generarString tabla e1, ")"]
+generarString tabla (Entero e1) = show e1
+generarString tabla (Real e1) = show e1
+generarString tabla (EMVariable (Variable s)) = "x" -- la variable en gnuplot siempre es x
+generarString tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
         case Map.lookup nombre tabla of
               Nothing -> if nombre `elem` funcionesPredefinidas 
-                         then concat [nombre, "(", evaluarEM tabla expresion, ")"] 
+                         then concat [nombre, "(", generarString tabla expresion, ")"] 
                          else error $ "error: no se encontro la funcion " ++ nombre
-              Just (var, expr)  -> evaluarEM tabla (expresionSimple tabla expr) -- desenrollar esta funcion!   
+              Just (var, exprFuncion)  -> generarString tabla 
+                   (evaluarFuncion expresion exprFuncion) -- desenrollar esta funcion!   
 
 -- Codigo que ya no se usa, quizas pueda ser util despues
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
@@ -136,7 +138,7 @@ evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
 --traducir _ aSalida _ = ""
     
 --traducir tabla _ (Asignacion _ em) = do
---    putStrLn $ evaluarEM tabla em 
+--    putStrLn $ generarString tabla em 
 --
 --traducir tabla _ (Asignacion _ (EMLlamada (LlamadaFuncion nombre expresion))) = do
 --    existe <- TablaSimbolos.lookup tabla nombre
@@ -181,7 +183,7 @@ evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
     --     Nothing -> error $ "error: no existe la funcion " ++ nombre
     --     Just _ -> return 'a'
 --         show e1
---evaluarEM tabla (ArregloEM [EM] ) =
+--generarString tabla (ArregloEM [EM] ) =
 --         show e1
 
 --producirEvaluacion :: LlamadaFuncion -> String
