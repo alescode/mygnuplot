@@ -10,13 +10,25 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
     where 
           traducir tabla ((DefFuncion nombre (Variable var) expresion):ls) =  
               --trace (show $ Map.insert nombre (var, expresion) tabla)
-                    traducir (Map.insert nombre (var, expresion) tabla) ls 
+                    case revisarFuncion var expresion of
+                        Nothing -> traducir (Map.insert nombre (var, simple) tabla) ls 
+                                   where simple = expresionSimple tabla expresion
+                        Just e  -> error $ "error: la funcion " ++ nombre ++
+                                   "tiene la variable libre '" ++ e ++ "'"
+                       
           traducir tabla ((Graficar rango expresion):ls) = 
               --trace (show tabla)
               instruccionGraficar : traducir tabla ls
               where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
           traducir tabla (_:ls) = traducir tabla ls
           traducir tabla [] = []
+
+revisarFuncion :: String -> EM -> Maybe String
+revisarFuncion var expresion = Nothing
+
+-- Se asegura de que en 
+expresionSimple :: TablaDeSimbolos -> EM -> EM
+expresionSimple _ expresion = expresion
 
 evaluarEM :: TablaDeSimbolos -> EM -> String
 evaluarEM tabla (Suma e1 e2) =
@@ -26,6 +38,7 @@ evaluarEM tabla (Resta e1 e2) =
 evaluarEM tabla (Multiplicacion e1 e2) =
          concat ["(", evaluarEM tabla e1, " * ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Division e1 e2) =
+
          concat ["(", evaluarEM tabla e1, " / ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Potencia e1 e2) =
          concat ["(", evaluarEM tabla e1, " ** ", evaluarEM tabla e2, ")"]
