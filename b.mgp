@@ -9,4 +9,4 @@
 #plot i, g(x)
 g(z) = z + 1;
 f(y) = y + g(3*y) + 1;
-plot range(2,3), 5+f(3*x)
+plot range(pi,3), [5+f(3*x), 1]

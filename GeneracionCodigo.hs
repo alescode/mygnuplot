@@ -127,6 +127,9 @@ generarFGraficable tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
                          else error $ "error: no se encontro la funcion " ++ nombre
               Just (var, exprFuncion)  -> generarFGraficable tabla 
                    (evaluarFuncion expresion exprFuncion) -- desenrollar esta funcion!   
+generarFGraficable tabla (ArregloEM arr) = init $ unwords $ map (++ ",") $
+                                           map (generarFGraficable tabla) arr
+
 
 generarRango :: EM -> String
 generarRango (Rango (Entero izq) (Entero der)) = "[" ++ show izq ++ ":" ++ show der ++ "]"
