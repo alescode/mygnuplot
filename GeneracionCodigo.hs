@@ -32,8 +32,14 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
               instruccionGraficar : traducir tabla ls
               where instruccionGraficar = "plot " ++ 
                      generarRango rango ++ " " ++ generarFGraficable tabla expresion 
+
+          traducir tabla ((GraficarEstilo rango expresion estilo):ls) = 
+              --trace (show tabla)
+              instruccionGraficar : traducir tabla ls
+              where instruccionGraficar = "plot " ++ 
+                     generarRango rango ++ " " ++ generarFGraficable tabla expresion 
          
-          -- faltan: arreglos de expresiones Y estilos
+          -- faltan: estilos
           traducir tabla (_:ls) = traducir tabla ls
           traducir tabla [] = []
 
@@ -127,6 +133,7 @@ generarFGraficable tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
                          else error $ "error: no se encontro la funcion " ++ nombre
               Just (var, exprFuncion)  -> generarFGraficable tabla 
                    (evaluarFuncion expresion exprFuncion) -- desenrollar esta funcion!   
+
 generarFGraficable tabla (ArregloEM arr) = init $ unwords $ map (++ ",") $
                                            map (generarFGraficable tabla) arr
 

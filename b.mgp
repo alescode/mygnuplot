@@ -9,4 +9,7 @@
 #plot i, g(x)
 g(z) = z + 1;
 f(y) = y + g(3*y) + 1;
-plot range(pi,3), [5+f(3*x), 1]
+plot range(pi,3), [5+f(3*x), 1];
+
+# Como manejar este caso de pi medios? Preguntar... foro?
+#plot range(-pi,pi/2), [y^(1+1), sin(y)]
