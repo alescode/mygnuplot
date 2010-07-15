@@ -1,6 +1,6 @@
-f(z) = sin(z*x*e);
-f(z) = sin(pi*z^.2*x);
-g(z) = sin(z*x);
+f(x) = sin(x*e);
+f(z) = sin(pi*z^.2*z);
+g(z) = sin(z*z);
 #z = f(28);
 #u = z(20);
 u = 20+8*x;

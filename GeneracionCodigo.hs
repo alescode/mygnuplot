@@ -4,6 +4,7 @@ import TablaSimbolos
 import System.IO
 import Debug.Trace
 import qualified Data.Map as Map
+import Data.Generics.Aliases
 
 generarCodigo :: Bloque -> TablaDeSimbolos -> [String]
 generarCodigo (Secuencia lista) tabla = traducir tabla lista
@@ -13,8 +14,8 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
                     case revisarFuncion var expresion of
                         Nothing -> traducir (Map.insert nombre (var, simple) tabla) ls 
                                    where simple = expresionSimple tabla expresion
-                        Just e  -> error $ "error: la funcion " ++ nombre ++
-                                   "tiene la variable libre '" ++ e ++ "'"
+                        Just e  -> error $ "error: la funcion '" ++ nombre ++
+                                   "' tiene la variable libre '" ++ e ++ "'"
                        
           traducir tabla ((Graficar rango expresion):ls) = 
               --trace (show tabla)
@@ -24,7 +25,19 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
           traducir tabla [] = []
 
 revisarFuncion :: String -> EM -> Maybe String
-revisarFuncion var expresion = Nothing
+revisarFuncion var expresion = 
+    case expresion of
+        Suma e1 e2           -> revisarFuncion var e1 `orElse` revisarFuncion var e2 
+        Resta e1 e2          -> revisarFuncion var e1 `orElse` revisarFuncion var e2 
+        Multiplicacion e1 e2 -> revisarFuncion var e1 `orElse` revisarFuncion var e2 
+        Division e1 e2       -> revisarFuncion var e1 `orElse` revisarFuncion var e2 
+        Potencia e1 e2       -> revisarFuncion var e1 `orElse` revisarFuncion var e2 
+        Menos e1             -> revisarFuncion var e1
+        EMLlamada (LlamadaFuncion _ e1) -> revisarFuncion var e1
+        EMVariable (Variable var_nueva) -> if var_nueva /= var
+                                           then Just var_nueva -- variable libre
+                                           else Nothing
+        _                    -> Nothing -- casos base
 
 -- Se asegura de que en 
 expresionSimple :: TablaDeSimbolos -> EM -> EM
