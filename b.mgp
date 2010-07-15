@@ -1,8 +1,9 @@
 f(x) = sin(x*e);
-f(z) = sin(pi*z^.2*z);
-g(z) = sin(z*z);
+g(z) = f(z+1);
+#f(z) = sin(pi*z^.2*z*r(2));
+g(z) = t(z)+sin(z*z);
 #z = f(28);
 #u = z(20);
 u = 20+8*x;
 u = fi(x);
-plot i, f((sin(20)+x)/(12*7)) 
+plot i, g(x)
