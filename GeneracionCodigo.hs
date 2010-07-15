@@ -123,7 +123,7 @@ evaluarEM tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
               Nothing -> if nombre `elem` funcionesPredefinidas 
                          then concat [nombre, "(", evaluarEM tabla expresion, ")"] 
                          else error $ "error: no se encontro la funcion " ++ nombre
-              Just e  -> evaluarEM tabla (expresionSimple tabla expresion) -- desenrollar esta funcion!   
+              Just (var, expr)  -> evaluarEM tabla (expresionSimple tabla expr) -- desenrollar esta funcion!   
 
 -- Codigo que ya no se usa, quizas pueda ser util despues
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]

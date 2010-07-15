@@ -1,9 +1,12 @@
-f(x) = sin(x*e);
-g(z) = f(z+1);
-#f(z) = sin(pi*z^.2*z*r(2));
-g(z) = t(z)+sin(z*z);
-#z = f(28);
-#u = z(20);
-u = 20+8*x;
-u = fi(x);
-plot i, g(x)
+#f(x) = sin(x*e);
+#g(z) = f(z+1);
+##f(z) = sin(pi*z^.2*z*r(2));
+#g(z) = t(z)+sin(z*z);
+##z = f(28);
+##u = z(20);
+#u = 20+8*x;
+#u = fi(x);
+#plot i, g(x)
+g(z) = z + 1;
+f(y) = g(y) + 1;
+plot i, 5+2*f(x)
