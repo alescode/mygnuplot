@@ -12,7 +12,7 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
               --trace (show $ Map.insert nombre (var, expresion) tabla)
                     traducir (Map.insert nombre (var, expresion) tabla) ls 
           traducir tabla ((Graficar rango expresion):ls) = 
-              trace (show tabla)
+              --trace (show tabla)
               instruccionGraficar : traducir tabla ls
               where instruccionGraficar = "plot " ++ evaluarEM tabla expresion 
           traducir tabla (_:ls) = traducir tabla ls
@@ -20,15 +20,15 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
 
 evaluarEM :: TablaDeSimbolos -> EM -> String
 evaluarEM tabla (Suma e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") + (", evaluarEM tabla e2, ")"]
+         concat ["(", evaluarEM tabla e1, " + ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Resta e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") - (", evaluarEM tabla e2, ")"]
+         concat ["(", evaluarEM tabla e1, " - ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Multiplicacion e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") * (", evaluarEM tabla e2, ")"]
+         concat ["(", evaluarEM tabla e1, " * ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Division e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") / (", evaluarEM tabla e2, ")"]
+         concat ["(", evaluarEM tabla e1, " / ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Potencia e1 e2) =
-         concat ["(", evaluarEM tabla e1, ") ** (", evaluarEM tabla e2, ")"]
+         concat ["(", evaluarEM tabla e1, " ** ", evaluarEM tabla e2, ")"]
 evaluarEM tabla (Menos e1) =
          concat ["-(", evaluarEM tabla e1, ")"]
 evaluarEM tabla (Entero e1) = show e1

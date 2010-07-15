@@ -160,8 +160,7 @@ COND  : COND '+' COND                               { CSuma $1 $3 }
 
 -- Funcion de error estandar
 parseError :: [ParserStatus] -> a
-parseError [_] = error $ "error sintactico en el ultimo token,\
-                         antes del fin de archivo"
+parseError [_] = error $ "error sintactico en el ultimo token, antes del fin de archivo"
 parseError (t:ts) = error $ "error sintactico en la linea: " ++ linea
                     ++ "\n\tcolumna: " ++ columna
                     ++ "\n\ten el token '" ++ show (token t) ++ "'"
