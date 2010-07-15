@@ -9,4 +9,4 @@
 #plot i, g(x)
 g(z) = z + 1;
 f(y) = y + g(y) + 1;
-plot i, 5+f(x^2)
+plot range(2,3), 5+f(x^2)

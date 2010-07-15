@@ -30,7 +30,8 @@ generarCodigo (Secuencia lista) tabla = traducir tabla lista
           traducir tabla ((Graficar rango expresion):ls) = 
               --trace (show tabla)
               instruccionGraficar : traducir tabla ls
-              where instruccionGraficar = "plot " ++ generarString tabla expresion 
+              where instruccionGraficar = "plot " ++ 
+                     generarRango rango ++ " " ++ generarFGraficable tabla expresion 
          
           -- faltan: arreglos de expresiones Y estilos
           traducir tabla (_:ls) = traducir tabla ls
@@ -102,30 +103,38 @@ evaluarFuncion expresion exprFuncion =
 
 -- Devuelve la representacion en String de la expresion
 -- matematica que toma como argumento
-generarString :: TablaDeSimbolos -> EM -> String
-generarString tabla (Suma e1 e2) =
-         concat ["(", generarString tabla e1, " + ", generarString tabla e2, ")"]
-generarString tabla (Resta e1 e2) =
-         concat ["(", generarString tabla e1, " - ", generarString tabla e2, ")"]
-generarString tabla (Multiplicacion e1 e2) =
-         concat ["(", generarString tabla e1, " * ", generarString tabla e2, ")"]
-generarString tabla (Division e1 e2) =
+generarFGraficable :: TablaDeSimbolos -> EM -> String
+generarFGraficable tabla (Suma e1 e2) =
+         concat ["(", generarFGraficable tabla e1, " + ", generarFGraficable tabla e2, ")"]
+generarFGraficable tabla (Resta e1 e2) =
+         concat ["(", generarFGraficable tabla e1, " - ", generarFGraficable tabla e2, ")"]
+generarFGraficable tabla (Multiplicacion e1 e2) =
+         concat ["(", generarFGraficable tabla e1, " * ", generarFGraficable tabla e2, ")"]
+generarFGraficable tabla (Division e1 e2) =
 
-         concat ["(", generarString tabla e1, " / ", generarString tabla e2, ")"]
-generarString tabla (Potencia e1 e2) =
-         concat ["(", generarString tabla e1, " ** ", generarString tabla e2, ")"]
-generarString tabla (Menos e1) =
-         concat ["-(", generarString tabla e1, ")"]
-generarString tabla (Entero e1) = show e1
-generarString tabla (Real e1) = show e1
-generarString tabla (EMVariable (Variable s)) = "x" -- la variable en gnuplot siempre es x
-generarString tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
+         concat ["(", generarFGraficable tabla e1, " / ", generarFGraficable tabla e2, ")"]
+generarFGraficable tabla (Potencia e1 e2) =
+         concat ["(", generarFGraficable tabla e1, " ** ", generarFGraficable tabla e2, ")"]
+generarFGraficable tabla (Menos e1) =
+         concat ["-(", generarFGraficable tabla e1, ")"]
+generarFGraficable tabla (Entero e1) = show e1
+generarFGraficable tabla (Real e1) = show e1
+generarFGraficable tabla (EMVariable (Variable s)) = "x" -- la variable en gnuplot siempre es x
+generarFGraficable tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
         case Map.lookup nombre tabla of
               Nothing -> if nombre `elem` funcionesPredefinidas 
-                         then concat [nombre, "(", generarString tabla expresion, ")"] 
+                         then concat [nombre, "(", generarFGraficable tabla expresion, ")"] 
                          else error $ "error: no se encontro la funcion " ++ nombre
-              Just (var, exprFuncion)  -> generarString tabla 
+              Just (var, exprFuncion)  -> generarFGraficable tabla 
                    (evaluarFuncion expresion exprFuncion) -- desenrollar esta funcion!   
+
+generarRango :: EM -> String
+generarRango (Rango (Entero izq) (Entero der)) = "[" ++ show izq ++ ":" ++ show der ++ "]"
+generarRango (Rango (Real izq) (Entero der)) = "[" ++ show izq ++ ":" ++ show der ++ "]"
+generarRango (Rango (Entero izq) (Real der)) = "[" ++ show izq ++ ":" ++ show der ++ "]"
+generarRango (Rango (Real izq) (Real der)) = "[" ++ show izq ++ ":" ++ show der ++ "]"
+generarRango _ = error "error: rango invalido"
+
 
 -- Codigo que ya no se usa, quizas pueda ser util despues
 --traducir :: TablaDeSimbolos -> [Instruccion] -> [String]
@@ -138,7 +147,7 @@ generarString tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
 --traducir _ aSalida _ = ""
     
 --traducir tabla _ (Asignacion _ em) = do
---    putStrLn $ generarString tabla em 
+--    putStrLn $ generarFGraficable tabla em 
 --
 --traducir tabla _ (Asignacion _ (EMLlamada (LlamadaFuncion nombre expresion))) = do
 --    existe <- TablaSimbolos.lookup tabla nombre
@@ -183,7 +192,7 @@ generarString tabla (EMLlamada (LlamadaFuncion nombre expresion)) =
     --     Nothing -> error $ "error: no existe la funcion " ++ nombre
     --     Just _ -> return 'a'
 --         show e1
---generarString tabla (ArregloEM [EM] ) =
+--generarFGraficable tabla (ArregloEM [EM] ) =
 --         show e1
 
 --producirEvaluacion :: LlamadaFuncion -> String
